@@ -78,6 +78,16 @@ class ReflectionObject
     }
 
     /**
+     * Return the list of injection strategies used
+     *
+     * @return TypedCollectionInterface
+     */
+    public function getInjectionStrategies(): TypedCollectionInterface
+    {
+        return $this->injectionStrategies;
+    }
+
+    /**
      * Return the object with the list of properties set on it
      *
      * @return object

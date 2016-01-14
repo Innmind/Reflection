@@ -4,6 +4,11 @@ declare(strict_types=1);
 namespace Innmind\Reflection\Tests;
 
 use Innmind\Reflection\ReflectionObject;
+use Innmind\Reflection\InjectionStrategyInterface;
+use Innmind\Reflection\InjectionStrategy\SetterStrategy;
+use Innmind\Reflection\InjectionStrategy\NamedMethodStrategy;
+use Innmind\Reflection\InjectionStrategy\ReflectionStrategy;
+use Innmind\Immutable\TypedCollection;
 
 class ReflectionObjectTest extends \PHPUnit_Framework_TestCase
 {
@@ -143,5 +148,26 @@ class ReflectionObjectTest extends \PHPUnit_Framework_TestCase
         (new ReflectionObject($o))
             ->withProperty('a', 1)
             ->buildObject();
+    }
+
+    public function testGetInjectionStrategies()
+    {
+        $refl = new ReflectionObject(new \stdClass);
+
+        $s = $refl->getInjectionStrategies();
+        $this->assertSame(InjectionStrategyInterface::class, $s->getType());
+        $this->assertInstanceOf(SetterStrategy::class, $s[0]);
+        $this->assertInstanceOf(NamedMethodStrategy::class, $s[1]);
+        $this->assertInstanceOf(ReflectionStrategy::class, $s[2]);
+
+        $refl = new ReflectionObject(
+            new \stdClass,
+            null,
+            new TypedCollection(
+                InjectionStrategyInterface::class,
+                [$s = new ReflectionStrategy]
+            )
+        );
+        $this->assertSame($s, $refl->getInjectionStrategies()[0]);
     }
 }
