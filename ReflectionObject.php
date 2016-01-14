@@ -89,7 +89,10 @@ class ReflectionObject
 
         if ($refl->hasMethod((string) $setter)) {
             $this->injectBySetter((string) $setter, $value);
-        } else if ($refl->hasMethod($key)) {
+        } else if (
+            $refl->hasMethod($key) &&
+            $refl->getMethod($key)->getNumberOfParameters() > 0
+        ) {
             $this->injectBySetter($key, $value);
         } else if ($refl->hasProperty($key)) {
             $this->injectByReflection(

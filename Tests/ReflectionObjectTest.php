@@ -87,4 +87,21 @@ class ReflectionObjectTest extends \PHPUnit_Framework_TestCase
             ->withProperty('a', 1)
             ->buildObject();
     }
+
+    /**
+     * @expectedException Innmind\Reflection\Exception\LogicException
+     * @expectedExceptionMessage Property "a" not found
+     */
+    public function testThrowWhenNameMethodDoesntHaveParameter()
+    {
+        $o = new class() {
+            public function a()
+            {
+                //pass
+            }
+        };
+        (new ReflectionObject($o))
+            ->withProperty('a', 1)
+            ->buildObject();
+    }
 }
