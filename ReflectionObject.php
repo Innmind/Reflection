@@ -30,27 +30,8 @@ class ReflectionObject
 
         $this->object = $object;
 
-        if ($properties === null) {
-            $properties = new Collection([]);
-        }
-
-        if ($injectionStrategies === null) {
-            $injectionStrategies = new TypedCollection(
-                InjectionStrategyInterface::class,
-                [
-                    new SetterStrategy,
-                    new NamedMethodStrategy,
-                    new ReflectionStrategy,
-                ]
-            );
-        }
-
-        if ($injectionStrategies->getType() !== InjectionStrategyInterface::class) {
-            throw new InvalidArgumentException;
-        }
-
-        $this->properties = $properties;
-        $this->injectionStrategies = $injectionStrategies;
+        $this->initProperties($properties);
+        $this->initInjectionStrategies($injectionStrategies);
     }
 
     /**
@@ -116,5 +97,44 @@ class ReflectionObject
             'Property "%s" cannot be injected',
             $key
         ));
+    }
+
+    /**
+     * @param CollectionInterface|null $properties
+     *
+     * @return void
+     */
+    private function initProperties(CollectionInterface $properties = null)
+    {
+        if ($properties === null) {
+            $properties = new Collection([]);
+        }
+
+        $this->properties = $properties;
+    }
+
+    /**
+     * @param TypedCollectionInterface $strategies
+     *
+     * @return void
+     */
+    private function initInjectionStrategies(TypedCollectionInterface $strategies = null)
+    {
+        if ($strategies === null) {
+            $strategies = new TypedCollection(
+                InjectionStrategyInterface::class,
+                [
+                    new SetterStrategy,
+                    new NamedMethodStrategy,
+                    new ReflectionStrategy,
+                ]
+            );
+        }
+
+        if ($strategies->getType() !== InjectionStrategyInterface::class) {
+            throw new InvalidArgumentException;
+        }
+
+        $this->injectionStrategies = $strategies;
     }
 }
