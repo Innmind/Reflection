@@ -5,19 +5,25 @@ namespace Innmind\Reflection;
 
 use Innmind\Reflection\Exception\InvalidArgumentException;
 use Innmind\Reflection\Exception\LogicException;
+use Innmind\Reflection\InjectionStrategy\SetterStrategy;
+use Innmind\Reflection\InjectionStrategy\NamedMethodStrategy;
+use Innmind\Reflection\InjectionStrategy\ReflectionStrategy;
 use Innmind\Immutable\Collection;
 use Innmind\Immutable\CollectionInterface;
+use Innmind\Immutable\TypedCollection;
+use Innmind\Immutable\TypedCollectionInterface;
 use Innmind\Immutable\StringPrimitive;
 
 class ReflectionObject
 {
     private $object;
     private $properties;
-    private $setter;
+    private $injectionStrategies;
 
     public function __construct(
         $object,
-        CollectionInterface $properties = null
+        CollectionInterface $properties = null,
+        TypedCollectionInterface $injectionStrategies = null
     ) {
         if (!is_object($object)) {
             throw new InvalidArgumentException;
@@ -29,8 +35,23 @@ class ReflectionObject
             $properties = new Collection([]);
         }
 
+        if ($injectionStrategies === null) {
+            $injectionStrategies = new TypedCollection(
+                InjectionStrategyInterface::class,
+                [
+                    new SetterStrategy,
+                    new NamedMethodStrategy,
+                    new ReflectionStrategy,
+                ]
+            );
+        }
+
+        if ($injectionStrategies->getType() !== InjectionStrategyInterface::class) {
+            throw new InvalidArgumentException;
+        }
+
         $this->properties = $properties;
-        $this->setter = new StringPrimitive('set%s');
+        $this->injectionStrategies = $injectionStrategies;
     }
 
     /**
@@ -45,7 +66,8 @@ class ReflectionObject
     {
         return new self(
             $this->object,
-            $this->properties->set($name, $value)
+            $this->properties->set($name, $value),
+            $this->injectionStrategies
         );
     }
 
@@ -83,61 +105,17 @@ class ReflectionObject
      */
     private function inject(string $key, $value)
     {
-        $refl = new \ReflectionObject($this->object);
+        foreach ($this->injectionStrategies as $strategy) {
+            if ($strategy->supports($this->object, $key, $value)) {
+                $strategy->inject($this->object, $key, $value);
 
-        $setter = $this->setter->sprintf(ucfirst($key));
-
-        if ($refl->hasMethod((string) $setter)) {
-            $this->injectBySetter((string) $setter, $value);
-        } else if (
-            $refl->hasMethod($key) &&
-            $refl->getMethod($key)->getNumberOfParameters() > 0
-        ) {
-            $this->injectBySetter($key, $value);
-        } else if ($refl->hasProperty($key)) {
-            $this->injectByReflection(
-                $refl->getProperty($key),
-                $value
-            );
-        } else {
-            throw new LogicException(sprintf(
-                'Property "%s" not found',
-                $key
-            ));
-        }
-    }
-
-    /**
-     * Inject the value through the given setter
-     *
-     * @param string $setter
-     * @param mixed $value
-     *
-     * @return void
-     */
-    private function injectBySetter(string $setter, $value)
-    {
-        $this->object->$setter($value);
-    }
-
-    /**
-     * Inject the given value through reflection
-     *
-     * @param ReflectionProperty $refl
-     * @param mixed $value
-     *
-     * @return void
-     */
-    public function injectByReflection(\ReflectionProperty $refl, $value)
-    {
-        if (!$refl->isPublic()) {
-            $refl->setAccessible(true);
+                return;
+            }
         }
 
-        $refl->setValue($this->object, $value);
-
-        if (!$refl->isPublic()) {
-            $refl->setAccessible(false);
-        }
+        throw new LogicException(sprintf(
+            'Property "%s" cannot be injected',
+            $key
+        ));
     }
 }

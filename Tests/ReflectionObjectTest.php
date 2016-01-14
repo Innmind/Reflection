@@ -79,7 +79,7 @@ class ReflectionObjectTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @expectedException Innmind\Reflection\Exception\LogicException
-     * @expectedExceptionMessage Property "a" not found
+     * @expectedExceptionMessage Property "a" cannot be injected
      */
     public function testThrowWhenPropertyNotFound()
     {
@@ -90,7 +90,7 @@ class ReflectionObjectTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @expectedException Innmind\Reflection\Exception\LogicException
-     * @expectedExceptionMessage Property "a" not found
+     * @expectedExceptionMessage Property "a" cannot be injected
      */
     public function testThrowWhenNameMethodDoesntHaveParameter()
     {
