@@ -77,6 +77,46 @@ class ReflectionObjectTest extends \PHPUnit_Framework_TestCase
         $this->assertSame([1, 2, 3, 4], $o->dump());
     }
 
+    public function testBuildWithProperties()
+    {
+        $o = new class() {
+            private $a;
+            protected $b;
+            private $c;
+            private $d;
+
+            public function setC($value)
+            {
+                $this->c = $value;
+            }
+
+            public function d($value)
+            {
+                $this->d = $value;
+            }
+
+            public function dump()
+            {
+                return [$this->a, $this->b, $this->c, $this->d];
+            }
+        };
+
+        $this->assertSame([null, null, null, null], $o->dump());
+
+        (new ReflectionObject($o))
+            ->withProperties([
+                'a' => 1,
+                'b' => 2
+            ])
+            ->withProperties([
+                'c' => 3,
+                'd' => 4,
+            ])
+            ->buildObject();
+
+        $this->assertSame([1, 2, 3, 4], $o->dump());
+    }
+
     /**
      * @expectedException Innmind\Reflection\Exception\LogicException
      * @expectedExceptionMessage Property "a" cannot be injected

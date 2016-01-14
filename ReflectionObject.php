@@ -52,6 +52,22 @@ class ReflectionObject
     }
 
     /**
+     * Add a set of properties that need to be injected
+     *
+     * @param array $properties
+     *
+     * @return self
+     */
+    public function withProperties(array $properties): self
+    {
+        return new self(
+            $this->object,
+            $this->properties->merge(new Collection($properties)),
+            $this->injectionStrategies
+        );
+    }
+
+    /**
      * Return the collection of properties that will be injected in the object
      *
      * @return CollectionInterface
