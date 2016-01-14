@@ -1,0 +1,26 @@
+{
+    "name": "innmind/reflection",
+    "type": "library",
+    "description": "Library to build objects and extract data out of them",
+    "keywords": ["reflection"],
+    "homepage": "http://github.com/Innmind/Reflection",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Baptiste Langlade",
+            "email": "langlade.baptiste@gmail.com"
+        }
+    ],
+    "support": {
+        "issues": "http://github.com/Innmind/Reflection/issues"
+    },
+    "require": {
+        "php": "~7.0"
+    },
+    "autoload": {
+        "psr-0": {
+            "Innmind\\Reflection": ""
+        }
+    },
+    "target-dir": "Innmind/Reflection"
+}
