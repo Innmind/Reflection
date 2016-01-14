@@ -12,7 +12,6 @@ use Innmind\Immutable\Collection;
 use Innmind\Immutable\CollectionInterface;
 use Innmind\Immutable\TypedCollection;
 use Innmind\Immutable\TypedCollectionInterface;
-use Innmind\Immutable\StringPrimitive;
 
 class ReflectionObject
 {
