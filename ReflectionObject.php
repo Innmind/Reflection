@@ -54,7 +54,7 @@ class ReflectionObject
      *
      * @return CollectionInterface
      */
-    public function getProperties() : CollectionInterface
+    public function getProperties(): CollectionInterface
     {
         return $this->properties;
     }
