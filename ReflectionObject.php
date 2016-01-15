@@ -30,7 +30,7 @@ class ReflectionObject
 
         $this->object = $object;
 
-        $this->initProperties($properties);
+        $this->properties = $properties ?? new Collection([]);
         $this->initInjectionStrategies($injectionStrategies);
     }
 
@@ -126,36 +126,20 @@ class ReflectionObject
     }
 
     /**
-     * @param CollectionInterface|null $properties
-     *
-     * @return void
-     */
-    private function initProperties(CollectionInterface $properties = null)
-    {
-        if ($properties === null) {
-            $properties = new Collection([]);
-        }
-
-        $this->properties = $properties;
-    }
-
-    /**
      * @param TypedCollectionInterface $strategies
      *
      * @return void
      */
     private function initInjectionStrategies(TypedCollectionInterface $strategies = null)
     {
-        if ($strategies === null) {
-            $strategies = new TypedCollection(
-                InjectionStrategyInterface::class,
-                [
-                    new SetterStrategy,
-                    new NamedMethodStrategy,
-                    new ReflectionStrategy,
-                ]
-            );
-        }
+        $strategies = $strategies ?? new TypedCollection(
+            InjectionStrategyInterface::class,
+            [
+                new SetterStrategy,
+                new NamedMethodStrategy,
+                new ReflectionStrategy,
+            ]
+        );
 
         if ($strategies->getType() !== InjectionStrategyInterface::class) {
             throw new InvalidArgumentException;
