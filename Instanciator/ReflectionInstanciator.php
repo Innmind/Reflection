@@ -17,6 +17,11 @@ class ReflectionInstanciator implements InstanciatorInterface
     {
         try {
             $refl = new \ReflectionClass($class);
+
+            if (!$refl->hasMethod('__construct')) {
+                return $refl->newInstance();
+            }
+
             $constructor = $refl->getMethod('__construct');
 
             return $refl->newInstanceArgs(
@@ -42,6 +47,11 @@ class ReflectionInstanciator implements InstanciatorInterface
     public function getParameters(string $class): CollectionInterface
     {
         $refl = new \ReflectionClass($class);
+
+        if (!$refl->hasMethod('__construct')) {
+            return new Collection([]);
+        }
+
         $refl = $refl->getMethod('__construct');
         $parameters = [];
 

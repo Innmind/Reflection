@@ -35,6 +35,10 @@ class ReflectionInstanciatorTest extends \PHPUnit_Framework_TestCase
 
         $this->assertInstanceOf(Foo::class, $object);
         $this->assertSame([$o, 'foo', 42], $object->properties);
+
+        $object = $i->build('stdClass', new Collection([]));
+
+        $this->assertInstanceOf('stdClass', $object);
     }
 
     /**
@@ -56,6 +60,10 @@ class ReflectionInstanciatorTest extends \PHPUnit_Framework_TestCase
 
         $this->assertInstanceOf(CollectionInterface::class, $parameters);
         $this->assertSame(['o', 'bar', 'baz'], $parameters->toPrimitive());
+
+        $parameters = $i->getParameters('stdClass');
+
+        $this->assertSame(0, $parameters->count());
     }
 }
 
