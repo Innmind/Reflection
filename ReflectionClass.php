@@ -25,9 +25,15 @@ class ReflectionClass
         TypedCollectionInterface $injectionStrategies = null,
         InstanciatorInterface $instanciator = null
     ) {
+        $injectionStrategies = $injectionStrategies ?? InjectionStrategies::defaults();
+
+        if ($injectionStrategies->getType() !== InjectionStrategyInterface::class) {
+            throw new InvalidArgumentException;
+        }
+
         $this->class = $class;
         $this->properties = $properties ?? new Collection([]);
-        $this->initInjectionStrategies($injectionStrategies);
+        $this->injectionStrategies = $injectionStrategies;
         $this->instanciator = $instanciator ?? new ReflectionInstanciator;
     }
 
@@ -119,28 +125,5 @@ class ReflectionClass
         );
 
         return $refl->buildObject();
-    }
-
-    /**
-     * @param TypedCollectionInterface $strategies
-     *
-     * @return void
-     */
-    private function initInjectionStrategies(TypedCollectionInterface $strategies = null)
-    {
-        $strategies = $strategies ?? new TypedCollection(
-            InjectionStrategyInterface::class,
-            [
-                new SetterStrategy,
-                new NamedMethodStrategy,
-                new ReflectionStrategy,
-            ]
-        );
-
-        if ($strategies->getType() !== InjectionStrategyInterface::class) {
-            throw new InvalidArgumentException;
-        }
-
-        $this->injectionStrategies = $strategies;
     }
 }

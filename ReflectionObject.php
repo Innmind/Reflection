@@ -28,10 +28,16 @@ class ReflectionObject
             throw new InvalidArgumentException;
         }
 
+        $injectionStrategies = $injectionStrategies ?? InjectionStrategies::defaults();
+
+        if ($injectionStrategies->getType() !== InjectionStrategyInterface::class) {
+            throw new InvalidArgumentException;
+        }
+
         $this->object = $object;
 
         $this->properties = $properties ?? new Collection([]);
-        $this->initInjectionStrategies($injectionStrategies);
+        $this->injectionStrategies = $injectionStrategies;
     }
 
     /**
@@ -123,28 +129,5 @@ class ReflectionObject
             'Property "%s" cannot be injected',
             $key
         ));
-    }
-
-    /**
-     * @param TypedCollectionInterface $strategies
-     *
-     * @return void
-     */
-    private function initInjectionStrategies(TypedCollectionInterface $strategies = null)
-    {
-        $strategies = $strategies ?? new TypedCollection(
-            InjectionStrategyInterface::class,
-            [
-                new SetterStrategy,
-                new NamedMethodStrategy,
-                new ReflectionStrategy,
-            ]
-        );
-
-        if ($strategies->getType() !== InjectionStrategyInterface::class) {
-            throw new InvalidArgumentException;
-        }
-
-        $this->injectionStrategies = $strategies;
     }
 }
