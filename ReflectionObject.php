@@ -5,12 +5,8 @@ namespace Innmind\Reflection;
 
 use Innmind\Reflection\Exception\InvalidArgumentException;
 use Innmind\Reflection\Exception\LogicException;
-use Innmind\Reflection\InjectionStrategy\SetterStrategy;
-use Innmind\Reflection\InjectionStrategy\NamedMethodStrategy;
-use Innmind\Reflection\InjectionStrategy\ReflectionStrategy;
 use Innmind\Immutable\Collection;
 use Innmind\Immutable\CollectionInterface;
-use Innmind\Immutable\TypedCollection;
 use Innmind\Immutable\TypedCollectionInterface;
 
 class ReflectionObject
