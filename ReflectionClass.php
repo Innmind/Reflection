@@ -109,7 +109,7 @@ class ReflectionClass
         //avoid injecting the properties already used in the constructor
         $properties = $this
             ->properties
-            ->filter(function ($value, $property) use ($parameters) {
+            ->filter(function($value, $property) use ($parameters) {
                 return !$parameters->contains($property);
             });
         $refl = new ReflectionObject(
