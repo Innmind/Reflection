@@ -5,6 +5,7 @@ namespace Innmind\Reflection\ExtractionStrategy;
 
 use Innmind\Reflection\ExtractionStrategyInterface;
 use Innmind\Reflection\Exception\LogicException;
+use Innmind\Immutable\StringPrimitive;
 
 class NamedMethodStrategy implements ExtractionStrategyInterface
 {
@@ -14,6 +15,10 @@ class NamedMethodStrategy implements ExtractionStrategyInterface
     public function supports($object, string $property): bool
     {
         $refl = new \ReflectionObject($object);
+
+        $property = (string) (new StringPrimitive($property))
+            ->camelize()
+            ->lcfirst();
 
         return $refl->hasMethod($property) &&
             $refl->getMethod($property)->getNumberOfRequiredParameters() === 0;
@@ -27,6 +32,10 @@ class NamedMethodStrategy implements ExtractionStrategyInterface
         if (!$this->supports($object, $property)) {
             throw new LogicException;
         }
+
+        $property = (string) (new StringPrimitive($property))
+            ->camelize()
+            ->lcfirst();
 
         return $object->$property();
     }

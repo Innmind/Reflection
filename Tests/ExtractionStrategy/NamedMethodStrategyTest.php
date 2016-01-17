@@ -17,6 +17,11 @@ class NamedMethodStrategyTest extends \PHPUnit_Framework_TestCase
 
             }
 
+            public function someLongProperty()
+            {
+
+            }
+
             public function b($b)
             {
 
@@ -26,6 +31,7 @@ class NamedMethodStrategyTest extends \PHPUnit_Framework_TestCase
         $s = new NamedMethodStrategy;
 
         $this->assertTrue($s->supports($o, 'a'));
+        $this->assertTrue($s->supports($o, 'some_long_property'));
         $this->assertFalse($s->supports($o, 'b'));
         $this->assertFalse($s->supports($o, 'c'));
     }
@@ -48,9 +54,15 @@ class NamedMethodStrategyTest extends \PHPUnit_Framework_TestCase
             {
                 return 42;
             }
+
+            public function someLongProperty()
+            {
+                return 66;
+            }
         };
         $s = new NamedMethodStrategy;
 
         $this->assertSame(42, $s->extract($o, 'a'));
+        $this->assertSame(66, $s->extract($o, 'some_long_property'));
     }
 }
