@@ -7,6 +7,7 @@ use Innmind\Reflection\InjectionStrategy\SetterStrategy;
 use Innmind\Reflection\InjectionStrategy\NamedMethodStrategy;
 use Innmind\Reflection\InjectionStrategy\ReflectionStrategy;
 use Innmind\Immutable\TypedCollection;
+use Innmind\Immutable\TypedCollectionInterface;
 
 final class InjectionStrategies
 {
@@ -15,9 +16,9 @@ final class InjectionStrategies
     /**
      * Return a collection of the default strategies available
      *
-     * @return TypedCollection
+     * @return TypedCollectionInterface
      */
-    public static function defaults(): TypedCollection
+    public static function defaults(): TypedCollectionInterface
     {
         if (self::$defaults !== null) {
             return self::$defaults;
