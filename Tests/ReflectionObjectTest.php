@@ -8,7 +8,13 @@ use Innmind\Reflection\InjectionStrategyInterface;
 use Innmind\Reflection\InjectionStrategy\SetterStrategy;
 use Innmind\Reflection\InjectionStrategy\NamedMethodStrategy;
 use Innmind\Reflection\InjectionStrategy\ReflectionStrategy;
+use Innmind\Reflection\ExtractionStrategyInterface;
+use Innmind\Reflection\ExtractionStrategy\GetterStrategy;
+use Innmind\Reflection\ExtractionStrategy\NamedMethodStrategy as ENamedMethodStrategy;
+use Innmind\Reflection\ExtractionStrategy\ReflectionStrategy as EReflectionStrategy;
 use Innmind\Immutable\TypedCollection;
+use Innmind\Immutable\TypedCollectionInterface;
+use Innmind\Immutable\CollectionInterface;
 
 class ReflectionObjectTest extends \PHPUnit_Framework_TestCase
 {
@@ -159,6 +165,7 @@ class ReflectionObjectTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf(SetterStrategy::class, $s[0]);
         $this->assertInstanceOf(NamedMethodStrategy::class, $s[1]);
         $this->assertInstanceOf(ReflectionStrategy::class, $s[2]);
+        $this->assertSame(3, $s->count());
 
         $refl = new ReflectionObject(
             new \stdClass,
@@ -169,5 +176,71 @@ class ReflectionObjectTest extends \PHPUnit_Framework_TestCase
             )
         );
         $this->assertSame($s, $refl->getInjectionStrategies()[0]);
+        $this->assertSame(1, $refl->getInjectionStrategies()->count());
+    }
+
+    public function testGetExtractionStrategies()
+    {
+        $refl = new ReflectionObject(new \stdClass);
+
+        $s = $refl->getExtractionStrategies();
+        $this->assertInstanceOf(TypedCollectionInterface::class, $s);
+        $this->assertSame(ExtractionStrategyInterface::class, $s->getType());
+        $this->assertInstanceOf(GetterStrategy::class, $s[0]);
+        $this->assertInstanceOf(ENamedMethodStrategy::class, $s[1]);
+        $this->assertInstanceOf(EReflectionStrategy::class, $s[2]);
+        $this->assertSame(3, $s->count());
+
+        $refl = new ReflectionObject(
+            new \stdClass,
+            null,
+            null,
+            new TypedCollection(
+                ExtractionStrategyInterface::class,
+                [$g = new GetterStrategy]
+            )
+        );
+
+        $s = $refl->getExtractionStrategies();
+        $this->assertInstanceOf(TypedCollectionInterface::class, $s);
+        $this->assertSame(ExtractionStrategyInterface::class, $s->getType());
+        $this->assertInstanceOf(GetterStrategy::class, $s[0]);
+        $this->assertSame(1, $s->count());
+    }
+
+    public function testExtract()
+    {
+        $o = new class {
+            public $a = 24;
+
+            public function getB()
+            {
+                return 42;
+            }
+
+            public function c()
+            {
+                return 66;
+            }
+        };
+        $refl = new ReflectionObject($o);
+
+        $values = $refl->extract(['a', 'b', 'c']);
+
+        $this->assertInstanceOf(CollectionInterface::class, $values);
+        $this->assertSame(3, $values->count());
+        $this->assertSame(
+            ['a' => 24, 'b' => 42, 'c' => 66],
+            $values->toPrimitive()
+        );
+    }
+
+    /**
+     * @expectedException Innmind\Reflection\Exception\LogicException
+     * @expectedExceptionMessage Property "a" cannot be extracted
+     */
+    public function testThrowWhenCannotExtractProperty()
+    {
+        (new ReflectionObject(new \stdClass))->extract(['a']);
     }
 }

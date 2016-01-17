@@ -18,15 +18,21 @@ class ReflectionObject
     public function __construct(
         $object,
         CollectionInterface $properties = null,
-        TypedCollectionInterface $injectionStrategies = null
+        TypedCollectionInterface $injectionStrategies = null,
+        TypedCollectionInterface $extractionStrategies = null
     ) {
         if (!is_object($object)) {
             throw new InvalidArgumentException;
         }
 
         $injectionStrategies = $injectionStrategies ?? InjectionStrategies::defaults();
+        $extractionStrategies = $extractionStrategies ?? ExtractionStrategies::defaults();
 
         if ($injectionStrategies->getType() !== InjectionStrategyInterface::class) {
+            throw new InvalidArgumentException;
+        }
+
+        if ($extractionStrategies->getType() !== ExtractionStrategyInterface::class) {
             throw new InvalidArgumentException;
         }
 
@@ -34,6 +40,7 @@ class ReflectionObject
 
         $this->properties = $properties ?? new Collection([]);
         $this->injectionStrategies = $injectionStrategies;
+        $this->extractionStrategies = $extractionStrategies;
     }
 
     /**
@@ -49,7 +56,8 @@ class ReflectionObject
         return new self(
             $this->object,
             $this->properties->set($name, $value),
-            $this->injectionStrategies
+            $this->injectionStrategies,
+            $this->extractionStrategies
         );
     }
 
@@ -65,7 +73,8 @@ class ReflectionObject
         return new self(
             $this->object,
             $this->properties->merge(new Collection($properties)),
-            $this->injectionStrategies
+            $this->injectionStrategies,
+            $this->extractionStrategies
         );
     }
 
@@ -90,6 +99,16 @@ class ReflectionObject
     }
 
     /**
+     * Return the list of extraction strategies used
+     *
+     * @return TypedCollectionInterface
+     */
+    public function getExtractionStrategies(): TypedCollectionInterface
+    {
+        return $this->extractionStrategies;
+    }
+
+    /**
      * Return the object with the list of properties set on it
      *
      * @return object
@@ -101,6 +120,24 @@ class ReflectionObject
         }
 
         return $this->object;
+    }
+
+    /**
+     * Extract the given list of properties
+     *
+     * @param array $properties
+     *
+     * @return CollectionInterface
+     */
+    public function extract(array $properties): CollectionInterface
+    {
+        $values = [];
+
+        foreach ($properties as $property) {
+            $values[$property] = $this->extractProperty($property);
+        }
+
+        return new Collection($values);
     }
 
     /**
@@ -124,6 +161,27 @@ class ReflectionObject
         throw new LogicException(sprintf(
             'Property "%s" cannot be injected',
             $key
+        ));
+    }
+
+    /**
+     * Extract the given property out of the object
+     *
+     * @param string $property
+     *
+     * @return mixed
+     */
+    private function extractProperty(string $property)
+    {
+        foreach ($this->extractionStrategies as $strategy) {
+            if ($strategy->supports($this->object, $property)) {
+                return $strategy->extract($this->object, $property);
+            }
+        }
+
+        throw new LogicException(sprintf(
+            'Property "%s" cannot be extracted',
+            $property
         ));
     }
 }
