@@ -14,6 +14,7 @@ class ReflectionObject
     private $object;
     private $properties;
     private $injectionStrategies;
+    private $extractionStrategies;
 
     public function __construct(
         $object,
