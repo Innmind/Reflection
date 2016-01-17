@@ -22,7 +22,9 @@ class GetterStrategy implements ExtractionStrategyInterface
     public function supports($object, string $property): bool
     {
         $refl = new \ReflectionObject($object);
-        $getter = (string) $this->getter->sprintf(ucfirst($property));
+        $getter = (string) $this->getter->sprintf(
+            (string) (new StringPrimitive($property))->camelize()
+        );
 
         return $refl->hasMethod($getter) &&
             $refl->getMethod($getter)->getNumberOfRequiredParameters() === 0;
@@ -37,7 +39,9 @@ class GetterStrategy implements ExtractionStrategyInterface
             throw new LogicException;
         }
 
-        $getter = (string) $this->getter->sprintf(ucfirst($property));
+        $getter = (string) $this->getter->sprintf(
+            (string) (new StringPrimitive($property))->camelize()
+        );
 
         return $object->$getter();
     }

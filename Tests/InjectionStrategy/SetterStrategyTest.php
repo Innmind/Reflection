@@ -24,9 +24,15 @@ class SetterStrategyTest extends \PHPUnit_Framework_TestCase
             {
                 return $this->b;
             }
+
+            public function setSomeLongProperty($foo)
+            {
+
+            }
         };
 
         $this->assertTrue($s->supports($o, 'b', null));
+        $this->assertTrue($s->supports($o, 'some_long_property', null));
         $this->assertFalse($s->supports($o, 'a', null));
     }
 
@@ -35,6 +41,7 @@ class SetterStrategyTest extends \PHPUnit_Framework_TestCase
         $s = new SetterStrategy;
         $o = new class {
             private $b;
+            private $foo;
 
             public function setB($b)
             {
@@ -45,10 +52,22 @@ class SetterStrategyTest extends \PHPUnit_Framework_TestCase
             {
                 return $this->b;
             }
+
+            public function setSomeLongProperty($foo)
+            {
+                $this->foo = $foo;
+            }
+
+            public function getFoo()
+            {
+                return $this->foo;
+            }
         };
 
         $this->assertSame(null, $s->inject($o, 'b', 'bar'));
         $this->assertSame('bar', $o->getB());
+        $this->assertSame(null, $s->inject($o, 'some_long_property', 42));
+        $this->assertSame(42, $o->getFoo());
     }
 
     /**

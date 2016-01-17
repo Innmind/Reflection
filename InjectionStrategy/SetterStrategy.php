@@ -24,7 +24,9 @@ class SetterStrategy implements InjectionStrategyInterface
         $refl = new \ReflectionObject($object);
 
         return $refl->hasMethod(
-            (string) $this->setter->sprintf(ucfirst($property))
+            (string) $this->setter->sprintf(
+                (string) (new StringPrimitive($property))->camelize()
+            )
         );
     }
 
@@ -37,7 +39,9 @@ class SetterStrategy implements InjectionStrategyInterface
             throw new LogicException;
         }
 
-        $setter = (string) $this->setter->sprintf(ucfirst($property));
+        $setter = (string) $this->setter->sprintf(
+            (string) (new StringPrimitive($property))->camelize()
+        );
         $object->$setter($value);
     }
 }
