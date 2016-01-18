@@ -3,8 +3,8 @@ declare(strict_types = 1);
 
 namespace Innmind\Reflection\Tests;
 
-use Innmind\Reflection\InjectionStrategies;
-use Innmind\Reflection\InjectionStrategyInterface;
+use Innmind\Reflection\InjectionStrategy\InjectionStrategies;
+use Innmind\Reflection\InjectionStrategy\InjectionStrategyInterface;
 use Innmind\Reflection\InjectionStrategy\SetterStrategy;
 use Innmind\Reflection\InjectionStrategy\NamedMethodStrategy;
 use Innmind\Reflection\InjectionStrategy\ReflectionStrategy;

@@ -1,11 +1,8 @@
 <?php
 declare(strict_types = 1);
 
-namespace Innmind\Reflection;
+namespace Innmind\Reflection\ExtractionStrategy;
 
-use Innmind\Reflection\ExtractionStrategy\GetterStrategy;
-use Innmind\Reflection\ExtractionStrategy\NamedMethodStrategy;
-use Innmind\Reflection\ExtractionStrategy\ReflectionStrategy;
 use Innmind\Immutable\TypedCollection;
 use Innmind\Immutable\TypedCollectionInterface;
 

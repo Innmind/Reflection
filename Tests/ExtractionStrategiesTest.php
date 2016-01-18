@@ -3,8 +3,8 @@ declare(strict_types = 1);
 
 namespace Innmind\Reflection\Tests;
 
-use Innmind\Reflection\ExtractionStrategies;
-use Innmind\Reflection\ExtractionStrategyInterface;
+use Innmind\Reflection\ExtractionStrategy\ExtractionStrategies;
+use Innmind\Reflection\ExtractionStrategy\ExtractionStrategyInterface;
 use Innmind\Reflection\ExtractionStrategy\GetterStrategy;
 use Innmind\Reflection\ExtractionStrategy\NamedMethodStrategy;
 use Innmind\Reflection\ExtractionStrategy\ReflectionStrategy;

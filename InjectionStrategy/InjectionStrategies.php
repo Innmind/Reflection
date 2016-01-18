@@ -1,11 +1,8 @@
 <?php
 declare(strict_types = 1);
 
-namespace Innmind\Reflection;
+namespace Innmind\Reflection\InjectionStrategy;
 
-use Innmind\Reflection\InjectionStrategy\SetterStrategy;
-use Innmind\Reflection\InjectionStrategy\NamedMethodStrategy;
-use Innmind\Reflection\InjectionStrategy\ReflectionStrategy;
 use Innmind\Immutable\TypedCollection;
 use Innmind\Immutable\TypedCollectionInterface;
 

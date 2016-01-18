@@ -4,6 +4,8 @@ declare(strict_types = 1);
 namespace Innmind\Reflection;
 
 use Innmind\Reflection\Exception\InvalidArgumentException;
+use Innmind\Reflection\InjectionStrategy\InjectionStrategies;
+use Innmind\Reflection\InjectionStrategy\InjectionStrategyInterface;
 use Innmind\Reflection\Instanciator\ReflectionInstanciator;
 use Innmind\Immutable\Collection;
 use Innmind\Immutable\CollectionInterface;

@@ -8,6 +8,10 @@ use Innmind\Reflection\Exception\LogicException;
 use Innmind\Immutable\Collection;
 use Innmind\Immutable\CollectionInterface;
 use Innmind\Immutable\TypedCollectionInterface;
+use Innmind\Reflection\ExtractionStrategy\ExtractionStrategies;
+use Innmind\Reflection\ExtractionStrategy\ExtractionStrategyInterface;
+use Innmind\Reflection\InjectionStrategy\InjectionStrategies;
+use Innmind\Reflection\InjectionStrategy\InjectionStrategyInterface;
 
 class ReflectionObject
 {
