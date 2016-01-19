@@ -3,15 +3,14 @@ declare(strict_types = 1);
 
 namespace Innmind\Reflection;
 
-use Innmind\Reflection\Exception\InvalidArgumentException;
-use Innmind\Reflection\Exception\LogicException;
 use Innmind\Immutable\Collection;
 use Innmind\Immutable\CollectionInterface;
 use Innmind\Immutable\TypedCollectionInterface;
+use Innmind\Reflection\Exception\InvalidArgumentException;
+use Innmind\Reflection\ExtractionStrategy\DefaultExtractionStrategies;
 use Innmind\Reflection\ExtractionStrategy\ExtractionStrategies;
-use Innmind\Reflection\ExtractionStrategy\ExtractionStrategyInterface;
+use Innmind\Reflection\InjectionStrategy\DefaultInjectionStrategies;
 use Innmind\Reflection\InjectionStrategy\InjectionStrategies;
-use Innmind\Reflection\InjectionStrategy\InjectionStrategyInterface;
 
 class ReflectionObject
 {
@@ -23,29 +22,19 @@ class ReflectionObject
     public function __construct(
         $object,
         CollectionInterface $properties = null,
-        TypedCollectionInterface $injectionStrategies = null,
-        TypedCollectionInterface $extractionStrategies = null
+        InjectionStrategies $injectionStrategies = null,
+        ExtractionStrategies $extractionStrategies = null
     ) {
         if (!is_object($object)) {
             throw new InvalidArgumentException;
         }
 
-        $injectionStrategies = $injectionStrategies ?? InjectionStrategies::defaults();
-        $extractionStrategies = $extractionStrategies ?? ExtractionStrategies::defaults();
-
-        if ($injectionStrategies->getType() !== InjectionStrategyInterface::class) {
-            throw new InvalidArgumentException;
-        }
-
-        if ($extractionStrategies->getType() !== ExtractionStrategyInterface::class) {
-            throw new InvalidArgumentException;
-        }
+        $this->injectionStrategies = $injectionStrategies ?? new DefaultInjectionStrategies();
+        $this->extractionStrategies = $extractionStrategies ?? new DefaultExtractionStrategies();
 
         $this->object = $object;
 
         $this->properties = $properties ?? new Collection([]);
-        $this->injectionStrategies = $injectionStrategies;
-        $this->extractionStrategies = $extractionStrategies;
     }
 
     /**
@@ -96,9 +85,9 @@ class ReflectionObject
     /**
      * Return the list of injection strategies used
      *
-     * @return TypedCollectionInterface
+     * @return InjectionStrategies
      */
-    public function getInjectionStrategies(): TypedCollectionInterface
+    public function getInjectionStrategies(): InjectionStrategies
     {
         return $this->injectionStrategies;
     }
@@ -106,9 +95,9 @@ class ReflectionObject
     /**
      * Return the list of extraction strategies used
      *
-     * @return TypedCollectionInterface
+     * @return ExtractionStrategies
      */
-    public function getExtractionStrategies(): TypedCollectionInterface
+    public function getExtractionStrategies(): ExtractionStrategies
     {
         return $this->extractionStrategies;
     }
@@ -149,24 +138,16 @@ class ReflectionObject
      * Inject the given key/value pair into the object
      *
      * @param string $key
-     * @param mixed $value
+     * @param mixed  $value
      *
      * @return void
      */
     private function inject(string $key, $value)
     {
-        foreach ($this->injectionStrategies as $strategy) {
-            if ($strategy->supports($this->object, $key, $value)) {
-                $strategy->inject($this->object, $key, $value);
-
-                return;
-            }
-        }
-
-        throw new LogicException(sprintf(
-            'Property "%s" cannot be injected',
-            $key
-        ));
+        $this
+            ->injectionStrategies
+            ->get($this->object, $key, $value)
+            ->inject($this->object, $key, $value);
     }
 
     /**
@@ -178,15 +159,9 @@ class ReflectionObject
      */
     private function extractProperty(string $property)
     {
-        foreach ($this->extractionStrategies as $strategy) {
-            if ($strategy->supports($this->object, $property)) {
-                return $strategy->extract($this->object, $property);
-            }
-        }
-
-        throw new LogicException(sprintf(
-            'Property "%s" cannot be extracted',
-            $property
-        ));
+        return $this
+            ->extractionStrategies
+            ->get($this->object,$property)
+            ->extract($this->object,$property);
     }
 }

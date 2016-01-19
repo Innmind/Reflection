@@ -1,20 +1,22 @@
 <?php
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace Innmind\Reflection\Tests;
 
-use Innmind\Reflection\ReflectionObject;
-use Innmind\Reflection\InjectionStrategy\InjectionStrategyInterface;
-use Innmind\Reflection\InjectionStrategy\SetterStrategy;
-use Innmind\Reflection\InjectionStrategy\NamedMethodStrategy;
-use Innmind\Reflection\InjectionStrategy\ReflectionStrategy;
+use Innmind\Immutable\CollectionInterface;
+use Innmind\Immutable\TypedCollection;
+use Innmind\Immutable\TypedCollectionInterface;
+use Innmind\Reflection\ExtractionStrategy\ExtractionStrategies;
 use Innmind\Reflection\ExtractionStrategy\ExtractionStrategyInterface;
 use Innmind\Reflection\ExtractionStrategy\GetterStrategy;
 use Innmind\Reflection\ExtractionStrategy\NamedMethodStrategy as ENamedMethodStrategy;
 use Innmind\Reflection\ExtractionStrategy\ReflectionStrategy as EReflectionStrategy;
-use Innmind\Immutable\TypedCollection;
-use Innmind\Immutable\TypedCollectionInterface;
-use Innmind\Immutable\CollectionInterface;
+use Innmind\Reflection\InjectionStrategy\InjectionStrategies;
+use Innmind\Reflection\InjectionStrategy\InjectionStrategyInterface;
+use Innmind\Reflection\InjectionStrategy\NamedMethodStrategy;
+use Innmind\Reflection\InjectionStrategy\ReflectionStrategy;
+use Innmind\Reflection\InjectionStrategy\SetterStrategy;
+use Innmind\Reflection\ReflectionObject;
 
 class ReflectionObjectTest extends \PHPUnit_Framework_TestCase
 {
@@ -54,7 +56,8 @@ class ReflectionObjectTest extends \PHPUnit_Framework_TestCase
 
     public function testBuild()
     {
-        $o = new class() {
+        $o = new class()
+        {
             private $a;
             protected $b;
             private $c;
@@ -90,7 +93,8 @@ class ReflectionObjectTest extends \PHPUnit_Framework_TestCase
 
     public function testBuildWithProperties()
     {
-        $o = new class() {
+        $o = new class()
+        {
             private $a;
             protected $b;
             private $c;
@@ -115,14 +119,18 @@ class ReflectionObjectTest extends \PHPUnit_Framework_TestCase
         $this->assertSame([null, null, null, null], $o->dump());
 
         (new ReflectionObject($o))
-            ->withProperties([
-                'a' => 1,
-                'b' => 2
-            ])
-            ->withProperties([
-                'c' => 3,
-                'd' => 4,
-            ])
+            ->withProperties(
+                [
+                    'a' => 1,
+                    'b' => 2,
+                ]
+            )
+            ->withProperties(
+                [
+                    'c' => 3,
+                    'd' => 4,
+                ]
+            )
             ->buildObject();
 
         $this->assertSame([1, 2, 3, 4], $o->dump());
@@ -145,7 +153,8 @@ class ReflectionObjectTest extends \PHPUnit_Framework_TestCase
      */
     public function testThrowWhenNameMethodDoesntHaveParameter()
     {
-        $o = new class() {
+        $o = new class()
+        {
             public function a()
             {
                 //pass
@@ -160,30 +169,40 @@ class ReflectionObjectTest extends \PHPUnit_Framework_TestCase
     {
         $refl = new ReflectionObject(new \stdClass);
 
-        $s = $refl->getInjectionStrategies();
+        $s = $refl->getInjectionStrategies()->all();
         $this->assertSame(InjectionStrategyInterface::class, $s->getType());
         $this->assertInstanceOf(SetterStrategy::class, $s[0]);
         $this->assertInstanceOf(NamedMethodStrategy::class, $s[1]);
         $this->assertInstanceOf(ReflectionStrategy::class, $s[2]);
         $this->assertSame(3, $s->count());
 
+        $testInjectionStrategies = $this->getMockBuilder(InjectionStrategies::class)
+            ->getMock();
+        $testInjectionStrategies->expects($this->any())
+            ->method('all')
+            ->will(
+                $this->returnValue(
+                    new TypedCollection(
+                        InjectionStrategyInterface::class,
+                        [$s = new ReflectionStrategy]
+                    )
+                )
+            );
+
         $refl = new ReflectionObject(
             new \stdClass,
             null,
-            new TypedCollection(
-                InjectionStrategyInterface::class,
-                [$s = new ReflectionStrategy]
-            )
+            $testInjectionStrategies
         );
-        $this->assertSame($s, $refl->getInjectionStrategies()[0]);
-        $this->assertSame(1, $refl->getInjectionStrategies()->count());
+        $this->assertSame($s, $refl->getInjectionStrategies()->all()[0]);
+        $this->assertSame(1, $refl->getInjectionStrategies()->all()->count());
     }
 
     public function testGetExtractionStrategies()
     {
         $refl = new ReflectionObject(new \stdClass);
 
-        $s = $refl->getExtractionStrategies();
+        $s = $refl->getExtractionStrategies()->all();
         $this->assertInstanceOf(TypedCollectionInterface::class, $s);
         $this->assertSame(ExtractionStrategyInterface::class, $s->getType());
         $this->assertInstanceOf(GetterStrategy::class, $s[0]);
@@ -191,17 +210,27 @@ class ReflectionObjectTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf(EReflectionStrategy::class, $s[2]);
         $this->assertSame(3, $s->count());
 
+        $testExtractionStrategies = $this->getMockBuilder(ExtractionStrategies::class)
+            ->getMock();
+        $testExtractionStrategies->expects($this->any())
+            ->method('all')
+            ->will(
+                $this->returnValue(
+                    new TypedCollection(
+                        ExtractionStrategyInterface::class,
+                        [$g = new GetterStrategy]
+                    )
+                )
+            );
+
         $refl = new ReflectionObject(
             new \stdClass,
             null,
             null,
-            new TypedCollection(
-                ExtractionStrategyInterface::class,
-                [$g = new GetterStrategy]
-            )
+            $testExtractionStrategies
         );
 
-        $s = $refl->getExtractionStrategies();
+        $s = $refl->getExtractionStrategies()->all();
         $this->assertInstanceOf(TypedCollectionInterface::class, $s);
         $this->assertSame(ExtractionStrategyInterface::class, $s->getType());
         $this->assertInstanceOf(GetterStrategy::class, $s[0]);
@@ -210,7 +239,8 @@ class ReflectionObjectTest extends \PHPUnit_Framework_TestCase
 
     public function testExtract()
     {
-        $o = new class {
+        $o = new class
+        {
             public $a = 24;
 
             public function getB()

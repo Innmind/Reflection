@@ -3,9 +3,8 @@ declare(strict_types = 1);
 
 namespace Innmind\Reflection;
 
-use Innmind\Reflection\Exception\InvalidArgumentException;
+use Innmind\Reflection\InjectionStrategy\DefaultInjectionStrategies;
 use Innmind\Reflection\InjectionStrategy\InjectionStrategies;
-use Innmind\Reflection\InjectionStrategy\InjectionStrategyInterface;
 use Innmind\Reflection\Instanciator\ReflectionInstanciator;
 use Innmind\Immutable\Collection;
 use Innmind\Immutable\CollectionInterface;
@@ -21,14 +20,10 @@ class ReflectionClass
     public function __construct(
         string $class,
         CollectionInterface $properties = null,
-        TypedCollectionInterface $injectionStrategies = null,
+        InjectionStrategies $injectionStrategies = null,
         InstanciatorInterface $instanciator = null
     ) {
-        $injectionStrategies = $injectionStrategies ?? InjectionStrategies::defaults();
-
-        if ($injectionStrategies->getType() !== InjectionStrategyInterface::class) {
-            throw new InvalidArgumentException;
-        }
+        $injectionStrategies = $injectionStrategies ?? new DefaultInjectionStrategies();
 
         $this->class = $class;
         $this->properties = $properties ?? new Collection([]);
@@ -84,9 +79,9 @@ class ReflectionClass
     /**
      * Return the list of injection strategies used
      *
-     * @return TypedCollectionInterface
+     * @return InjectionStrategies
      */
-    public function getInjectionStrategies(): TypedCollectionInterface
+    public function getInjectionStrategies(): InjectionStrategies
     {
         return $this->injectionStrategies;
     }

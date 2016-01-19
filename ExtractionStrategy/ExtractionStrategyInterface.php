@@ -3,6 +3,8 @@ declare(strict_types = 1);
 
 namespace Innmind\Reflection\ExtractionStrategy;
 
+use Innmind\Reflection\Exception\LogicException;
+
 interface ExtractionStrategyInterface
 {
     /**

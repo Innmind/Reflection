@@ -4,32 +4,30 @@ declare(strict_types = 1);
 namespace Innmind\Reflection\InjectionStrategy;
 
 use Innmind\Immutable\TypedCollection;
-use Innmind\Immutable\TypedCollectionInterface;
 
-final class InjectionStrategies
+/**
+ * Repository of InjectionStrategies
+ *
+ * @author Hugues Maignol <hugues.maignol@kitpages.fr>
+ */
+interface InjectionStrategies
 {
-    private static $defaults;
 
     /**
-     * Return a collection of the default strategies available
+     * All the InjectionStrategies.
      *
-     * @return TypedCollectionInterface
+     * @return TypedCollection
      */
-    public static function defaults(): TypedCollectionInterface
-    {
-        if (self::$defaults !== null) {
-            return self::$defaults;
-        }
+    public function all() : TypedCollection;
 
-        self::$defaults = new TypedCollection(
-            InjectionStrategyInterface::class,
-            [
-                new SetterStrategy,
-                new NamedMethodStrategy,
-                new ReflectionStrategy,
-            ]
-        );
-
-        return self::$defaults;
-    }
+    /**
+     * Returns the relevant injection strategy for the given object, key and value.
+     *
+     * @param mixed  $object
+     * @param string $key
+     * @param mixed  $value
+     *
+     * @return InjectionStrategyInterface
+     */
+    public function get($object, string $key, $value) : InjectionStrategyInterface;
 }

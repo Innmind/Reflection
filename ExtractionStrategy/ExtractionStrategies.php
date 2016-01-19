@@ -4,32 +4,29 @@ declare(strict_types = 1);
 namespace Innmind\Reflection\ExtractionStrategy;
 
 use Innmind\Immutable\TypedCollection;
-use Innmind\Immutable\TypedCollectionInterface;
 
-final class ExtractionStrategies
+/**
+ * Repository of extractionStrategies
+ *
+ * @author Hugues Maignol <hugues.maignol@kitpages.fr>
+ */
+interface ExtractionStrategies
 {
-    private static $defaults;
+    /**
+     * All the ExtractionStrategies
+     *
+     * @return TypedCollection
+     */
+    public function all() : TypedCollection;
 
     /**
-     * Return a collection of the default strategies available
+     * Get the relevant ExctactionStrategyInterface for the given object and key.
      *
-     * @return TypedCollectionInterface
+     * @param  mixed $object
+     * @param string $key
+     *
+     * @return ExtractionStrategyInterface
+     *
      */
-    public static function defaults(): TypedCollectionInterface
-    {
-        if (self::$defaults !== null) {
-            return self::$defaults;
-        }
-
-        self::$defaults = new TypedCollection(
-            ExtractionStrategyInterface::class,
-            [
-                new GetterStrategy,
-                new NamedMethodStrategy,
-                new ReflectionStrategy,
-            ]
-        );
-
-        return self::$defaults;
-    }
+    public function get($object, string $key) : ExtractionStrategyInterface;
 }
