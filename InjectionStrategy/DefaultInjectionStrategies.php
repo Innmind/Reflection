@@ -3,6 +3,7 @@
 namespace Innmind\Reflection\InjectionStrategy;
 
 use Innmind\Immutable\TypedCollection;
+use Innmind\Immutable\TypedCollectionInterface;
 use Innmind\Reflection\Cache\StrategyCachingCapabilities;
 use Innmind\Reflection\Exception\LogicException;
 
@@ -17,7 +18,7 @@ final class DefaultInjectionStrategies implements InjectionStrategies
 
     private $strategies;
 
-    public function all() : TypedCollection
+    public function all(): TypedCollectionInterface
     {
         if ($this->strategies == null) {
             return $this->strategies = new TypedCollection(
@@ -33,7 +34,7 @@ final class DefaultInjectionStrategies implements InjectionStrategies
         return $this->strategies;
     }
 
-    public function get($object, string $key, $value) : InjectionStrategyInterface
+    public function get($object, string $key, $value): InjectionStrategyInterface
     {
         $strategy = $this->getCachedStrategy(get_class($object), $key);
         if (null !== $strategy) {

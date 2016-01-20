@@ -3,6 +3,7 @@
 namespace Innmind\Reflection\ExtractionStrategy;
 
 use Innmind\Immutable\TypedCollection;
+use Innmind\Immutable\TypedCollectionInterface;
 use Innmind\Reflection\Cache\StrategyCachingCapabilities;
 use Innmind\Reflection\Exception\LogicException;
 
@@ -18,7 +19,7 @@ final class DefaultExtractionStrategies implements ExtractionStrategies
 
     private $strategies;
 
-    public function all() : TypedCollection
+    public function all(): TypedCollectionInterface
     {
         if ($this->strategies == null) {
             return $this->strategies = new TypedCollection(
@@ -34,7 +35,7 @@ final class DefaultExtractionStrategies implements ExtractionStrategies
         return $this->strategies;
     }
 
-    public function get($object, string $key) : ExtractionStrategyInterface
+    public function get($object, string $key): ExtractionStrategyInterface
     {
         $strategy = $this->getCachedStrategy(get_class($object), $key);
         if (null !== $strategy) {

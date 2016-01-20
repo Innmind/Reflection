@@ -3,7 +3,7 @@ declare(strict_types = 1);
 
 namespace Innmind\Reflection\InjectionStrategy;
 
-use Innmind\Immutable\TypedCollection;
+use Innmind\Immutable\TypedCollectionInterface;
 
 /**
  * Repository of InjectionStrategies
@@ -16,9 +16,9 @@ interface InjectionStrategies
     /**
      * All the InjectionStrategies.
      *
-     * @return TypedCollection
+     * @return TypedCollectionInterface
      */
-    public function all() : TypedCollection;
+    public function all(): TypedCollectionInterface;
 
     /**
      * Returns the relevant injection strategy for the given object, key and value.
@@ -29,5 +29,5 @@ interface InjectionStrategies
      *
      * @return InjectionStrategyInterface
      */
-    public function get($object, string $key, $value) : InjectionStrategyInterface;
+    public function get($object, string $key, $value): InjectionStrategyInterface;
 }

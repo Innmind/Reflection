@@ -3,7 +3,7 @@ declare(strict_types = 1);
 
 namespace Innmind\Reflection\ExtractionStrategy;
 
-use Innmind\Immutable\TypedCollection;
+use Innmind\Immutable\TypedCollectionInterface;
 
 /**
  * Repository of extractionStrategies
@@ -15,9 +15,9 @@ interface ExtractionStrategies
     /**
      * All the ExtractionStrategies
      *
-     * @return TypedCollection
+     * @return TypedCollectionInterface
      */
-    public function all() : TypedCollection;
+    public function all(): TypedCollectionInterface;
 
     /**
      * Get the relevant ExctactionStrategyInterface for the given object and key.
@@ -28,5 +28,5 @@ interface ExtractionStrategies
      * @return ExtractionStrategyInterface
      *
      */
-    public function get($object, string $key) : ExtractionStrategyInterface;
+    public function get($object, string $key): ExtractionStrategyInterface;
 }

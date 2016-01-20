@@ -3,7 +3,7 @@
 namespace Innmind\Reflection\Cache;
 
 /**
- * Strategy caching based on object class and key of method/property
+ * Strategy caching based on object class and key of method/property.
  *
  * @author Hugues Maignol <hugues@hmlb.frr>
  */
@@ -27,11 +27,11 @@ trait StrategyCachingCapabilities
     /**
      * @param string $class
      * @param string $key
-     * @param        $strategy
+     * @param mixed  $strategy
      *
      * @return self
      */
-    private function setCachedStrategy(string $class, string $key, $strategy)
+    private function setCachedStrategy(string $class, string $key, $strategy): self
     {
         self::$strategyCache[$class.'::'.$key] = $strategy;
 
@@ -46,9 +46,8 @@ trait StrategyCachingCapabilities
      *
      * @return string
      */
-    private function getCacheKey(string $class, string $key)
+    private function getCacheKey(string $class, string $key): string
     {
         return $class.'::'.$key;
     }
-
 }
