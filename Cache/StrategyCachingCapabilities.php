@@ -9,7 +9,7 @@ namespace Innmind\Reflection\Cache;
  */
 trait StrategyCachingCapabilities
 {
-    private $strategyCache = [];
+    private static $strategyCache = [];
 
     /**
      * The cached strategy for the given class and property.
@@ -21,7 +21,7 @@ trait StrategyCachingCapabilities
      */
     private function getCachedStrategy(string $class, string $key)
     {
-        return $this->strategyCache[$this->getCacheKey($class, $key)] ?? null;
+        return self::$strategyCache[$this->getCacheKey($class, $key)] ?? null;
     }
 
     /**
@@ -33,7 +33,7 @@ trait StrategyCachingCapabilities
      */
     private function setCachedStrategy(string $class, string $key, $strategy)
     {
-        $this->strategyCache[$class.'::'.$key] = $strategy;
+        self::$strategyCache[$class.'::'.$key] = $strategy;
 
         return $this;
     }
