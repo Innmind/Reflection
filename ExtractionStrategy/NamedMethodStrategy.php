@@ -3,7 +3,6 @@ declare(strict_types = 1);
 
 namespace Innmind\Reflection\ExtractionStrategy;
 
-use Innmind\Reflection\ExtractionStrategyInterface;
 use Innmind\Reflection\Exception\LogicException;
 use Innmind\Immutable\StringPrimitive;
 
