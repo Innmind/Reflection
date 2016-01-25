@@ -109,7 +109,7 @@ class ReflectionClass
         $properties = $this
             ->properties
             ->filter(
-                function ($value, $property) use ($parameters) {
+                function($value, $property) use ($parameters) {
                     return !$parameters->contains($property);
                 }
             );
