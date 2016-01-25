@@ -22,11 +22,12 @@ class StrategyCachingCapabilitiesTest extends \PHPUnit_Framework_TestCase
 
         //Strategy should not be already cached for CacheTestObject
         $cachedStrategies = $this->getCachedStrategies($extractionStrategies);
-        foreach($cachedStrategies as $key => $strategy){
+        foreach ($cachedStrategies as $key => $strategy) {
             $this->assertFalse($key == 'Innmind\Reflection\Tests\Cache\CacheTestObject::name');
         }
 
-        $firstTime = $reflection->extract(['name']);
+        $firstTime = $reflection->extract(['name'])['name'];
+        $this->assertEquals('unicorn', $firstTime);
 
         //Strategy should now be cached for CacheTestObject::name
         $cachedStrategies = $this->getCachedStrategies($extractionStrategies);
@@ -36,15 +37,20 @@ class StrategyCachingCapabilitiesTest extends \PHPUnit_Framework_TestCase
             $cachedStrategies['Innmind\Reflection\Tests\Cache\CacheTestObject::name']
         );
 
-        $secondTime = $reflection->extract(['name']);
+        $secondReflection = new ReflectionObject($object);
+        $secondExtractionStrategies = $secondReflection->getExtractionStrategies();
 
         //Strategy should still be cached for CacheTestObject::name and returned strategies should be equal.
-        $cachedStrategies = $this->getCachedStrategies($extractionStrategies);
-        $this->assertArrayHasKey('Innmind\Reflection\Tests\Cache\CacheTestObject::name', $cachedStrategies);
+        $secondCachedStrategies = $this->getCachedStrategies($secondExtractionStrategies);
+        $this->assertArrayHasKey('Innmind\Reflection\Tests\Cache\CacheTestObject::name', $secondCachedStrategies);
         $this->assertInstanceOf(
             ReflectionStrategy::class,
-            $cachedStrategies['Innmind\Reflection\Tests\Cache\CacheTestObject::name']
+            $secondCachedStrategies['Innmind\Reflection\Tests\Cache\CacheTestObject::name']
         );
+        $this->assertEquals($cachedStrategies, $secondCachedStrategies);
+
+        $secondTime = $secondReflection->extract(['name'])['name'];
+
         $this->assertEquals($firstTime, $secondTime);
     }
 
