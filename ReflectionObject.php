@@ -5,7 +5,6 @@ namespace Innmind\Reflection;
 
 use Innmind\Immutable\Collection;
 use Innmind\Immutable\CollectionInterface;
-use Innmind\Immutable\TypedCollectionInterface;
 use Innmind\Reflection\Exception\InvalidArgumentException;
 use Innmind\Reflection\ExtractionStrategy\DefaultExtractionStrategies;
 use Innmind\Reflection\ExtractionStrategy\ExtractionStrategies;
@@ -41,7 +40,7 @@ class ReflectionObject
      * Add a property that will be injected
      *
      * @param string $name
-     * @param mixed $value
+     * @param mixed  $value
      *
      * @return self
      */
@@ -161,7 +160,7 @@ class ReflectionObject
     {
         return $this
             ->extractionStrategies
-            ->get($this->object,$property)
-            ->extract($this->object,$property);
+            ->get($this->object, $property)
+            ->extract($this->object, $property);
     }
 }

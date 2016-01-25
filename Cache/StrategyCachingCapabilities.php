@@ -33,7 +33,7 @@ trait StrategyCachingCapabilities
      */
     private function setCachedStrategy(string $class, string $key, $strategy): self
     {
-        self::$strategyCache[$class.'::'.$key] = $strategy;
+        self::$strategyCache[$this->getCacheKey($class, $key)] = $strategy;
 
         return $this;
     }
@@ -48,6 +48,6 @@ trait StrategyCachingCapabilities
      */
     private function getCacheKey(string $class, string $key): string
     {
-        return $class.'::'.$key;
+        return $class . '::' . $key;
     }
 }

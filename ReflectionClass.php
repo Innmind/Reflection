@@ -3,12 +3,11 @@ declare(strict_types = 1);
 
 namespace Innmind\Reflection;
 
+use Innmind\Immutable\Collection;
+use Innmind\Immutable\CollectionInterface;
 use Innmind\Reflection\InjectionStrategy\DefaultInjectionStrategies;
 use Innmind\Reflection\InjectionStrategy\InjectionStrategies;
 use Innmind\Reflection\Instanciator\ReflectionInstanciator;
-use Innmind\Immutable\Collection;
-use Innmind\Immutable\CollectionInterface;
-use Innmind\Immutable\TypedCollectionInterface;
 
 class ReflectionClass
 {
@@ -35,7 +34,7 @@ class ReflectionClass
      * Add a property to be injected in the new object
      *
      * @param string $property
-     * @param mixed $value
+     * @param mixed  $value
      *
      * @return self
      */
@@ -109,9 +108,11 @@ class ReflectionClass
         //avoid injecting the properties already used in the constructor
         $properties = $this
             ->properties
-            ->filter(function($value, $property) use ($parameters) {
-                return !$parameters->contains($property);
-            });
+            ->filter(
+                function ($value, $property) use ($parameters) {
+                    return !$parameters->contains($property);
+                }
+            );
         $refl = new ReflectionObject(
             $object,
             $properties,
