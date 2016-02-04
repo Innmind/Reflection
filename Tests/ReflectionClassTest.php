@@ -3,15 +3,16 @@ declare(strict_types = 1);
 
 namespace Innmind\Reflection\Tests;
 
-use Innmind\Reflection\ReflectionClass;
-use Innmind\Reflection\InjectionStrategyInterface;
-use Innmind\Reflection\InjectionStrategy\SetterStrategy;
+use Innmind\Immutable\CollectionInterface;
+use Innmind\Immutable\TypedCollection;
+use Innmind\Reflection\InjectionStrategy\InjectionStrategies;
+use Innmind\Reflection\InjectionStrategy\InjectionStrategyInterface;
 use Innmind\Reflection\InjectionStrategy\NamedMethodStrategy;
 use Innmind\Reflection\InjectionStrategy\ReflectionStrategy;
-use Innmind\Reflection\InstanciatorInterface;
+use Innmind\Reflection\InjectionStrategy\SetterStrategy;
 use Innmind\Reflection\Instanciator\ReflectionInstanciator;
-use Innmind\Immutable\TypedCollection;
-use Innmind\Immutable\CollectionInterface;
+use Innmind\Reflection\InstanciatorInterface;
+use Innmind\Reflection\ReflectionClass;
 
 class ReflectionClassTest extends \PHPUnit_Framework_TestCase
 {
@@ -35,10 +36,12 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
         $this->assertSame(42, $o->a());
 
         $o = (new ReflectionClass(WithConstruct::class))
-            ->withProperties([
-                'a' => 24,
-                'b' => 66,
-            ])
+            ->withProperties(
+                [
+                    'a' => 24,
+                    'b' => 66,
+                ]
+            )
             ->buildObject();
 
         $this->assertInstanceOf(WithConstruct::class, $o);
@@ -50,21 +53,31 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
     {
         $refl = new ReflectionClass('stdClass');
 
-        $s = $refl->getInjectionStrategies();
+        $s = $refl->getInjectionStrategies()->all();
         $this->assertSame(InjectionStrategyInterface::class, $s->getType());
         $this->assertInstanceOf(SetterStrategy::class, $s[0]);
         $this->assertInstanceOf(NamedMethodStrategy::class, $s[1]);
         $this->assertInstanceOf(ReflectionStrategy::class, $s[2]);
 
+        $testInjectionStrategies = $this->getMockBuilder(InjectionStrategies::class)
+            ->getMock();
+        $testInjectionStrategies->expects($this->any())
+            ->method('all')
+            ->will(
+                $this->returnValue(
+                    new TypedCollection(
+                        InjectionStrategyInterface::class,
+                        [$s = new ReflectionStrategy]
+                    )
+                )
+            );
+
         $refl = new ReflectionClass(
             'stdClass',
             null,
-            new TypedCollection(
-                InjectionStrategyInterface::class,
-                [$s = new ReflectionStrategy]
-            )
+            $testInjectionStrategies
         );
-        $this->assertSame($s, $refl->getInjectionStrategies()[0]);
+        $this->assertSame($s, $refl->getInjectionStrategies()->all()[0]);
     }
 
     public function testGetProperties()
@@ -84,7 +97,8 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
         $i = $r->getInstanciator();
         $this->assertInstanceOf(ReflectionInstanciator::class, $i);
 
-        $i = new class implements InstanciatorInterface {
+        $i = new class implements InstanciatorInterface
+        {
             public function build(string $class, CollectionInterface $properties)
             {
             }

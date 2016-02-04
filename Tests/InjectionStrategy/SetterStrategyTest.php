@@ -3,7 +3,6 @@ declare(strict_types = 1);
 
 namespace Innmind\Reflection\Tests\InjectionStrategy;
 
-use Innmind\Reflection\InjectionStrategyInterface;
 use Innmind\Reflection\InjectionStrategy\SetterStrategy;
 
 class SetterStrategyTest extends \PHPUnit_Framework_TestCase

@@ -6,13 +6,13 @@ namespace Innmind\Reflection\ExtractionStrategy;
 use Innmind\Reflection\Exception\LogicException;
 use Innmind\Immutable\StringPrimitive;
 
-class GetterStrategy implements ExtractionStrategyInterface
+class IsserStrategy implements ExtractionStrategyInterface
 {
-    private $getter;
+    private $isser;
 
     public function __construct()
     {
-        $this->getter = new StringPrimitive('get%s');
+        $this->isser = new StringPrimitive('is%s');
     }
 
     /**
@@ -21,12 +21,12 @@ class GetterStrategy implements ExtractionStrategyInterface
     public function supports($object, string $property): bool
     {
         $refl = new \ReflectionObject($object);
-        $getter = (string) $this->getter->sprintf(
+        $isser = (string) $this->isser->sprintf(
             (string) (new StringPrimitive($property))->camelize()
         );
 
-        return $refl->hasMethod($getter) &&
-            $refl->getMethod($getter)->getNumberOfRequiredParameters() === 0;
+        return $refl->hasMethod($isser) &&
+            $refl->getMethod($isser)->getNumberOfRequiredParameters() === 0;
     }
 
     /**
@@ -38,10 +38,10 @@ class GetterStrategy implements ExtractionStrategyInterface
             throw new LogicException;
         }
 
-        $getter = (string) $this->getter->sprintf(
+        $isser = (string) $this->isser->sprintf(
             (string) (new StringPrimitive($property))->camelize()
         );
 
-        return $object->$getter();
+        return $object->$isser();
     }
 }

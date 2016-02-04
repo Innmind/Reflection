@@ -65,6 +65,8 @@ To do so, it uses 3 strategies:
 
 * look for a `getFoo()`
 * look for a `foo()` (without required parameters)
+* look for a `isFoo()` (without required parameters)
+* look for a `hasFoo()` (without required parameters)
 * uses reflection to check if the property `foo` exists
 
 **Important**: all strategies using methods will use a camelized version of the property, ie: the property `foo_bar` will lead to `getFooBar()` and `fooBar()`.

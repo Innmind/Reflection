@@ -3,11 +3,11 @@ declare(strict_types = 1);
 
 namespace Innmind\Reflection;
 
-use Innmind\Reflection\Exception\InvalidArgumentException;
-use Innmind\Reflection\Instanciator\ReflectionInstanciator;
 use Innmind\Immutable\Collection;
 use Innmind\Immutable\CollectionInterface;
-use Innmind\Immutable\TypedCollectionInterface;
+use Innmind\Reflection\InjectionStrategy\DefaultInjectionStrategies;
+use Innmind\Reflection\InjectionStrategy\InjectionStrategies;
+use Innmind\Reflection\Instanciator\ReflectionInstanciator;
 
 class ReflectionClass
 {
@@ -19,14 +19,10 @@ class ReflectionClass
     public function __construct(
         string $class,
         CollectionInterface $properties = null,
-        TypedCollectionInterface $injectionStrategies = null,
+        InjectionStrategies $injectionStrategies = null,
         InstanciatorInterface $instanciator = null
     ) {
-        $injectionStrategies = $injectionStrategies ?? InjectionStrategies::defaults();
-
-        if ($injectionStrategies->getType() !== InjectionStrategyInterface::class) {
-            throw new InvalidArgumentException;
-        }
+        $injectionStrategies = $injectionStrategies ?? new DefaultInjectionStrategies();
 
         $this->class = $class;
         $this->properties = $properties ?? new Collection([]);
@@ -38,7 +34,7 @@ class ReflectionClass
      * Add a property to be injected in the new object
      *
      * @param string $property
-     * @param mixed $value
+     * @param mixed  $value
      *
      * @return self
      */
@@ -82,9 +78,9 @@ class ReflectionClass
     /**
      * Return the list of injection strategies used
      *
-     * @return TypedCollectionInterface
+     * @return InjectionStrategies
      */
-    public function getInjectionStrategies(): TypedCollectionInterface
+    public function getInjectionStrategies(): InjectionStrategies
     {
         return $this->injectionStrategies;
     }
@@ -112,9 +108,11 @@ class ReflectionClass
         //avoid injecting the properties already used in the constructor
         $properties = $this
             ->properties
-            ->filter(function($value, $property) use ($parameters) {
-                return !$parameters->contains($property);
-            });
+            ->filter(
+                function($value, $property) use ($parameters) {
+                    return !$parameters->contains($property);
+                }
+            );
         $refl = new ReflectionObject(
             $object,
             $properties,
