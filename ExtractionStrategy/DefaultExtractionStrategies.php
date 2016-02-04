@@ -28,6 +28,7 @@ final class DefaultExtractionStrategies implements ExtractionStrategies
                     new GetterStrategy,
                     new NamedMethodStrategy,
                     new IsserStrategy,
+                    new HasserStrategy,
                     new ReflectionStrategy,
                 ]
             );

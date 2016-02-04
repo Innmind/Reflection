@@ -12,6 +12,7 @@ use Innmind\Reflection\ExtractionStrategy\GetterStrategy;
 use Innmind\Reflection\ExtractionStrategy\NamedMethodStrategy as ENamedMethodStrategy;
 use Innmind\Reflection\ExtractionStrategy\ReflectionStrategy as EReflectionStrategy;
 use Innmind\Reflection\ExtractionStrategy\IsserStrategy;
+use Innmind\Reflection\ExtractionStrategy\HasserStrategy;
 use Innmind\Reflection\InjectionStrategy\InjectionStrategies;
 use Innmind\Reflection\InjectionStrategy\InjectionStrategyInterface;
 use Innmind\Reflection\InjectionStrategy\NamedMethodStrategy;
@@ -209,8 +210,9 @@ class ReflectionObjectTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf(GetterStrategy::class, $s[0]);
         $this->assertInstanceOf(ENamedMethodStrategy::class, $s[1]);
         $this->assertInstanceOf(IsserStrategy::class, $s[2]);
-        $this->assertInstanceOf(EReflectionStrategy::class, $s[3]);
-        $this->assertSame(4, $s->count());
+        $this->assertInstanceOf(HasserStrategy::class, $s[3]);
+        $this->assertInstanceOf(EReflectionStrategy::class, $s[4]);
+        $this->assertSame(5, $s->count());
 
         $testExtractionStrategies = $this->getMockBuilder(ExtractionStrategies::class)
             ->getMock();
