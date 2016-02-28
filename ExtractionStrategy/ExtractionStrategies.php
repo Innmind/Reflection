@@ -21,7 +21,7 @@ final class ExtractionStrategies implements ExtractionStrategiesInterface
 
     public function all(): TypedCollectionInterface
     {
-        if ($this->strategies == null) {
+        if ($this->strategies === null) {
             return $this->strategies = new TypedCollection(
                 ExtractionStrategyInterface::class,
                 [

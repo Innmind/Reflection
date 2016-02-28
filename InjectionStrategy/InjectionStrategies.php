@@ -20,7 +20,7 @@ final class InjectionStrategies implements InjectionStrategiesInterface
 
     public function all(): TypedCollectionInterface
     {
-        if ($this->strategies == null) {
+        if ($this->strategies === null) {
             return $this->strategies = new TypedCollection(
                 InjectionStrategyInterface::class,
                 [
