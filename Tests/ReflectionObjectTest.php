@@ -6,14 +6,14 @@ namespace Innmind\Reflection\Tests;
 use Innmind\Immutable\CollectionInterface;
 use Innmind\Immutable\TypedCollection;
 use Innmind\Immutable\TypedCollectionInterface;
-use Innmind\Reflection\ExtractionStrategy\ExtractionStrategies;
+use Innmind\Reflection\ExtractionStrategy\ExtractionStrategiesInterface;
 use Innmind\Reflection\ExtractionStrategy\ExtractionStrategyInterface;
 use Innmind\Reflection\ExtractionStrategy\GetterStrategy;
 use Innmind\Reflection\ExtractionStrategy\NamedMethodStrategy as ENamedMethodStrategy;
 use Innmind\Reflection\ExtractionStrategy\ReflectionStrategy as EReflectionStrategy;
 use Innmind\Reflection\ExtractionStrategy\IsserStrategy;
 use Innmind\Reflection\ExtractionStrategy\HasserStrategy;
-use Innmind\Reflection\InjectionStrategy\InjectionStrategies;
+use Innmind\Reflection\InjectionStrategy\InjectionStrategiesInterface;
 use Innmind\Reflection\InjectionStrategy\InjectionStrategyInterface;
 use Innmind\Reflection\InjectionStrategy\NamedMethodStrategy;
 use Innmind\Reflection\InjectionStrategy\ReflectionStrategy;
@@ -178,7 +178,7 @@ class ReflectionObjectTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf(ReflectionStrategy::class, $s[2]);
         $this->assertSame(3, $s->count());
 
-        $testInjectionStrategies = $this->getMockBuilder(InjectionStrategies::class)
+        $testInjectionStrategies = $this->getMockBuilder(InjectionStrategiesInterface::class)
             ->getMock();
         $testInjectionStrategies->expects($this->any())
             ->method('all')
@@ -214,7 +214,7 @@ class ReflectionObjectTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf(EReflectionStrategy::class, $s[4]);
         $this->assertSame(5, $s->count());
 
-        $testExtractionStrategies = $this->getMockBuilder(ExtractionStrategies::class)
+        $testExtractionStrategies = $this->getMockBuilder(ExtractionStrategiesInterface::class)
             ->getMock();
         $testExtractionStrategies->expects($this->any())
             ->method('all')

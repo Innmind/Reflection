@@ -1,33 +1,60 @@
 <?php
-declare(strict_types = 1);
 
 namespace Innmind\Reflection\InjectionStrategy;
 
+use Innmind\Immutable\TypedCollection;
 use Innmind\Immutable\TypedCollectionInterface;
+use Innmind\Reflection\Cache\StrategyCachingCapabilities;
+use Innmind\Reflection\Exception\LogicException;
 
 /**
- * Repository of InjectionStrategies
+ * DefaultInjectionStrategies
  *
- * @author Hugues Maignol <hugues.maignol@kitpages.fr>
+ * @author Hugues Maignol <hugues@hmlb.fr>
  */
-interface InjectionStrategies
+final class InjectionStrategies implements InjectionStrategiesInterface
 {
+    use StrategyCachingCapabilities;
 
-    /**
-     * All the InjectionStrategies.
-     *
-     * @return TypedCollectionInterface
-     */
-    public function all(): TypedCollectionInterface;
+    private $strategies;
 
-    /**
-     * Returns the relevant injection strategy for the given object, key and value.
-     *
-     * @param mixed  $object
-     * @param string $key
-     * @param mixed  $value
-     *
-     * @return InjectionStrategyInterface
-     */
-    public function get($object, string $key, $value): InjectionStrategyInterface;
+    public function all(): TypedCollectionInterface
+    {
+        if ($this->strategies == null) {
+            return $this->strategies = new TypedCollection(
+                InjectionStrategyInterface::class,
+                [
+                    new SetterStrategy,
+                    new NamedMethodStrategy,
+                    new ReflectionStrategy,
+                ]
+            );
+        }
+
+        return $this->strategies;
+    }
+
+    public function get($object, string $key, $value): InjectionStrategyInterface
+    {
+        $strategy = $this->getCachedStrategy(get_class($object), $key);
+        if (null !== $strategy) {
+            return $strategy;
+        }
+
+        foreach ($this->all() as $strategy) {
+            if ($strategy->supports($object, $key, $value)) {
+
+                $this->setCachedStrategy(get_class($object), $key, $strategy);
+
+                return $strategy;
+            }
+        }
+
+        throw new LogicException(
+            sprintf(
+                'Property "%s" cannot be injected',
+                $key
+            )
+        );
+    }
 }

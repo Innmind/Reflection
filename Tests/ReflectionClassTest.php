@@ -5,7 +5,7 @@ namespace Innmind\Reflection\Tests;
 
 use Innmind\Immutable\CollectionInterface;
 use Innmind\Immutable\TypedCollection;
-use Innmind\Reflection\InjectionStrategy\InjectionStrategies;
+use Innmind\Reflection\InjectionStrategy\InjectionStrategiesInterface;
 use Innmind\Reflection\InjectionStrategy\InjectionStrategyInterface;
 use Innmind\Reflection\InjectionStrategy\NamedMethodStrategy;
 use Innmind\Reflection\InjectionStrategy\ReflectionStrategy;
@@ -59,7 +59,7 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf(NamedMethodStrategy::class, $s[1]);
         $this->assertInstanceOf(ReflectionStrategy::class, $s[2]);
 
-        $testInjectionStrategies = $this->getMockBuilder(InjectionStrategies::class)
+        $testInjectionStrategies = $this->getMockBuilder(InjectionStrategiesInterface::class)
             ->getMock();
         $testInjectionStrategies->expects($this->any())
             ->method('all')

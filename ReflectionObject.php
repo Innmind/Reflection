@@ -6,10 +6,10 @@ namespace Innmind\Reflection;
 use Innmind\Immutable\Collection;
 use Innmind\Immutable\CollectionInterface;
 use Innmind\Reflection\Exception\InvalidArgumentException;
-use Innmind\Reflection\ExtractionStrategy\DefaultExtractionStrategies;
 use Innmind\Reflection\ExtractionStrategy\ExtractionStrategies;
-use Innmind\Reflection\InjectionStrategy\DefaultInjectionStrategies;
+use Innmind\Reflection\ExtractionStrategy\ExtractionStrategiesInterface;
 use Innmind\Reflection\InjectionStrategy\InjectionStrategies;
+use Innmind\Reflection\InjectionStrategy\InjectionStrategiesInterface;
 
 class ReflectionObject
 {
@@ -21,15 +21,15 @@ class ReflectionObject
     public function __construct(
         $object,
         CollectionInterface $properties = null,
-        InjectionStrategies $injectionStrategies = null,
-        ExtractionStrategies $extractionStrategies = null
+        InjectionStrategiesInterface $injectionStrategies = null,
+        ExtractionStrategiesInterface $extractionStrategies = null
     ) {
         if (!is_object($object)) {
             throw new InvalidArgumentException;
         }
 
-        $this->injectionStrategies = $injectionStrategies ?? new DefaultInjectionStrategies();
-        $this->extractionStrategies = $extractionStrategies ?? new DefaultExtractionStrategies();
+        $this->injectionStrategies = $injectionStrategies ?? new InjectionStrategies();
+        $this->extractionStrategies = $extractionStrategies ?? new ExtractionStrategies();
 
         $this->object = $object;
 
@@ -84,9 +84,9 @@ class ReflectionObject
     /**
      * Return the list of injection strategies used
      *
-     * @return InjectionStrategies
+     * @return InjectionStrategiesInterface
      */
-    public function getInjectionStrategies(): InjectionStrategies
+    public function getInjectionStrategies(): InjectionStrategiesInterface
     {
         return $this->injectionStrategies;
     }
@@ -94,9 +94,9 @@ class ReflectionObject
     /**
      * Return the list of extraction strategies used
      *
-     * @return ExtractionStrategies
+     * @return ExtractionStrategiesInterface
      */
-    public function getExtractionStrategies(): ExtractionStrategies
+    public function getExtractionStrategies(): ExtractionStrategiesInterface
     {
         return $this->extractionStrategies;
     }
