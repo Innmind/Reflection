@@ -1,32 +1,64 @@
 <?php
-declare(strict_types = 1);
 
 namespace Innmind\Reflection\ExtractionStrategy;
 
+use Innmind\Immutable\TypedCollection;
 use Innmind\Immutable\TypedCollectionInterface;
+use Innmind\Reflection\Cache\StrategyCachingCapabilities;
+use Innmind\Reflection\Exception\LogicException;
 
 /**
- * Repository of extractionStrategies
+ * DefaultExtractionStrategies
  *
- * @author Hugues Maignol <hugues.maignol@kitpages.fr>
+ * @author Hugues Maignol <hugues@hmlb.fr>
  */
-interface ExtractionStrategies
+final class ExtractionStrategies implements ExtractionStrategiesInterface
 {
-    /**
-     * All the ExtractionStrategies
-     *
-     * @return TypedCollectionInterface
-     */
-    public function all(): TypedCollectionInterface;
 
-    /**
-     * Get the relevant ExctactionStrategyInterface for the given object and key.
-     *
-     * @param  mixed $object
-     * @param string $key
-     *
-     * @return ExtractionStrategyInterface
-     *
-     */
-    public function get($object, string $key): ExtractionStrategyInterface;
+    use StrategyCachingCapabilities;
+
+    private $strategies;
+
+    public function all(): TypedCollectionInterface
+    {
+        if ($this->strategies === null) {
+            return $this->strategies = new TypedCollection(
+                ExtractionStrategyInterface::class,
+                [
+                    new GetterStrategy,
+                    new NamedMethodStrategy,
+                    new IsserStrategy,
+                    new HasserStrategy,
+                    new ReflectionStrategy,
+                ]
+            );
+        }
+
+        return $this->strategies;
+    }
+
+    public function get($object, string $key): ExtractionStrategyInterface
+    {
+        $strategy = $this->getCachedStrategy(get_class($object), $key);
+        if (null !== $strategy) {
+            return $strategy;
+        }
+
+        foreach ($this->all() as $strategy) {
+            if ($strategy->supports($object, $key)) {
+
+                $this->setCachedStrategy(get_class($object), $key, $strategy);
+
+                return $strategy;
+            }
+        }
+
+        throw new LogicException(
+            sprintf(
+                'Property "%s" cannot be extracted',
+                $key
+            )
+        );
+    }
+
 }

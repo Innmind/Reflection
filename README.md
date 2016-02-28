@@ -1,8 +1,8 @@
 # Reflection
 
-[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/Innmind/Reflection/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/Innmind/Reflection/?branch=master)
-[![Code Coverage](https://scrutinizer-ci.com/g/Innmind/Reflection/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/Innmind/Reflection/?branch=master)
-[![Build Status](https://scrutinizer-ci.com/g/Innmind/Reflection/badges/build.png?b=master)](https://scrutinizer-ci.com/g/Innmind/Reflection/build-status/master)
+| `master` | `develop` |
+|----------|-----------|
+|[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/Innmind/Reflection/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/Innmind/Reflection/?branch=master) [![Code Coverage](https://scrutinizer-ci.com/g/Innmind/Reflection/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/Innmind/Reflection/?branch=master) [![Build Status](https://scrutinizer-ci.com/g/Innmind/Reflection/badges/build.png?b=master)](https://scrutinizer-ci.com/g/Innmind/Reflection/build-status/master) | [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/Innmind/Reflection/badges/quality-score.png?b=develop)](https://scrutinizer-ci.com/g/Innmind/Reflection/?branch=develop) [![Code Coverage](https://scrutinizer-ci.com/g/Innmind/Reflection/badges/coverage.png?b=develop)](https://scrutinizer-ci.com/g/Innmind/Reflection/?branch=develop) [![Build Status](https://scrutinizer-ci.com/g/Innmind/Reflection/badges/build.png?b=develop)](https://scrutinizer-ci.com/g/Innmind/Reflection/build-status/develop)|
 
 [![SensioLabsInsight](https://insight.sensiolabs.com/projects/08bda127-8c81-4f20-a5e2-c2ac37abff71/big.png)](https://insight.sensiolabs.com/projects/08bda127-8c81-4f20-a5e2-c2ac37abff71)
 

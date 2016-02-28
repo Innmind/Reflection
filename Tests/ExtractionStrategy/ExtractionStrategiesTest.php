@@ -3,7 +3,8 @@ declare(strict_types = 1);
 
 namespace Innmind\Reflection\Tests\ExtractionStrategy;
 
-use Innmind\Reflection\ExtractionStrategy\DefaultExtractionStrategies;
+use Innmind\Reflection\ExtractionStrategy\ExtractionStrategies;
+use Innmind\Reflection\ExtractionStrategy\ExtractionStrategiesInterface;
 use Innmind\Reflection\ExtractionStrategy\ExtractionStrategyInterface;
 use Innmind\Reflection\ExtractionStrategy\GetterStrategy;
 use Innmind\Reflection\ExtractionStrategy\NamedMethodStrategy;
@@ -12,12 +13,13 @@ use Innmind\Reflection\ExtractionStrategy\IsserStrategy;
 use Innmind\Reflection\ExtractionStrategy\HasserStrategy;
 use Innmind\Immutable\TypedCollection;
 
-class DefaultExtractionStrategiesTest extends \PHPUnit_Framework_TestCase
+class ExtractionStrategiesTest extends \PHPUnit_Framework_TestCase
 {
     public function testDefaults()
     {
-        $defaults = (new DefaultExtractionStrategies())->all();
+        $defaults = (new ExtractionStrategies())->all();
 
+        $this->assertInstanceOf(ExtractionStrategiesInterface::class, new ExtractionStrategies);
         $this->assertInstanceOf(TypedCollection::class, $defaults);
         $this->assertSame(ExtractionStrategyInterface::class, $defaults->getType());
         $this->assertInstanceOf(GetterStrategy::class, $defaults[0]);

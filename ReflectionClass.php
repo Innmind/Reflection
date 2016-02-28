@@ -5,8 +5,8 @@ namespace Innmind\Reflection;
 
 use Innmind\Immutable\Collection;
 use Innmind\Immutable\CollectionInterface;
-use Innmind\Reflection\InjectionStrategy\DefaultInjectionStrategies;
 use Innmind\Reflection\InjectionStrategy\InjectionStrategies;
+use Innmind\Reflection\InjectionStrategy\InjectionStrategiesInterface;
 use Innmind\Reflection\Instanciator\ReflectionInstanciator;
 
 class ReflectionClass
@@ -19,10 +19,10 @@ class ReflectionClass
     public function __construct(
         string $class,
         CollectionInterface $properties = null,
-        InjectionStrategies $injectionStrategies = null,
+        InjectionStrategiesInterface $injectionStrategies = null,
         InstanciatorInterface $instanciator = null
     ) {
-        $injectionStrategies = $injectionStrategies ?? new DefaultInjectionStrategies();
+        $injectionStrategies = $injectionStrategies ?? new InjectionStrategies();
 
         $this->class = $class;
         $this->properties = $properties ?? new Collection([]);
@@ -78,9 +78,9 @@ class ReflectionClass
     /**
      * Return the list of injection strategies used
      *
-     * @return InjectionStrategies
+     * @return InjectionStrategiesInterface
      */
-    public function getInjectionStrategies(): InjectionStrategies
+    public function getInjectionStrategies(): InjectionStrategiesInterface
     {
         return $this->injectionStrategies;
     }
