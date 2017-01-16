@@ -1,34 +1,34 @@
 <?php
 declare(strict_types = 1);
 
-namespace Innmind\Reflection\Tests\ExtractionStrategy;
+namespace Tests\Innmind\Reflection\ExtractionStrategy;
 
-use Innmind\Reflection\ExtractionStrategy\HasserStrategy;
+use Innmind\Reflection\ExtractionStrategy\NamedMethodStrategy;
 
-class HasserStrategyTest extends \PHPUnit_Framework_TestCase
+class NamedMethodStrategyTest extends \PHPUnit_Framework_TestCase
 {
     public function testSupports()
     {
         $o = new class {
             public $c;
 
-            public function hasA()
+            public function a()
             {
 
             }
 
-            public function hasB($b)
+            public function someLongProperty()
             {
 
             }
 
-            public function hasSomeLongProperty()
+            public function b($b)
             {
 
             }
         };
 
-        $s = new HasserStrategy;
+        $s = new NamedMethodStrategy;
 
         $this->assertTrue($s->supports($o, 'a'));
         $this->assertTrue($s->supports($o, 'some_long_property'));
@@ -42,7 +42,7 @@ class HasserStrategyTest extends \PHPUnit_Framework_TestCase
     public function testThrowWhenExtractingUnsuppportedProperty()
     {
         $o = new \stdClass;
-        $s = new HasserStrategy;
+        $s = new NamedMethodStrategy;
 
         $s->extract($o, 'a');
     }
@@ -50,19 +50,19 @@ class HasserStrategyTest extends \PHPUnit_Framework_TestCase
     public function testExtract()
     {
         $o = new class {
-            public function hasA()
+            public function a()
             {
-                return true;
+                return 42;
             }
 
-            public function hasSomeLongProperty()
+            public function someLongProperty()
             {
-                return true;
+                return 66;
             }
         };
-        $s = new HasserStrategy;
+        $s = new NamedMethodStrategy;
 
-        $this->assertTrue($s->extract($o, 'a'));
-        $this->assertTrue($s->extract($o, 'some_long_property'));
+        $this->assertSame(42, $s->extract($o, 'a'));
+        $this->assertSame(66, $s->extract($o, 'some_long_property'));
     }
 }

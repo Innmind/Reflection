@@ -1,7 +1,7 @@
 <?php
 declare(strict_types = 1);
 
-namespace Innmind\Reflection\Tests\ExtractionStrategy;
+namespace Tests\Innmind\Reflection\ExtractionStrategy;
 
 use Innmind\Reflection\ExtractionStrategy\IsserStrategy;
 

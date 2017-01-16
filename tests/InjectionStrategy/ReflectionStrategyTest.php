@@ -1,7 +1,7 @@
 <?php
 declare(strict_types = 1);
 
-namespace Innmind\Reflection\Tests\InjectionStrategy;
+namespace Tests\Innmind\Reflection\InjectionStrategy;
 
 use Innmind\Reflection\InjectionStrategy\ReflectionStrategy;
 

@@ -1,34 +1,34 @@
 <?php
 declare(strict_types = 1);
 
-namespace Innmind\Reflection\Tests\ExtractionStrategy;
+namespace Tests\Innmind\Reflection\ExtractionStrategy;
 
-use Innmind\Reflection\ExtractionStrategy\NamedMethodStrategy;
+use Innmind\Reflection\ExtractionStrategy\HasserStrategy;
 
-class NamedMethodStrategyTest extends \PHPUnit_Framework_TestCase
+class HasserStrategyTest extends \PHPUnit_Framework_TestCase
 {
     public function testSupports()
     {
         $o = new class {
             public $c;
 
-            public function a()
+            public function hasA()
             {
 
             }
 
-            public function someLongProperty()
+            public function hasB($b)
             {
 
             }
 
-            public function b($b)
+            public function hasSomeLongProperty()
             {
 
             }
         };
 
-        $s = new NamedMethodStrategy;
+        $s = new HasserStrategy;
 
         $this->assertTrue($s->supports($o, 'a'));
         $this->assertTrue($s->supports($o, 'some_long_property'));
@@ -42,7 +42,7 @@ class NamedMethodStrategyTest extends \PHPUnit_Framework_TestCase
     public function testThrowWhenExtractingUnsuppportedProperty()
     {
         $o = new \stdClass;
-        $s = new NamedMethodStrategy;
+        $s = new HasserStrategy;
 
         $s->extract($o, 'a');
     }
@@ -50,19 +50,19 @@ class NamedMethodStrategyTest extends \PHPUnit_Framework_TestCase
     public function testExtract()
     {
         $o = new class {
-            public function a()
+            public function hasA()
             {
-                return 42;
+                return true;
             }
 
-            public function someLongProperty()
+            public function hasSomeLongProperty()
             {
-                return 66;
+                return true;
             }
         };
-        $s = new NamedMethodStrategy;
+        $s = new HasserStrategy;
 
-        $this->assertSame(42, $s->extract($o, 'a'));
-        $this->assertSame(66, $s->extract($o, 'some_long_property'));
+        $this->assertTrue($s->extract($o, 'a'));
+        $this->assertTrue($s->extract($o, 'some_long_property'));
     }
 }

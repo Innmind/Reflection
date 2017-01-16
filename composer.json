@@ -19,9 +19,13 @@
         "innmind/immutable": "~0.6|~1.0"
     },
     "autoload": {
-        "psr-0": {
-            "Innmind\\Reflection": ""
+        "psr-4": {
+            "Innmind\\Reflection\\": "src/"
         }
     },
-    "target-dir": "Innmind/Reflection"
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\Innmind\\Reflection\\": "tests/"
+        }
+    }
 }

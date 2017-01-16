@@ -1,7 +1,7 @@
 <?php
 declare(strict_types = 1);
 
-namespace Innmind\Reflection\Tests\Instanciator;
+namespace Tests\Innmind\Reflection\Instanciator;
 
 use Innmind\Reflection\Instanciator\ReflectionInstanciator;
 use Innmind\Immutable\Collection;
@@ -43,7 +43,7 @@ class ReflectionInstanciatorTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @expectedException Innmind\Reflection\Exception\InstanciationFailedException
-     * @expectedExceptionMessage Class "Innmind\Reflection\Tests\Instanciator\Foo" cannot be instanciated
+     * @expectedExceptionMessage Class "Tests\Innmind\Reflection\Instanciator\Foo" cannot be instanciated
      */
     public function testThrowWhenClassCannotBeInstanciated()
     {
