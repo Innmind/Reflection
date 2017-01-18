@@ -1,7 +1,7 @@
 <?php
 declare(strict_types = 1);
 
-namespace Innmind\Reflection\Tests\Cache;
+namespace Tests\Innmind\Reflection\Cache;
 
 /**
  * CacheTestObject

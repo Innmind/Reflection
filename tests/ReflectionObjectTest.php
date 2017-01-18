@@ -1,7 +1,7 @@
 <?php
 declare(strict_types = 1);
 
-namespace Innmind\Reflection\Tests;
+namespace Tests\Innmind\Reflection;
 
 use Innmind\Immutable\CollectionInterface;
 use Innmind\Immutable\TypedCollection;

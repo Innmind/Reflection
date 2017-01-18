@@ -1,7 +1,7 @@
 <?php
 declare(strict_types = 1);
 
-namespace Innmind\Reflection\Tests\Cache;
+namespace Tests\Innmind\Reflection\Cache;
 
 use Innmind\Reflection\ExtractionStrategy\ReflectionStrategy;
 use Innmind\Reflection\ReflectionObject;
@@ -23,7 +23,7 @@ class StrategyCachingCapabilitiesTest extends \PHPUnit_Framework_TestCase
         //Strategy should not be already cached for CacheTestObject
         $cachedStrategies = $this->getCachedStrategies($extractionStrategies);
         foreach ($cachedStrategies as $key => $strategy) {
-            $this->assertFalse($key == 'Innmind\Reflection\Tests\Cache\CacheTestObject::name');
+            $this->assertFalse($key == 'Tests\Innmind\Reflection\Cache\CacheTestObject::name');
         }
 
         $firstTime = $reflection->extract(['name'])['name'];
@@ -31,10 +31,10 @@ class StrategyCachingCapabilitiesTest extends \PHPUnit_Framework_TestCase
 
         //Strategy should now be cached for CacheTestObject::name
         $cachedStrategies = $this->getCachedStrategies($extractionStrategies);
-        $this->assertArrayHasKey('Innmind\Reflection\Tests\Cache\CacheTestObject::name', $cachedStrategies);
+        $this->assertArrayHasKey('Tests\Innmind\Reflection\Cache\CacheTestObject::name', $cachedStrategies);
         $this->assertInstanceOf(
             ReflectionStrategy::class,
-            $cachedStrategies['Innmind\Reflection\Tests\Cache\CacheTestObject::name']
+            $cachedStrategies['Tests\Innmind\Reflection\Cache\CacheTestObject::name']
         );
 
         $secondReflection = new ReflectionObject($object);
@@ -42,10 +42,10 @@ class StrategyCachingCapabilitiesTest extends \PHPUnit_Framework_TestCase
 
         //Strategy should still be cached for CacheTestObject::name and returned strategies should be equal.
         $secondCachedStrategies = $this->getCachedStrategies($secondExtractionStrategies);
-        $this->assertArrayHasKey('Innmind\Reflection\Tests\Cache\CacheTestObject::name', $secondCachedStrategies);
+        $this->assertArrayHasKey('Tests\Innmind\Reflection\Cache\CacheTestObject::name', $secondCachedStrategies);
         $this->assertInstanceOf(
             ReflectionStrategy::class,
-            $secondCachedStrategies['Innmind\Reflection\Tests\Cache\CacheTestObject::name']
+            $secondCachedStrategies['Tests\Innmind\Reflection\Cache\CacheTestObject::name']
         );
         $this->assertEquals($cachedStrategies, $secondCachedStrategies);
 

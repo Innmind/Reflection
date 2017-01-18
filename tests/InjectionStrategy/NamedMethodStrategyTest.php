@@ -1,20 +1,20 @@
 <?php
 declare(strict_types = 1);
 
-namespace Innmind\Reflection\Tests\InjectionStrategy;
+namespace Tests\Innmind\Reflection\InjectionStrategy;
 
-use Innmind\Reflection\InjectionStrategy\SetterStrategy;
+use Innmind\Reflection\InjectionStrategy\NamedMethodStrategy;
 
-class SetterStrategyTest extends \PHPUnit_Framework_TestCase
+class NamedMethodStrategyTest extends \PHPUnit_Framework_TestCase
 {
     public function testSupports()
     {
-        $s = new SetterStrategy;
+        $s = new NamedMethodStrategy;
         $o = new class {
             private $a;
             private $b;
 
-            public function setB($b)
+            public function b($b)
             {
                 $this->b = $b;
             }
@@ -24,7 +24,7 @@ class SetterStrategyTest extends \PHPUnit_Framework_TestCase
                 return $this->b;
             }
 
-            public function setSomeLongProperty($foo)
+            public function someLongProperty($foo)
             {
 
             }
@@ -37,12 +37,12 @@ class SetterStrategyTest extends \PHPUnit_Framework_TestCase
 
     public function testInject()
     {
-        $s = new SetterStrategy;
+        $s = new NamedMethodStrategy;
         $o = new class {
             private $b;
             private $foo;
 
-            public function setB($b)
+            public function b($b)
             {
                 $this->b = $b;
             }
@@ -52,12 +52,12 @@ class SetterStrategyTest extends \PHPUnit_Framework_TestCase
                 return $this->b;
             }
 
-            public function setSomeLongProperty($foo)
+            public function someLongProperty($foo)
             {
                 $this->foo = $foo;
             }
 
-            public function getFoo()
+            public function foo()
             {
                 return $this->foo;
             }
@@ -66,7 +66,7 @@ class SetterStrategyTest extends \PHPUnit_Framework_TestCase
         $this->assertSame(null, $s->inject($o, 'b', 'bar'));
         $this->assertSame('bar', $o->getB());
         $this->assertSame(null, $s->inject($o, 'some_long_property', 42));
-        $this->assertSame(42, $o->getFoo());
+        $this->assertSame(42, $o->foo());
     }
 
     /**
@@ -74,7 +74,7 @@ class SetterStrategyTest extends \PHPUnit_Framework_TestCase
      */
     public function testThrowWhenInjectingUnsupportedProperty()
     {
-        $s = new SetterStrategy;
+        $s = new NamedMethodStrategy;
         $o = new class {
             public $a;
         };
