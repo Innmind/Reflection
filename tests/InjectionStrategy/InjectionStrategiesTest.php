@@ -24,4 +24,28 @@ class InjectionStrategiesTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf(NamedMethodStrategy::class, $defaults[1]);
         $this->assertInstanceOf(ReflectionStrategy::class, $defaults[2]);
     }
+
+    public function testCustomStrategies()
+    {
+        $expected = new TypedCollection(
+            InjectionStrategyInterface::class,
+            [new ReflectionStrategy]
+        );
+        $strategies = (new InjectionStrategies($expected))->all();
+
+        $this->assertSame($expected, $strategies);
+    }
+
+    /**
+     * @expectedException Innmind\Reflection\Exception\InvalidArgumentException
+     */
+    public function testThrowWhenInjectingInvalidCollection()
+    {
+        new InjectionStrategies(
+            new TypedCollection(
+                'stdClass',
+                []
+            )
+        );
+    }
 }

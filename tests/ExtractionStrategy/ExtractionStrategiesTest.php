@@ -28,4 +28,28 @@ class ExtractionStrategiesTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf(HasserStrategy::class, $defaults[3]);
         $this->assertInstanceOf(ReflectionStrategy::class, $defaults[4]);
     }
+
+    public function testCustomStrategies()
+    {
+        $expected = new TypedCollection(
+            ExtractionStrategyInterface::class,
+            [new ReflectionStrategy]
+        );
+        $strategies = (new ExtractionStrategies($expected))->all();
+
+        $this->assertSame($expected, $strategies);
+    }
+
+    /**
+     * @expectedException Innmind\Reflection\Exception\InvalidArgumentException
+     */
+    public function testThrowWhenInjectingInvalidCollection()
+    {
+        new ExtractionStrategies(
+            new TypedCollection(
+                'stdClass',
+                []
+            )
+        );
+    }
 }

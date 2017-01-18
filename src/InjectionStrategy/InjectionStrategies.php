@@ -2,10 +2,15 @@
 
 namespace Innmind\Reflection\InjectionStrategy;
 
-use Innmind\Immutable\TypedCollection;
-use Innmind\Immutable\TypedCollectionInterface;
-use Innmind\Reflection\Cache\StrategyCachingCapabilities;
-use Innmind\Reflection\Exception\LogicException;
+use Innmind\Reflection\{
+    Cache\StrategyCachingCapabilities,
+    Exception\LogicException,
+    Exception\InvalidArgumentException
+};
+use Innmind\Immutable\{
+    TypedCollection,
+    TypedCollectionInterface
+};
 
 /**
  * DefaultInjectionStrategies
@@ -17,6 +22,15 @@ final class InjectionStrategies implements InjectionStrategiesInterface
     use StrategyCachingCapabilities;
 
     private $strategies;
+
+    public function __construct(TypedCollectionInterface $strategies = null)
+    {
+        $this->strategies = $strategies ?? $this->all();
+
+        if ($this->strategies->getType() !== InjectionStrategyInterface::class) {
+            throw new InvalidArgumentException;
+        }
+    }
 
     public function all(): TypedCollectionInterface
     {

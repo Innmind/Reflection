@@ -2,10 +2,15 @@
 
 namespace Innmind\Reflection\ExtractionStrategy;
 
-use Innmind\Immutable\TypedCollection;
-use Innmind\Immutable\TypedCollectionInterface;
-use Innmind\Reflection\Cache\StrategyCachingCapabilities;
-use Innmind\Reflection\Exception\LogicException;
+use Innmind\Reflection\{
+    Cache\StrategyCachingCapabilities,
+    Exception\LogicException,
+    Exception\InvalidArgumentException
+};
+use Innmind\Immutable\{
+    TypedCollection,
+    TypedCollectionInterface
+};
 
 /**
  * DefaultExtractionStrategies
@@ -14,10 +19,18 @@ use Innmind\Reflection\Exception\LogicException;
  */
 final class ExtractionStrategies implements ExtractionStrategiesInterface
 {
-
     use StrategyCachingCapabilities;
 
     private $strategies;
+
+    public function __construct(TypedCollectionInterface $strategies = null)
+    {
+        $this->strategies = $strategies ?? $this->all();
+
+        if ($this->strategies->getType() !== ExtractionStrategyInterface::class) {
+            throw new InvalidArgumentException;
+        }
+    }
 
     public function all(): TypedCollectionInterface
     {
