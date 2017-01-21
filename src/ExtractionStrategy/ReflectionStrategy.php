@@ -1,10 +1,7 @@
 <?php
 declare(strict_types = 1);
-
 namespace Innmind\Reflection\ExtractionStrategy;
-
 use Innmind\Reflection\Exception\LogicException;
-
 class ReflectionStrategy implements ExtractionStrategyInterface
 {
     /**
@@ -12,9 +9,13 @@ class ReflectionStrategy implements ExtractionStrategyInterface
      */
     public function supports($object, string $property): bool
     {
-        $refl = new \ReflectionObject($object);
+        try {
+            $this->property(get_class($object), $property);
 
-        return $refl->hasProperty($property);
+            return true;
+        } catch (\Exception $e) {
+            return false;
+        }
     }
 
     /**
@@ -26,8 +27,7 @@ class ReflectionStrategy implements ExtractionStrategyInterface
             throw new LogicException;
         }
 
-        $refl = new \ReflectionObject($object);
-        $refl = $refl->getProperty($property);
+        $refl = $this->property(get_class($object), $property);
 
         if (!$refl->isPublic()) {
             $refl->setAccessible(true);
@@ -40,5 +40,20 @@ class ReflectionStrategy implements ExtractionStrategyInterface
         }
 
         return $value;
+    }
+
+    private function property(string $class, string $property): \ReflectionProperty
+    {
+        $refl = new \ReflectionClass($class);
+
+        if ($refl->hasProperty($property)) {
+            return $refl->getProperty($property);
+        }
+
+        if ($refl->getParentClass()) {
+            return $this->property($refl->getParentClass()->getName(), $property);
+        }
+
+        throw new \Exception;
     }
 }

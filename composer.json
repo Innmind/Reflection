@@ -16,7 +16,7 @@
     },
     "require": {
         "php": "~7.0",
-        "innmind/immutable": "~0.6|~1.0"
+        "innmind/immutable": "~1.0"
     },
     "autoload": {
         "psr-4": {
@@ -25,7 +25,8 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "Tests\\Innmind\\Reflection\\": "tests/"
+            "Tests\\Innmind\\Reflection\\": "tests/",
+            "Fixtures\\Innmind\\Reflection\\": "fixtures/"
         }
     },
     "require-dev": {

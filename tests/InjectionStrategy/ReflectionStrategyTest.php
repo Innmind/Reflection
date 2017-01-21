@@ -4,6 +4,7 @@ declare(strict_types = 1);
 namespace Tests\Innmind\Reflection\InjectionStrategy;
 
 use Innmind\Reflection\InjectionStrategy\ReflectionStrategy;
+use Fixtures\Innmind\Reflection\Foo;
 
 class ReflectionStrategyTest extends \PHPUnit_Framework_TestCase
 {
@@ -43,6 +44,16 @@ class ReflectionStrategyTest extends \PHPUnit_Framework_TestCase
         $this->assertSame('bar', $o->b());
         $this->assertSame(null, $s->inject($o, 'c', 'bar'));
         $this->assertSame('bar', $o->c);
+    }
+
+    public function testInjectInheritedProperty()
+    {
+        $strategy = new ReflectionStrategy;
+        $object = new class extends Foo {};
+
+        $this->assertSame(42, $object->someProperty());
+        $this->assertNull($strategy->inject($object, 'someProperty', 24));
+        $this->assertSame(24, $object->someProperty());
     }
 
     /**

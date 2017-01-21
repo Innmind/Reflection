@@ -4,6 +4,7 @@ declare(strict_types = 1);
 namespace Tests\Innmind\Reflection\InjectionStrategy;
 
 use Innmind\Reflection\InjectionStrategy\SetterStrategy;
+use Fixtures\Innmind\Reflection\Foo;
 
 class SetterStrategyTest extends \PHPUnit_Framework_TestCase
 {
@@ -79,5 +80,15 @@ class SetterStrategyTest extends \PHPUnit_Framework_TestCase
             public $a;
         };
         $s->inject($o, 'a', 'foo');
+    }
+
+    public function testInjectWithInheritedMethod()
+    {
+        $strategy = new SetterStrategy;
+        $object = new class extends Foo {};
+
+        $this->assertSame(42, $object->someProperty());
+        $this->assertNull($strategy->inject($object, 'someProperty', 24));
+        $this->assertSame(24, $object->someProperty());
     }
 }
