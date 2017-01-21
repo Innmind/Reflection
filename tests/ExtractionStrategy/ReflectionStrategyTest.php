@@ -22,6 +22,11 @@ class ReflectionStrategyTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($s->supports($o, 'b'));
         $this->assertTrue($s->supports($o, 'c'));
         $this->assertFalse($s->supports($o, 'd'));
+
+        $std = new \stdClass;
+        $std->foo = 'bar';
+
+        $this->assertTrue($s->supports($std, 'foo'));
     }
 
     public function testSupportsInheritMethod()
@@ -64,5 +69,14 @@ class ReflectionStrategyTest extends \PHPUnit_Framework_TestCase
         $strategy = new ReflectionStrategy;
 
         $this->assertSame(42, $strategy->extract($child, 'someProperty'));
+    }
+
+    public function testExtractDynamicallySetProperty()
+    {
+        $strategy = new ReflectionStrategy;
+        $std = new \stdClass;
+        $std->foo = 'bar';
+
+        $this->assertSame('bar', $strategy->extract($std, 'foo'));
     }
 }

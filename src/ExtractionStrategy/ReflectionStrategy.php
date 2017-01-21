@@ -10,7 +10,7 @@ class ReflectionStrategy implements ExtractionStrategyInterface
     public function supports($object, string $property): bool
     {
         try {
-            $this->property(get_class($object), $property);
+            $this->property($object, $property);
 
             return true;
         } catch (\Exception $e) {
@@ -27,7 +27,7 @@ class ReflectionStrategy implements ExtractionStrategyInterface
             throw new LogicException;
         }
 
-        $refl = $this->property(get_class($object), $property);
+        $refl = $this->property($object, $property);
 
         if (!$refl->isPublic()) {
             $refl->setAccessible(true);
@@ -42,7 +42,27 @@ class ReflectionStrategy implements ExtractionStrategyInterface
         return $value;
     }
 
-    private function property(string $class, string $property): \ReflectionProperty
+    private function property($object, string $property): \ReflectionProperty
+    {
+        try {
+            return $this->objectProperty($object, $property);
+        } catch (\Exception $e) {
+            return $this->classProperty(get_class($object), $property);
+        }
+    }
+
+    private function objectProperty($object, string $property): \ReflectionProperty
+    {
+        $refl = new \ReflectionObject($object);
+
+        if ($refl->hasProperty($property)) {
+            return $refl->getProperty($property);
+        }
+
+        throw new \Exception;
+    }
+
+    private function classProperty(string $class, string $property): \ReflectionProperty
     {
         $refl = new \ReflectionClass($class);
 
