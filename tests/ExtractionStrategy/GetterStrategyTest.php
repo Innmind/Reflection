@@ -4,6 +4,7 @@ declare(strict_types = 1);
 namespace Tests\Innmind\Reflection\ExtractionStrategy;
 
 use Innmind\Reflection\ExtractionStrategy\GetterStrategy;
+use Fixtures\Innmind\Reflection\Foo;
 
 class GetterStrategyTest extends \PHPUnit_Framework_TestCase
 {
@@ -64,5 +65,13 @@ class GetterStrategyTest extends \PHPUnit_Framework_TestCase
 
         $this->assertSame(42, $s->extract($o, 'a'));
         $this->assertSame(66, $s->extract($o, 'some_long_property'));
+    }
+
+    public function testExtractWithInheritedMethod()
+    {
+        $strategy = new GetterStrategy;
+        $object = new class extends Foo {};
+
+        $this->assertSame(42, $strategy->extract($object, 'someProperty'));
     }
 }

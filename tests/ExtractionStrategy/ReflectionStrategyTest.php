@@ -24,6 +24,14 @@ class ReflectionStrategyTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($s->supports($o, 'd'));
     }
 
+    public function testSupportsInheritMethod()
+    {
+        $strategy = new ReflectionStrategy;
+        $object = new class extends Foo {};
+
+        $this->assertTrue($strategy->supports($object, 'someProperty'));
+    }
+
     /**
      * @expectedException Innmind\Reflection\Exception\LogicException
      */

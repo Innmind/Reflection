@@ -4,6 +4,7 @@ declare(strict_types = 1);
 namespace Tests\Innmind\Reflection\ExtractionStrategy;
 
 use Innmind\Reflection\ExtractionStrategy\IsserStrategy;
+use Fixtures\Innmind\Reflection\Foo;
 
 class IsserStrategyTest extends \PHPUnit_Framework_TestCase
 {
@@ -64,5 +65,13 @@ class IsserStrategyTest extends \PHPUnit_Framework_TestCase
 
         $this->assertTrue($s->extract($o, 'a'));
         $this->assertTrue($s->extract($o, 'some_long_property'));
+    }
+
+    public function testExtractWithInheritedMethod()
+    {
+        $strategy = new IsserStrategy;
+        $object = new class extends Foo {};
+
+        $this->assertFalse($strategy->extract($object, 'someProperty'));
     }
 }
