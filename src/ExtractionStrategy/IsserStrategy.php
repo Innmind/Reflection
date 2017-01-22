@@ -25,8 +25,17 @@ class IsserStrategy implements ExtractionStrategyInterface
             (string) (new StringPrimitive($property))->camelize()
         );
 
-        return $refl->hasMethod($isser) &&
-            $refl->getMethod($isser)->getNumberOfRequiredParameters() === 0;
+        if (!$refl->hasMethod($isser)) {
+            return false;
+        }
+
+        $isser = $refl->getMethod($isser);
+
+        if (!$isser->isPublic()) {
+            return false;
+        }
+
+        return $isser->getNumberOfRequiredParameters() === 0;
     }
 
     /**

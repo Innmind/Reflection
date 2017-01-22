@@ -15,17 +15,22 @@ class HasserStrategyTest extends \PHPUnit_Framework_TestCase
 
             public function hasA()
             {
-
             }
 
             public function hasB($b)
             {
-
             }
 
             public function hasSomeLongProperty()
             {
+            }
 
+            private function hasFoo()
+            {
+            }
+
+            protected function hasBar()
+            {
             }
         };
 
@@ -35,6 +40,8 @@ class HasserStrategyTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($s->supports($o, 'some_long_property'));
         $this->assertFalse($s->supports($o, 'b'));
         $this->assertFalse($s->supports($o, 'c'));
+        $this->assertFalse($s->supports($o, 'foo'));
+        $this->assertFalse($s->supports($o, 'bar'));
     }
 
     /**

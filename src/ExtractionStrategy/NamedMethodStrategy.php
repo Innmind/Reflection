@@ -19,8 +19,17 @@ class NamedMethodStrategy implements ExtractionStrategyInterface
             ->camelize()
             ->lcfirst();
 
-        return $refl->hasMethod($property) &&
-            $refl->getMethod($property)->getNumberOfRequiredParameters() === 0;
+        if (!$refl->hasMethod($property)) {
+            return false;
+        }
+
+        $property = $refl->getMethod($property);
+
+        if (!$property->isPublic()) {
+            return false;
+        }
+
+        return $property->getNumberOfRequiredParameters() === 0;
     }
 
     /**

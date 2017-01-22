@@ -21,12 +21,15 @@ class SetterStrategy implements InjectionStrategyInterface
     public function supports($object, string $property, $value): bool
     {
         $refl = new \ReflectionObject($object);
-
-        return $refl->hasMethod(
-            (string) $this->setter->sprintf(
-                (string) (new StringPrimitive($property))->camelize()
-            )
+        $setter = (string) $this->setter->sprintf(
+            (string) (new StringPrimitive($property))->camelize()
         );
+
+        if (!$refl->hasMethod($setter)) {
+            return false;
+        }
+
+        return $refl->getMethod($setter)->isPublic();
     }
 
     /**

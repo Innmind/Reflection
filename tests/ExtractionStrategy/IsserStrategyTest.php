@@ -15,17 +15,22 @@ class IsserStrategyTest extends \PHPUnit_Framework_TestCase
 
             public function isA()
             {
-
             }
 
             public function isB($b)
             {
-
             }
 
             public function isSomeLongProperty()
             {
+            }
 
+            private function isFoo()
+            {
+            }
+
+            private function isBar()
+            {
             }
         };
 
@@ -35,6 +40,8 @@ class IsserStrategyTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($s->supports($o, 'some_long_property'));
         $this->assertFalse($s->supports($o, 'b'));
         $this->assertFalse($s->supports($o, 'c'));
+        $this->assertFalse($s->supports($o, 'foo'));
+        $this->assertFalse($s->supports($o, 'bar'));
     }
 
     /**

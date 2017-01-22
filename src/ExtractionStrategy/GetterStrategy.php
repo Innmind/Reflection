@@ -25,8 +25,17 @@ class GetterStrategy implements ExtractionStrategyInterface
             (string) (new StringPrimitive($property))->camelize()
         );
 
-        return $refl->hasMethod($getter) &&
-            $refl->getMethod($getter)->getNumberOfRequiredParameters() === 0;
+        if (!$refl->hasMethod($getter)) {
+            return false;
+        }
+
+        $getter = $refl->getMethod($getter);
+
+        if (!$getter->isPublic()) {
+            return false;
+        }
+
+        return $getter->getNumberOfRequiredParameters() === 0;
     }
 
     /**

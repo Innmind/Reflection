@@ -15,17 +15,22 @@ class NamedMethodStrategyTest extends \PHPUnit_Framework_TestCase
 
             public function a()
             {
-
             }
 
             public function someLongProperty()
             {
-
             }
 
             public function b($b)
             {
+            }
 
+            private function foo()
+            {
+            }
+
+            private function bar()
+            {
             }
         };
 
@@ -35,6 +40,8 @@ class NamedMethodStrategyTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($s->supports($o, 'some_long_property'));
         $this->assertFalse($s->supports($o, 'b'));
         $this->assertFalse($s->supports($o, 'c'));
+        $this->assertFalse($s->supports($o, 'foo'));
+        $this->assertFalse($s->supports($o, 'bar'));
     }
 
     /**
