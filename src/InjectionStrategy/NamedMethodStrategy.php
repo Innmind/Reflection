@@ -29,8 +29,17 @@ class NamedMethodStrategy implements InjectionStrategyInterface
             ->camelize()
             ->lcfirst();
 
-        return $refl->hasMethod($property) &&
-            $refl->getMethod($property)->getNumberOfParameters() > 0;
+        if (!$refl->hasMethod($property)) {
+            return false;
+        }
+
+        $property = $refl->getMethod($property);
+
+        if (!$property->isPublic()) {
+            return false;
+        }
+
+        return $property->getNumberOfParameters() > 0;
     }
 
     /**

@@ -25,8 +25,17 @@ class HasserStrategy implements ExtractionStrategyInterface
             (string) (new StringPrimitive($property))->camelize()
         );
 
-        return $refl->hasMethod($hasser) &&
-            $refl->getMethod($hasser)->getNumberOfRequiredParameters() === 0;
+        if (!$refl->hasMethod($hasser)) {
+            return false;
+        }
+
+        $hasser = $refl->getMethod($hasser);
+
+        if (!$hasser->isPublic()) {
+            return false;
+        }
+
+        return $hasser->getNumberOfRequiredParameters() === 0;
     }
 
     /**

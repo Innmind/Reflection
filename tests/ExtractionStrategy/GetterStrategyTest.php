@@ -15,17 +15,22 @@ class GetterStrategyTest extends \PHPUnit_Framework_TestCase
 
             public function getA()
             {
-
             }
 
             public function getB($b)
             {
-
             }
 
             public function getSomeLongProperty()
             {
+            }
 
+            private function getFoo()
+            {
+            }
+
+            protected function getBar()
+            {
             }
         };
 
@@ -35,6 +40,8 @@ class GetterStrategyTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($s->supports($o, 'some_long_property'));
         $this->assertFalse($s->supports($o, 'b'));
         $this->assertFalse($s->supports($o, 'c'));
+        $this->assertFalse($s->supports($o, 'foo'));
+        $this->assertFalse($s->supports($o, 'bar'));
     }
 
     /**

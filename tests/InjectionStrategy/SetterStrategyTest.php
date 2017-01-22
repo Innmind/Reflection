@@ -20,20 +20,24 @@ class SetterStrategyTest extends \PHPUnit_Framework_TestCase
                 $this->b = $b;
             }
 
-            public function getB()
-            {
-                return $this->b;
-            }
-
             public function setSomeLongProperty($foo)
             {
+            }
 
+            private function setFoo($foo)
+            {
+            }
+
+            private function setBar($bar)
+            {
             }
         };
 
         $this->assertTrue($s->supports($o, 'b', null));
         $this->assertTrue($s->supports($o, 'some_long_property', null));
         $this->assertFalse($s->supports($o, 'a', null));
+        $this->assertFalse($s->supports($o, 'foo', null));
+        $this->assertFalse($s->supports($o, 'bar', null));
     }
 
     public function testInject()
