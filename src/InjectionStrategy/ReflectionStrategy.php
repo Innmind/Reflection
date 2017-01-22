@@ -3,7 +3,10 @@ declare(strict_types = 1);
 
 namespace Innmind\Reflection\InjectionStrategy;
 
-use Innmind\Reflection\Exception\LogicException;
+use Innmind\Reflection\{
+    Exception\LogicException,
+    Visitor\AccessProperty
+};
 
 class ReflectionStrategy implements InjectionStrategyInterface
 {
@@ -12,9 +15,13 @@ class ReflectionStrategy implements InjectionStrategyInterface
      */
     public function supports($object, string $property, $value): bool
     {
-        $refl = new \ReflectionObject($object);
+        try {
+            (new AccessProperty)($object, $property);
 
-        return $refl->hasProperty($property);
+            return true;
+        } catch (\Exception $e) {
+            return false;
+        }
     }
 
     /**
@@ -26,8 +33,7 @@ class ReflectionStrategy implements InjectionStrategyInterface
             throw new LogicException;
         }
 
-        $refl = new \ReflectionObject($object);
-        $refl = $refl->getProperty($property);
+        $refl = (new AccessProperty)($object, $property);
 
         if (!$refl->isPublic()) {
             $refl->setAccessible(true);

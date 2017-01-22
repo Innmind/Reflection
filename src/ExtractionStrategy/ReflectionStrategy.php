@@ -1,7 +1,13 @@
 <?php
 declare(strict_types = 1);
+
 namespace Innmind\Reflection\ExtractionStrategy;
-use Innmind\Reflection\Exception\LogicException;
+
+use Innmind\Reflection\{
+    Exception\LogicException,
+    Visitor\AccessProperty
+};
+
 class ReflectionStrategy implements ExtractionStrategyInterface
 {
     /**
@@ -10,7 +16,7 @@ class ReflectionStrategy implements ExtractionStrategyInterface
     public function supports($object, string $property): bool
     {
         try {
-            $this->property($object, $property);
+            (new AccessProperty)($object, $property);
 
             return true;
         } catch (\Exception $e) {
@@ -27,7 +33,7 @@ class ReflectionStrategy implements ExtractionStrategyInterface
             throw new LogicException;
         }
 
-        $refl = $this->property($object, $property);
+        $refl = (new AccessProperty)($object, $property);
 
         if (!$refl->isPublic()) {
             $refl->setAccessible(true);
@@ -40,43 +46,5 @@ class ReflectionStrategy implements ExtractionStrategyInterface
         }
 
         return $value;
-    }
-
-    private function property($object, string $property): \ReflectionProperty
-    {
-        try {
-            return $this->objectProperty($object, $property);
-        } catch (\Exception $e) {
-            return $this->classProperty(get_class($object), $property);
-        }
-    }
-
-    private function objectProperty($object, string $property): \ReflectionProperty
-    {
-        $refl = new \ReflectionObject($object);
-
-        if ($refl->hasProperty($property)) {
-            return $refl->getProperty($property);
-        }
-
-        throw new \Exception;
-    }
-
-    private function classProperty(string $class, string $property): \ReflectionProperty
-    {
-        $refl = new \ReflectionClass($class);
-
-        if ($refl->hasProperty($property)) {
-            return $refl->getProperty($property);
-        }
-
-        if ($refl->getParentClass()) {
-            return $this->classProperty(
-                $refl->getParentClass()->getName(),
-                $property
-            );
-        }
-
-        throw new \Exception;
     }
 }
