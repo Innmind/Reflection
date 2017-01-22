@@ -5,7 +5,8 @@ namespace Fixtures\Innmind\Reflection;
 
 class Foo
 {
-    protected $someProperty = 42;
+    private $someProperty = 42;
+    protected $inheritProtected = 'whatever';
 
     public function someProperty(int $newValue = null)
     {
