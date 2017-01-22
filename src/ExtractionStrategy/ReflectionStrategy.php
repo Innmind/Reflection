@@ -71,7 +71,10 @@ class ReflectionStrategy implements ExtractionStrategyInterface
         }
 
         if ($refl->getParentClass()) {
-            return $this->property($refl->getParentClass()->getName(), $property);
+            return $this->classProperty(
+                $refl->getParentClass()->getName(),
+                $property
+            );
         }
 
         throw new \Exception;
