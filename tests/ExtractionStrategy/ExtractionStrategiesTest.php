@@ -5,7 +5,7 @@ namespace Tests\Innmind\Reflection\ExtractionStrategy;
 
 use Innmind\Reflection\ExtractionStrategy\ExtractionStrategies;
 use Innmind\Reflection\ExtractionStrategy\ExtractionStrategiesInterface;
-use Innmind\Reflection\ExtractionStrategy\ExtractionStrategyInterface;
+use Innmind\Reflection\ExtractionStrategyInterface;
 use Innmind\Reflection\ExtractionStrategy\GetterStrategy;
 use Innmind\Reflection\ExtractionStrategy\NamedMethodStrategy;
 use Innmind\Reflection\ExtractionStrategy\ReflectionStrategy;

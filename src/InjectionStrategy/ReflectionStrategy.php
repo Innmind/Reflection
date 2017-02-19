@@ -4,6 +4,7 @@ declare(strict_types = 1);
 namespace Innmind\Reflection\InjectionStrategy;
 
 use Innmind\Reflection\{
+    InjectionStrategyInterface,
     Exception\LogicException,
     Visitor\AccessProperty
 };

@@ -5,7 +5,8 @@ namespace Innmind\Reflection\ExtractionStrategy;
 use Innmind\Reflection\{
     Cache\StrategyCachingCapabilities,
     Exception\LogicException,
-    Exception\InvalidArgumentException
+    Exception\InvalidArgumentException,
+    ExtractionStrategyInterface
 };
 use Innmind\Immutable\{
     SetInterface,

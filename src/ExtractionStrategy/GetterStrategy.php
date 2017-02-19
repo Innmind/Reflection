@@ -3,7 +3,10 @@ declare(strict_types = 1);
 
 namespace Innmind\Reflection\ExtractionStrategy;
 
-use Innmind\Reflection\Exception\LogicException;
+use Innmind\Reflection\{
+    ExtractionStrategyInterface,
+    Exception\LogicException
+};
 use Innmind\Immutable\Str;
 
 class GetterStrategy implements ExtractionStrategyInterface

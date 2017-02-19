@@ -5,7 +5,8 @@ namespace Innmind\Reflection\InjectionStrategy;
 use Innmind\Reflection\{
     Cache\StrategyCachingCapabilities,
     Exception\LogicException,
-    Exception\InvalidArgumentException
+    Exception\InvalidArgumentException,
+    InjectionStrategyInterface
 };
 use Innmind\Immutable\{
     SetInterface,

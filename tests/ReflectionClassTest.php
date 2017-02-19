@@ -4,7 +4,7 @@ declare(strict_types = 1);
 namespace Tests\Innmind\Reflection;
 
 use Innmind\Reflection\InjectionStrategy\InjectionStrategiesInterface;
-use Innmind\Reflection\InjectionStrategy\InjectionStrategyInterface;
+use Innmind\Reflection\InjectionStrategyInterface;
 use Innmind\Reflection\InjectionStrategy\NamedMethodStrategy;
 use Innmind\Reflection\InjectionStrategy\ReflectionStrategy;
 use Innmind\Reflection\InjectionStrategy\SetterStrategy;

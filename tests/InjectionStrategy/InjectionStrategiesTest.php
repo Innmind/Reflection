@@ -5,7 +5,7 @@ namespace Tests\Innmind\Reflection\InjectionStrategy;
 
 use Innmind\Reflection\InjectionStrategy\InjectionStrategies;
 use Innmind\Reflection\InjectionStrategy\InjectionStrategiesInterface;
-use Innmind\Reflection\InjectionStrategy\InjectionStrategyInterface;
+use Innmind\Reflection\InjectionStrategyInterface;
 use Innmind\Reflection\InjectionStrategy\SetterStrategy;
 use Innmind\Reflection\InjectionStrategy\NamedMethodStrategy;
 use Innmind\Reflection\InjectionStrategy\ReflectionStrategy;

@@ -1,7 +1,7 @@
 <?php
 declare(strict_types = 1);
 
-namespace Innmind\Reflection\ExtractionStrategy;
+namespace Innmind\Reflection;
 
 use Innmind\Reflection\Exception\LogicException;
 

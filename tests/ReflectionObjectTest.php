@@ -4,14 +4,14 @@ declare(strict_types = 1);
 namespace Tests\Innmind\Reflection;
 
 use Innmind\Reflection\ExtractionStrategy\ExtractionStrategiesInterface;
-use Innmind\Reflection\ExtractionStrategy\ExtractionStrategyInterface;
+use Innmind\Reflection\ExtractionStrategyInterface;
 use Innmind\Reflection\ExtractionStrategy\GetterStrategy;
 use Innmind\Reflection\ExtractionStrategy\NamedMethodStrategy as ENamedMethodStrategy;
 use Innmind\Reflection\ExtractionStrategy\ReflectionStrategy as EReflectionStrategy;
 use Innmind\Reflection\ExtractionStrategy\IsserStrategy;
 use Innmind\Reflection\ExtractionStrategy\HasserStrategy;
 use Innmind\Reflection\InjectionStrategy\InjectionStrategiesInterface;
-use Innmind\Reflection\InjectionStrategy\InjectionStrategyInterface;
+use Innmind\Reflection\InjectionStrategyInterface;
 use Innmind\Reflection\InjectionStrategy\NamedMethodStrategy;
 use Innmind\Reflection\InjectionStrategy\ReflectionStrategy;
 use Innmind\Reflection\InjectionStrategy\SetterStrategy;
