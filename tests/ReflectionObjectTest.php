@@ -10,7 +10,7 @@ use Innmind\Reflection\ExtractionStrategy\NamedMethodStrategy as ENamedMethodStr
 use Innmind\Reflection\ExtractionStrategy\ReflectionStrategy as EReflectionStrategy;
 use Innmind\Reflection\ExtractionStrategy\IsserStrategy;
 use Innmind\Reflection\ExtractionStrategy\HasserStrategy;
-use Innmind\Reflection\InjectionStrategy\InjectionStrategiesInterface;
+use Innmind\Reflection\InjectionStrategy\InjectionStrategies;
 use Innmind\Reflection\InjectionStrategyInterface;
 use Innmind\Reflection\InjectionStrategy\NamedMethodStrategy;
 use Innmind\Reflection\InjectionStrategy\ReflectionStrategy;
@@ -168,38 +168,23 @@ class ReflectionObjectTest extends TestCase
             ->build();
     }
 
-    public function testGetInjectionStrategies()
+    public function testGetInjectionStrategy()
     {
         $refl = new ReflectionObject(new \stdClass);
 
-        $s = $refl->injectionStrategies()->all();
-        $this->assertSame(InjectionStrategyInterface::class, (string) $s->type());
-        $this->assertCount(3, $s);
-        $s = $s->toPrimitive();
-        $this->assertInstanceOf(SetterStrategy::class, $s[0]);
-        $this->assertInstanceOf(NamedMethodStrategy::class, $s[1]);
-        $this->assertInstanceOf(ReflectionStrategy::class, $s[2]);
+        $this->assertSame(
+            $refl->injectionStrategy(),
+            InjectionStrategies::default()
+        );
 
-        $testInjectionStrategies = $this
-            ->getMockBuilder(InjectionStrategiesInterface::class)
-            ->getMock();
-        $testInjectionStrategies
-            ->expects($this->any())
-            ->method('all')
-            ->will(
-                $this->returnValue(
-                    (new Set(InjectionStrategyInterface::class))
-                        ->add($s = new ReflectionStrategy)
-                )
-            );
-
+        $strategy = $this->createMock(InjectionStrategyInterface::class);
         $refl = new ReflectionObject(
             new \stdClass,
             null,
-            $testInjectionStrategies
+            $strategy
         );
-        $this->assertSame($s, $refl->injectionStrategies()->all()->current());
-        $this->assertCount(1, $refl->injectionStrategies()->all());
+
+        $this->assertSame($strategy, $refl->injectionStrategy());
     }
 
     public function testGetExtractionStrategies()

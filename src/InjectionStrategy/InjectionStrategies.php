@@ -2,71 +2,24 @@
 
 namespace Innmind\Reflection\InjectionStrategy;
 
-use Innmind\Reflection\{
-    Cache\StrategyCachingCapabilities,
-    Exception\LogicException,
-    Exception\InvalidArgumentException,
-    InjectionStrategyInterface
-};
-use Innmind\Immutable\{
-    SetInterface,
-    Set
-};
+use Innmind\Reflection\InjectionStrategyInterface;
+use Innmind\Immutable\Stream;
 
-/**
- * DefaultInjectionStrategies
- *
- * @author Hugues Maignol <hugues@hmlb.fr>
- */
-final class InjectionStrategies implements InjectionStrategiesInterface
+final class InjectionStrategies
 {
-    use StrategyCachingCapabilities;
+    private static $default;
 
-    private $strategies;
-
-    public function __construct(SetInterface $strategies = null)
+    public static function default(): InjectionStrategyInterface
     {
-        $this->strategies = $strategies ?? $this->all();
-
-        if ((string) $this->strategies->type() !== InjectionStrategyInterface::class) {
-            throw new InvalidArgumentException;
-        }
-    }
-
-    public function all(): SetInterface
-    {
-        if ($this->strategies === null) {
-            return $this->strategies = (new Set(InjectionStrategyInterface::class))
-                ->add(new SetterStrategy)
-                ->add(new NamedMethodStrategy)
-                ->add(new ReflectionStrategy);
+        if (self::$default === null) {
+            self::$default = new DelegationStrategy(
+                (new Stream(InjectionStrategyInterface::class))
+                    ->add(new SetterStrategy)
+                    ->add(new NamedMethodStrategy)
+                    ->add(new ReflectionStrategy)
+            );
         }
 
-        return $this->strategies;
-    }
-
-    public function get($object, string $key, $value): InjectionStrategyInterface
-    {
-        $strategy = $this->getCachedStrategy(get_class($object), $key);
-
-        if ($strategy !== null) {
-            return $strategy;
-        }
-
-        foreach ($this->all() as $strategy) {
-            if ($strategy->supports($object, $key, $value)) {
-
-                $this->setCachedStrategy(get_class($object), $key, $strategy);
-
-                return $strategy;
-            }
-        }
-
-        throw new LogicException(
-            sprintf(
-                'Property "%s" cannot be injected',
-                $key
-            )
-        );
+        return self::$default;
     }
 }

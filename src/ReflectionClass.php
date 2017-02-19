@@ -5,7 +5,6 @@ namespace Innmind\Reflection;
 
 use Innmind\Reflection\Exception\InvalidArgumentException;
 use Innmind\Reflection\InjectionStrategy\InjectionStrategies;
-use Innmind\Reflection\InjectionStrategy\InjectionStrategiesInterface;
 use Innmind\Reflection\Instanciator\ReflectionInstanciator;
 use Innmind\Immutable\{
     MapInterface,
@@ -16,13 +15,13 @@ class ReflectionClass
 {
     private $class;
     private $properties;
-    private $injectionStrategies;
+    private $injectionStrategy;
     private $instanciator;
 
     public function __construct(
         string $class,
         MapInterface $properties = null,
-        InjectionStrategiesInterface $injectionStrategies = null,
+        InjectionStrategyInterface $injectionStrategy = null,
         InstanciatorInterface $instanciator = null
     ) {
         $properties = $properties ?? new Map('string', 'mixed');
@@ -36,7 +35,7 @@ class ReflectionClass
 
         $this->class = $class;
         $this->properties = $properties;
-        $this->injectionStrategies = $injectionStrategies ?? new InjectionStrategies;
+        $this->injectionStrategy = $injectionStrategy ?? InjectionStrategies::default();
         $this->instanciator = $instanciator ?? new ReflectionInstanciator;
     }
 
@@ -53,7 +52,7 @@ class ReflectionClass
         return new self(
             $this->class,
             $this->properties->put($property, $value),
-            $this->injectionStrategies,
+            $this->injectionStrategy,
             $this->instanciator
         );
     }
@@ -76,7 +75,7 @@ class ReflectionClass
         return new self(
             $this->class,
             $map,
-            $this->injectionStrategies,
+            $this->injectionStrategy,
             $this->instanciator
         );
     }
@@ -96,9 +95,9 @@ class ReflectionClass
      *
      * @return InjectionStrategiesInterface
      */
-    public function injectionStrategies(): InjectionStrategiesInterface
+    public function injectionStrategy(): InjectionStrategyInterface
     {
-        return $this->injectionStrategies;
+        return $this->injectionStrategy;
     }
 
     /**
@@ -130,7 +129,7 @@ class ReflectionClass
         $refl = new ReflectionObject(
             $object,
             $properties,
-            $this->injectionStrategies
+            $this->injectionStrategy
         );
 
         return $refl->build();

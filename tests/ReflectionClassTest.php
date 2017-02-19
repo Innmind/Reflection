@@ -3,8 +3,8 @@ declare(strict_types = 1);
 
 namespace Tests\Innmind\Reflection;
 
-use Innmind\Reflection\InjectionStrategy\InjectionStrategiesInterface;
 use Innmind\Reflection\InjectionStrategyInterface;
+use Innmind\Reflection\InjectionStrategy\InjectionStrategies;
 use Innmind\Reflection\InjectionStrategy\NamedMethodStrategy;
 use Innmind\Reflection\InjectionStrategy\ReflectionStrategy;
 use Innmind\Reflection\InjectionStrategy\SetterStrategy;
@@ -53,34 +53,20 @@ class ReflectionClassTest extends TestCase
         $this->assertSame(66, $o->b());
     }
 
-    public function testGetInjectionStrategies()
+    public function testGetInjectionStrategy()
     {
         $refl = new ReflectionClass('stdClass');
 
-        $s = $refl->injectionStrategies()->all();
-        $this->assertSame(InjectionStrategyInterface::class, (string) $s->type());
-        $s = $s->toPrimitive();
-        $this->assertInstanceOf(SetterStrategy::class, $s[0]);
-        $this->assertInstanceOf(NamedMethodStrategy::class, $s[1]);
-        $this->assertInstanceOf(ReflectionStrategy::class, $s[2]);
+        $this->assertSame($refl->injectionStrategy(), InjectionStrategies::default());
 
-        $testInjectionStrategies = $this->getMockBuilder(InjectionStrategiesInterface::class)
-            ->getMock();
-        $testInjectionStrategies->expects($this->any())
-            ->method('all')
-            ->will(
-                $this->returnValue(
-                    (new Set(InjectionStrategyInterface::class))
-                        ->add($s = new ReflectionStrategy)
-                )
-            );
-
+        $strategy = $this->createMock(InjectionStrategyInterface::class);
         $refl = new ReflectionClass(
             'stdClass',
             null,
-            $testInjectionStrategies
+            $strategy
         );
-        $this->assertSame($s, $refl->injectionStrategies()->all()->current());
+
+        $this->assertSame($strategy, $refl->injectionStrategy());
     }
 
     public function testGetProperties()

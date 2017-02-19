@@ -7,7 +7,7 @@ use Innmind\Reflection\Exception\InvalidArgumentException;
 use Innmind\Reflection\ExtractionStrategy\ExtractionStrategies;
 use Innmind\Reflection\ExtractionStrategy\ExtractionStrategiesInterface;
 use Innmind\Reflection\InjectionStrategy\InjectionStrategies;
-use Innmind\Reflection\InjectionStrategy\InjectionStrategiesInterface;
+use Innmind\Reflection\InjectionStrategyInterface;
 use Innmind\Immutable\{
     MapInterface,
     Map
@@ -17,13 +17,13 @@ class ReflectionObject
 {
     private $object;
     private $properties;
-    private $injectionStrategies;
+    private $injectionStrategy;
     private $extractionStrategies;
 
     public function __construct(
         $object,
         MapInterface $properties = null,
-        InjectionStrategiesInterface $injectionStrategies = null,
+        InjectionStrategyInterface $injectionStrategy = null,
         ExtractionStrategiesInterface $extractionStrategies = null
     ) {
         $properties = $properties ?? new Map('string', 'mixed');
@@ -38,7 +38,7 @@ class ReflectionObject
 
         $this->object = $object;
         $this->properties = $properties;
-        $this->injectionStrategies = $injectionStrategies ?? new InjectionStrategies();
+        $this->injectionStrategy = $injectionStrategy ?? InjectionStrategies::default();
         $this->extractionStrategies = $extractionStrategies ?? new ExtractionStrategies();
     }
 
@@ -55,7 +55,7 @@ class ReflectionObject
         return new self(
             $this->object,
             $this->properties->put($name, $value),
-            $this->injectionStrategies,
+            $this->injectionStrategy,
             $this->extractionStrategies
         );
     }
@@ -78,7 +78,7 @@ class ReflectionObject
         return new self(
             $this->object,
             $map,
-            $this->injectionStrategies,
+            $this->injectionStrategy,
             $this->extractionStrategies
         );
     }
@@ -96,11 +96,11 @@ class ReflectionObject
     /**
      * Return the list of injection strategies used
      *
-     * @return InjectionStrategiesInterface
+     * @return InjectionStrategyInterface
      */
-    public function injectionStrategies(): InjectionStrategiesInterface
+    public function injectionStrategy(): InjectionStrategyInterface
     {
-        return $this->injectionStrategies;
+        return $this->injectionStrategy;
     }
 
     /**
@@ -158,10 +158,7 @@ class ReflectionObject
      */
     private function inject(string $key, $value): void
     {
-        $this
-            ->injectionStrategies
-            ->get($this->object, $key, $value)
-            ->inject($this->object, $key, $value);
+        $this->injectionStrategy->inject($this->object, $key, $value);
     }
 
     /**
