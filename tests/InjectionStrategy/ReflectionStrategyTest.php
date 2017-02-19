@@ -5,8 +5,9 @@ namespace Tests\Innmind\Reflection\InjectionStrategy;
 
 use Innmind\Reflection\InjectionStrategy\ReflectionStrategy;
 use Fixtures\Innmind\Reflection\Foo;
+use PHPUnit\Framework\TestCase;
 
-class ReflectionStrategyTest extends \PHPUnit_Framework_TestCase
+class ReflectionStrategyTest extends TestCase
 {
     public function testSupports()
     {

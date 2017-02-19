@@ -5,8 +5,9 @@ namespace Tests\Innmind\Reflection\Visitor;
 
 use Innmind\Reflection\Visitor\AccessProperty;
 use Fixtures\Innmind\Reflection\Foo;
+use PHPUnit\Framework\TestCase;
 
-class AccessPropertyTest extends \PHPUnit_Framework_TestCase
+class AccessPropertyTest extends TestCase
 {
     /**
      * @dataProvider cases

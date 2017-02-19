@@ -5,8 +5,9 @@ namespace Tests\Innmind\Reflection\InjectionStrategy;
 
 use Innmind\Reflection\InjectionStrategy\NamedMethodStrategy;
 use Fixtures\Innmind\Reflection\Foo;
+use PHPUnit\Framework\TestCase;
 
-class NamedMethodStrategyTest extends \PHPUnit_Framework_TestCase
+class NamedMethodStrategyTest extends TestCase
 {
     public function testSupports()
     {

@@ -5,8 +5,9 @@ namespace Tests\Innmind\Reflection\ExtractionStrategy;
 
 use Innmind\Reflection\ExtractionStrategy\GetterStrategy;
 use Fixtures\Innmind\Reflection\Foo;
+use PHPUnit\Framework\TestCase;
 
-class GetterStrategyTest extends \PHPUnit_Framework_TestCase
+class GetterStrategyTest extends TestCase
 {
     public function testSupports()
     {

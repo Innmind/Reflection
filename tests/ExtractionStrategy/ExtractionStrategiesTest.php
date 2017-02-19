@@ -12,8 +12,9 @@ use Innmind\Reflection\ExtractionStrategy\ReflectionStrategy;
 use Innmind\Reflection\ExtractionStrategy\IsserStrategy;
 use Innmind\Reflection\ExtractionStrategy\HasserStrategy;
 use Innmind\Immutable\TypedCollection;
+use PHPUnit\Framework\TestCase;
 
-class ExtractionStrategiesTest extends \PHPUnit_Framework_TestCase
+class ExtractionStrategiesTest extends TestCase
 {
     public function testDefaults()
     {

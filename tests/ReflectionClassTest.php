@@ -13,8 +13,9 @@ use Innmind\Reflection\InjectionStrategy\SetterStrategy;
 use Innmind\Reflection\Instanciator\ReflectionInstanciator;
 use Innmind\Reflection\InstanciatorInterface;
 use Innmind\Reflection\ReflectionClass;
+use PHPUnit\Framework\TestCase;
 
-class ReflectionClassTest extends \PHPUnit_Framework_TestCase
+class ReflectionClassTest extends TestCase
 {
     public function testBuildWithoutProperties()
     {

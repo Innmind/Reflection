@@ -8,8 +8,9 @@ use Innmind\Reflection\{
     Instanciator\ConstructorLessInstanciator
 };
 use Innmind\Immutable\Collection;
+use PHPUnit\Framework\TestCase;
 
-class ConstructorLessInstanciatorTest extends \PHPUnit_Framework_TestCase
+class ConstructorLessInstanciatorTest extends TestCase
 {
     public function testInterface()
     {

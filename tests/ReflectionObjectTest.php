@@ -19,8 +19,9 @@ use Innmind\Reflection\InjectionStrategy\NamedMethodStrategy;
 use Innmind\Reflection\InjectionStrategy\ReflectionStrategy;
 use Innmind\Reflection\InjectionStrategy\SetterStrategy;
 use Innmind\Reflection\ReflectionObject;
+use PHPUnit\Framework\TestCase;
 
-class ReflectionObjectTest extends \PHPUnit_Framework_TestCase
+class ReflectionObjectTest extends TestCase
 {
     public function testBuildWithoutProperties()
     {

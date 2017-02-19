@@ -5,13 +5,14 @@ namespace Tests\Innmind\Reflection\Cache;
 
 use Innmind\Reflection\ExtractionStrategy\ReflectionStrategy;
 use Innmind\Reflection\ReflectionObject;
+use PHPUnit\Framework\TestCase;
 
 /**
  * StrategyCachingCapabilitiesTest
  *
  * @author Hugues Maignol <hugues@hmlb.fr>
  */
-class StrategyCachingCapabilitiesTest extends \PHPUnit_Framework_TestCase
+class StrategyCachingCapabilitiesTest extends TestCase
 {
     public function testCaching()
     {

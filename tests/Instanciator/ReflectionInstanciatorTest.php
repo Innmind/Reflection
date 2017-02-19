@@ -6,8 +6,9 @@ namespace Tests\Innmind\Reflection\Instanciator;
 use Innmind\Reflection\Instanciator\ReflectionInstanciator;
 use Innmind\Immutable\Collection;
 use Innmind\Immutable\CollectionInterface;
+use PHPUnit\Framework\TestCase;
 
-class ReflectionInstanciatorTest extends \PHPUnit_Framework_TestCase
+class ReflectionInstanciatorTest extends TestCase
 {
     public function testBuild()
     {

@@ -10,8 +10,9 @@ use Innmind\Reflection\InjectionStrategy\SetterStrategy;
 use Innmind\Reflection\InjectionStrategy\NamedMethodStrategy;
 use Innmind\Reflection\InjectionStrategy\ReflectionStrategy;
 use Innmind\Immutable\TypedCollection;
+use PHPUnit\Framework\TestCase;
 
-class InjectionStrategiesTest extends \PHPUnit_Framework_TestCase
+class InjectionStrategiesTest extends TestCase
 {
     public function testDefaults()
     {

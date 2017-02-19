@@ -5,8 +5,9 @@ namespace Tests\Innmind\Reflection\ExtractionStrategy;
 
 use Innmind\Reflection\ExtractionStrategy\IsserStrategy;
 use Fixtures\Innmind\Reflection\Foo;
+use PHPUnit\Framework\TestCase;
 
-class IsserStrategyTest extends \PHPUnit_Framework_TestCase
+class IsserStrategyTest extends TestCase
 {
     public function testSupports()
     {

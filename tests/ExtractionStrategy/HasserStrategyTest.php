@@ -5,8 +5,9 @@ namespace Tests\Innmind\Reflection\ExtractionStrategy;
 
 use Innmind\Reflection\ExtractionStrategy\HasserStrategy;
 use Fixtures\Innmind\Reflection\Foo;
+use PHPUnit\Framework\TestCase;
 
-class HasserStrategyTest extends \PHPUnit_Framework_TestCase
+class HasserStrategyTest extends TestCase
 {
     public function testSupports()
     {
