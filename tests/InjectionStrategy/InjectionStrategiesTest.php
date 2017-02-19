@@ -3,8 +3,10 @@ declare(strict_types = 1);
 
 namespace Tests\Innmind\Reflection\InjectionStrategy;
 
-use Innmind\Reflection\InjectionStrategy\InjectionStrategies;
-use Innmind\Reflection\InjectionStrategy\DelegationStrategy;
+use Innmind\Reflection\InjectionStrategy\{
+    InjectionStrategies,
+    DelegationStrategy
+};
 use PHPUnit\Framework\TestCase;
 
 class InjectionStrategiesTest extends TestCase
