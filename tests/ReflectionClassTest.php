@@ -3,14 +3,16 @@ declare(strict_types = 1);
 
 namespace Tests\Innmind\Reflection;
 
-use Innmind\Reflection\InjectionStrategyInterface;
-use Innmind\Reflection\InjectionStrategy\InjectionStrategies;
-use Innmind\Reflection\InjectionStrategy\NamedMethodStrategy;
-use Innmind\Reflection\InjectionStrategy\ReflectionStrategy;
-use Innmind\Reflection\InjectionStrategy\SetterStrategy;
-use Innmind\Reflection\Instanciator\ReflectionInstanciator;
-use Innmind\Reflection\InstanciatorInterface;
-use Innmind\Reflection\ReflectionClass;
+use Innmind\Reflection\{
+    ReflectionClass,
+    InjectionStrategyInterface,
+    InjectionStrategy\InjectionStrategies,
+    InjectionStrategy\NamedMethodStrategy,
+    InjectionStrategy\ReflectionStrategy,
+    InjectionStrategy\SetterStrategy,
+    Instanciator\ReflectionInstanciator,
+    InstanciatorInterface
+};
 use Innmind\Immutable\{
     MapInterface,
     SetInterface,

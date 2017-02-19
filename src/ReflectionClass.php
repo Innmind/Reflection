@@ -3,9 +3,11 @@ declare(strict_types = 1);
 
 namespace Innmind\Reflection;
 
-use Innmind\Reflection\Exception\InvalidArgumentException;
-use Innmind\Reflection\InjectionStrategy\InjectionStrategies;
-use Innmind\Reflection\Instanciator\ReflectionInstanciator;
+use Innmind\Reflection\{
+    InjectionStrategy\InjectionStrategies,
+    Instanciator\ReflectionInstanciator,
+    Exception\InvalidArgumentException
+};
 use Innmind\Immutable\{
     MapInterface,
     Map

@@ -3,19 +3,13 @@ declare(strict_types = 1);
 
 namespace Tests\Innmind\Reflection;
 
-use Innmind\Reflection\ExtractionStrategy\ExtractionStrategies;
-use Innmind\Reflection\ExtractionStrategyInterface;
-use Innmind\Reflection\ExtractionStrategy\GetterStrategy;
-use Innmind\Reflection\ExtractionStrategy\NamedMethodStrategy as ENamedMethodStrategy;
-use Innmind\Reflection\ExtractionStrategy\ReflectionStrategy as EReflectionStrategy;
-use Innmind\Reflection\ExtractionStrategy\IsserStrategy;
-use Innmind\Reflection\ExtractionStrategy\HasserStrategy;
-use Innmind\Reflection\InjectionStrategy\InjectionStrategies;
-use Innmind\Reflection\InjectionStrategyInterface;
-use Innmind\Reflection\InjectionStrategy\NamedMethodStrategy;
-use Innmind\Reflection\InjectionStrategy\ReflectionStrategy;
-use Innmind\Reflection\InjectionStrategy\SetterStrategy;
-use Innmind\Reflection\ReflectionObject;
+use Innmind\Reflection\{
+    ReflectionObject,
+    ExtractionStrategy\ExtractionStrategies,
+    ExtractionStrategyInterface,
+    InjectionStrategy\InjectionStrategies,
+    InjectionStrategyInterface
+};
 use Innmind\Immutable\{
     MapInterface,
     SetInterface,

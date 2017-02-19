@@ -3,8 +3,10 @@ declare(strict_types = 1);
 
 namespace Innmind\Reflection\Instanciator;
 
-use Innmind\Reflection\InstanciatorInterface;
-use Innmind\Reflection\Exception\InstanciationFailedException;
+use Innmind\Reflection\{
+    InstanciatorInterface,
+    Exception\InstanciationFailedException
+};
 use Innmind\Immutable\{
     MapInterface,
     SetInterface,
