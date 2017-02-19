@@ -1,7 +1,7 @@
 <?php
 declare(strict_types = 1);
 
-namespace Innmind\Reflection\InjectionStrategy;
+namespace Innmind\Reflection;
 
 use Innmind\Reflection\Exception\LogicException;
 
@@ -26,9 +26,9 @@ interface InjectionStrategyInterface
      * @param string $property
      * @param mixed $value
      *
-     * @throws LogicException If the property is not supported
+     * @throws PropertyCannotBeInjectedException If the property is not supported
      *
      * @return void
      */
-    public function inject($object, string $property, $value);
+    public function inject($object, string $property, $value): void;
 }

@@ -3,11 +3,23 @@ declare(strict_types = 1);
 
 namespace Tests\Innmind\Reflection\ExtractionStrategy;
 
-use Innmind\Reflection\ExtractionStrategy\NamedMethodStrategy;
+use Innmind\Reflection\{
+    ExtractionStrategy\NamedMethodStrategy,
+    ExtractionStrategyInterface
+};
 use Fixtures\Innmind\Reflection\Foo;
+use PHPUnit\Framework\TestCase;
 
-class NamedMethodStrategyTest extends \PHPUnit_Framework_TestCase
+class NamedMethodStrategyTest extends TestCase
 {
+    public function testInterface()
+    {
+        $this->assertInstanceOf(
+            ExtractionStrategyInterface::class,
+            new NamedMethodStrategy
+        );
+    }
+
     public function testSupports()
     {
         $o = new class {

@@ -3,11 +3,23 @@ declare(strict_types = 1);
 
 namespace Tests\Innmind\Reflection\ExtractionStrategy;
 
-use Innmind\Reflection\ExtractionStrategy\HasserStrategy;
+use Innmind\Reflection\{
+    ExtractionStrategy\HasserStrategy,
+    ExtractionStrategyInterface
+};
 use Fixtures\Innmind\Reflection\Foo;
+use PHPUnit\Framework\TestCase;
 
-class HasserStrategyTest extends \PHPUnit_Framework_TestCase
+class HasserStrategyTest extends TestCase
 {
+    public function testInterface()
+    {
+        $this->assertInstanceOf(
+            ExtractionStrategyInterface::class,
+            new HasserStrategy
+        );
+    }
+
     public function testSupports()
     {
         $o = new class {

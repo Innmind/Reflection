@@ -3,8 +3,11 @@ declare(strict_types = 1);
 
 namespace Innmind\Reflection\ExtractionStrategy;
 
-use Innmind\Reflection\Exception\LogicException;
-use Innmind\Immutable\StringPrimitive;
+use Innmind\Reflection\{
+    ExtractionStrategyInterface,
+    Exception\LogicException
+};
+use Innmind\Immutable\Str;
 
 class GetterStrategy implements ExtractionStrategyInterface
 {
@@ -12,7 +15,7 @@ class GetterStrategy implements ExtractionStrategyInterface
 
     public function __construct()
     {
-        $this->getter = new StringPrimitive('get%s');
+        $this->getter = new Str('get%s');
     }
 
     /**
@@ -22,7 +25,7 @@ class GetterStrategy implements ExtractionStrategyInterface
     {
         $refl = new \ReflectionObject($object);
         $getter = (string) $this->getter->sprintf(
-            (string) (new StringPrimitive($property))->camelize()
+            (string) (new Str($property))->camelize()
         );
 
         if (!$refl->hasMethod($getter)) {
@@ -48,7 +51,7 @@ class GetterStrategy implements ExtractionStrategyInterface
         }
 
         $getter = (string) $this->getter->sprintf(
-            (string) (new StringPrimitive($property))->camelize()
+            (string) (new Str($property))->camelize()
         );
 
         return $object->$getter();

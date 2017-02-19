@@ -7,9 +7,10 @@ use Innmind\Reflection\{
     InstanciatorInterface,
     Instanciator\ConstructorLessInstanciator
 };
-use Innmind\Immutable\Collection;
+use Innmind\Immutable\Map;
+use PHPUnit\Framework\TestCase;
 
-class ConstructorLessInstanciatorTest extends \PHPUnit_Framework_TestCase
+class ConstructorLessInstanciatorTest extends TestCase
 {
     public function testInterface()
     {
@@ -35,13 +36,13 @@ class ConstructorLessInstanciatorTest extends \PHPUnit_Framework_TestCase
             'stdClass',
             $instanciator->build(
                 'stdClass',
-                new Collection([])
+                new Map('string', 'variable')
             )
         );
 
         $builtObject = $instanciator->build(
             get_class($object),
-            new Collection([])
+            new Map('string', 'variable')
         );
 
         $this->assertInstanceOf(get_class($object), $builtObject);
@@ -59,11 +60,11 @@ class ConstructorLessInstanciatorTest extends \PHPUnit_Framework_TestCase
 
         $this->assertSame(
             [],
-            $instanciator->getParameters('stdClass')->toPrimitive()
+            $instanciator->parameters('stdClass')->toPrimitive()
         );
         $this->assertSame(
             [],
-            $instanciator->getParameters(get_class($object))->toPrimitive()
+            $instanciator->parameters(get_class($object))->toPrimitive()
         );
     }
 }

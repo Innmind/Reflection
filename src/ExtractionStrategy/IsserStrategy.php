@@ -3,8 +3,11 @@ declare(strict_types = 1);
 
 namespace Innmind\Reflection\ExtractionStrategy;
 
-use Innmind\Reflection\Exception\LogicException;
-use Innmind\Immutable\StringPrimitive;
+use Innmind\Reflection\{
+    ExtractionStrategyInterface,
+    Exception\LogicException
+};
+use Innmind\Immutable\Str;
 
 class IsserStrategy implements ExtractionStrategyInterface
 {
@@ -12,7 +15,7 @@ class IsserStrategy implements ExtractionStrategyInterface
 
     public function __construct()
     {
-        $this->isser = new StringPrimitive('is%s');
+        $this->isser = new Str('is%s');
     }
 
     /**
@@ -22,7 +25,7 @@ class IsserStrategy implements ExtractionStrategyInterface
     {
         $refl = new \ReflectionObject($object);
         $isser = (string) $this->isser->sprintf(
-            (string) (new StringPrimitive($property))->camelize()
+            (string) (new Str($property))->camelize()
         );
 
         if (!$refl->hasMethod($isser)) {
@@ -48,7 +51,7 @@ class IsserStrategy implements ExtractionStrategyInterface
         }
 
         $isser = (string) $this->isser->sprintf(
-            (string) (new StringPrimitive($property))->camelize()
+            (string) (new Str($property))->camelize()
         );
 
         return $object->$isser();

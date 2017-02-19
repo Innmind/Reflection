@@ -3,11 +3,23 @@ declare(strict_types = 1);
 
 namespace Tests\Innmind\Reflection\InjectionStrategy;
 
-use Innmind\Reflection\InjectionStrategy\ReflectionStrategy;
+use Innmind\Reflection\{
+    InjectionStrategy\ReflectionStrategy,
+    InjectionStrategyInterface
+};
 use Fixtures\Innmind\Reflection\Foo;
+use PHPUnit\Framework\TestCase;
 
-class ReflectionStrategyTest extends \PHPUnit_Framework_TestCase
+class ReflectionStrategyTest extends TestCase
 {
+    public function testInterface()
+    {
+        $this->assertInstanceOf(
+            InjectionStrategyInterface::class,
+            new ReflectionStrategy
+        );
+    }
+
     public function testSupports()
     {
         $s = new ReflectionStrategy;

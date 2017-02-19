@@ -3,81 +3,76 @@ declare(strict_types = 1);
 
 namespace Tests\Innmind\Reflection;
 
-use Innmind\Immutable\CollectionInterface;
-use Innmind\Immutable\TypedCollection;
-use Innmind\Reflection\InjectionStrategy\InjectionStrategiesInterface;
-use Innmind\Reflection\InjectionStrategy\InjectionStrategyInterface;
-use Innmind\Reflection\InjectionStrategy\NamedMethodStrategy;
-use Innmind\Reflection\InjectionStrategy\ReflectionStrategy;
-use Innmind\Reflection\InjectionStrategy\SetterStrategy;
-use Innmind\Reflection\Instanciator\ReflectionInstanciator;
-use Innmind\Reflection\InstanciatorInterface;
-use Innmind\Reflection\ReflectionClass;
+use Innmind\Reflection\{
+    ReflectionClass,
+    InjectionStrategyInterface,
+    InjectionStrategy\InjectionStrategies,
+    InjectionStrategy\NamedMethodStrategy,
+    InjectionStrategy\ReflectionStrategy,
+    InjectionStrategy\SetterStrategy,
+    Instanciator\ReflectionInstanciator,
+    InstanciatorInterface
+};
+use Fixtures\Innmind\Reflection\{
+    NoConstructor,
+    WithConstructor
+};
+use Innmind\Immutable\{
+    MapInterface,
+    SetInterface,
+    Set
+};
+use PHPUnit\Framework\TestCase;
 
-class ReflectionClassTest extends \PHPUnit_Framework_TestCase
+class ReflectionClassTest extends TestCase
 {
     public function testBuildWithoutProperties()
     {
-        $r = new ReflectionClass(NoConstruct::class);
+        $r = new ReflectionClass(NoConstructor::class);
 
-        $o = $r->buildObject();
+        $o = $r->build();
 
-        $this->assertInstanceOf(NoConstruct::class, $o);
+        $this->assertInstanceOf(NoConstructor::class, $o);
         $this->assertSame(null, $o->a());
     }
 
     public function testBuild()
     {
-        $o = (new ReflectionClass(NoConstruct::class))
+        $o = (new ReflectionClass(NoConstructor::class))
             ->withProperty('a', 42)
-            ->buildObject();
+            ->build();
 
-        $this->assertInstanceOf(NoConstruct::class, $o);
+        $this->assertInstanceOf(NoConstructor::class, $o);
         $this->assertSame(42, $o->a());
 
-        $o = (new ReflectionClass(WithConstruct::class))
+        $o = (new ReflectionClass(WithConstructor::class))
             ->withProperties(
                 [
                     'a' => 24,
                     'b' => 66,
                 ]
             )
-            ->buildObject();
+            ->build();
 
-        $this->assertInstanceOf(WithConstruct::class, $o);
+        $this->assertInstanceOf(WithConstructor::class, $o);
         $this->assertSame(24, $o->a());
         $this->assertSame(66, $o->b());
     }
 
-    public function testGetInjectionStrategies()
+    public function testGetInjectionStrategy()
     {
         $refl = new ReflectionClass('stdClass');
 
-        $s = $refl->getInjectionStrategies()->all();
-        $this->assertSame(InjectionStrategyInterface::class, $s->getType());
-        $this->assertInstanceOf(SetterStrategy::class, $s[0]);
-        $this->assertInstanceOf(NamedMethodStrategy::class, $s[1]);
-        $this->assertInstanceOf(ReflectionStrategy::class, $s[2]);
+        $this->assertSame($refl->injectionStrategy(), InjectionStrategies::default());
 
-        $testInjectionStrategies = $this->getMockBuilder(InjectionStrategiesInterface::class)
-            ->getMock();
-        $testInjectionStrategies->expects($this->any())
-            ->method('all')
-            ->will(
-                $this->returnValue(
-                    new TypedCollection(
-                        InjectionStrategyInterface::class,
-                        [$s = new ReflectionStrategy]
-                    )
-                )
-            );
-
+        $strategy = $this->createMock(InjectionStrategyInterface::class);
         $refl = new ReflectionClass(
             'stdClass',
             null,
-            $testInjectionStrategies
+            $strategy
         );
-        $this->assertSame($s, $refl->getInjectionStrategies()->all()[0]);
+
+        $this->assertSame($strategy, $refl->injectionStrategy());
     }
 
     public function testGetProperties()
@@ -85,67 +80,34 @@ class ReflectionClassTest extends \PHPUnit_Framework_TestCase
         $r = (new ReflectionClass('foo'))
             ->withProperty('a', 'b');
 
-        $props = $r->getProperties();
+        $props = $r->properties();
 
-        $this->assertInstanceOf(CollectionInterface::class, $props);
-        $this->assertSame(['a' => 'b'], $props->toPrimitive());
+        $this->assertInstanceOf(MapInterface::class, $props);
+        $this->assertSame('string', (string) $props->keyType());
+        $this->assertSame('mixed', (string) $props->valueType());
+        $this->assertCount(1, $props);
+        $this->assertSame('b', $props->get('a'));
     }
 
     public function testGetInstanciator()
     {
         $r = new ReflectionClass('foo');
-        $i = $r->getInstanciator();
+        $i = $r->instanciator();
         $this->assertInstanceOf(ReflectionInstanciator::class, $i);
 
         $i = new class implements InstanciatorInterface
         {
-            public function build(string $class, CollectionInterface $properties)
+            public function build(string $class, MapInterface $properties)
             {
             }
 
-            public function getParameters(string $class): CollectionInterface
+            public function parameters(string $class): SetInterface
             {
             }
         };
 
         $r = new ReflectionClass('foo', null, null, $i);
-        $i2 = $r->getInstanciator();
+        $i2 = $r->instanciator();
         $this->assertSame($i, $i2);
-    }
-}
-
-class NoConstruct
-{
-    private $a;
-
-    public function a()
-    {
-        return $this->a;
-    }
-}
-
-class WithConstruct
-{
-    private $a;
-    private $b;
-
-    public function __construct($a)
-    {
-        $this->a = $a;
-    }
-
-    public function setA($a)
-    {
-        $this->a = 42;
-    }
-
-    public function a()
-    {
-        return $this->a;
-    }
-
-    public function b()
-    {
-        return $this->b;
     }
 }

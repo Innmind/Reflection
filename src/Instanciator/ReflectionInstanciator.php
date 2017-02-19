@@ -3,17 +3,23 @@ declare(strict_types = 1);
 
 namespace Innmind\Reflection\Instanciator;
 
-use Innmind\Reflection\InstanciatorInterface;
-use Innmind\Reflection\Exception\InstanciationFailedException;
-use Innmind\Immutable\CollectionInterface;
-use Innmind\Immutable\Collection;
+use Innmind\Reflection\{
+    InstanciatorInterface,
+    Exception\InstanciationFailedException
+};
+use Innmind\Immutable\{
+    MapInterface,
+    SetInterface,
+    Map,
+    Set
+};
 
 class ReflectionInstanciator implements InstanciatorInterface
 {
     /**
      * {@inheritdoc}
      */
-    public function build(string $class, CollectionInterface $properties)
+    public function build(string $class, MapInterface $properties)
     {
         try {
             $refl = new \ReflectionClass($class);
@@ -27,7 +33,14 @@ class ReflectionInstanciator implements InstanciatorInterface
             return $refl->newInstanceArgs(
                 $this
                     ->computeArguments($constructor, $properties)
-                    ->toPrimitive()
+                    ->reduce(
+                        [],
+                        function(array $carry, string $property, $value): array {
+                            $carry[$property] = $value;
+
+                            return $carry;
+                        }
+                    )
             );
         } catch (\TypeError $e) {
             throw new InstanciationFailedException(
@@ -44,41 +57,41 @@ class ReflectionInstanciator implements InstanciatorInterface
     /**
      * {@inheritdoc}
      */
-    public function getParameters(string $class): CollectionInterface
+    public function parameters(string $class): SetInterface
     {
+        $parameters = new Set('string');
         $refl = new \ReflectionClass($class);
 
         if (!$refl->hasMethod('__construct')) {
-            return new Collection([]);
+            return $parameters;
         }
 
         $refl = $refl->getMethod('__construct');
-        $parameters = [];
 
         foreach ($refl->getParameters() as $parameter) {
-            $parameters[] = $parameter->name;
+            $parameters = $parameters->add($parameter->name);
         }
 
-        return new Collection($parameters);
+        return $parameters;
     }
 
     /**
      * @param ReflectionMethod $constructor
-     * @param CollectionInterface $properties
+     * @param MapInterface<string, variable> $properties
      *
-     * @return CollectionInterface
+     * @return MapInterface<string, variable>
      */
     private function computeArguments(
         \ReflectionMethod $constructor,
-        CollectionInterface $properties
-    ): CollectionInterface {
-        $arguments = new Collection([]);
+        MapInterface $properties
+    ): MapInterface {
+        $arguments = $properties->clear();
 
         foreach ($constructor->getParameters() as $parameter) {
             if ($this->canInject($parameter, $properties)) {
-                $arguments = $arguments->set(
+                $arguments = $arguments->put(
                     $parameter->name,
-                    $properties[$parameter->name]
+                    $properties->get($parameter->name)
                 );
             }
         }
@@ -88,27 +101,27 @@ class ReflectionInstanciator implements InstanciatorInterface
 
     /**
      * @param ReflectionParameter $parameter
-     * @param CollectionInterface $properties
+     * @param MapInterface<string, variable> $properties
      *
      * @return bool
      */
     private function canInject(
         \ReflectionParameter $parameter,
-        CollectionInterface $properties
+        MapInterface $properties
     ): bool {
         if (
             !$parameter->allowsNull() &&
-            !$properties->hasKey($parameter->name)
+            !$properties->contains($parameter->name)
         ) {
             return false;
         } else if (
             $parameter->allowsNull() &&
-            !$properties->hasKey($parameter->name)
+            !$properties->contains($parameter->name)
         ) {
             return false;
         }
 
-        $property = $properties[$parameter->name];
+        $property = $properties->get($parameter->name);
 
         if ($parameter->hasType()) {
             $type = $parameter->getType();

@@ -3,8 +3,11 @@ declare(strict_types = 1);
 
 namespace Innmind\Reflection\ExtractionStrategy;
 
-use Innmind\Reflection\Exception\LogicException;
-use Innmind\Immutable\StringPrimitive;
+use Innmind\Reflection\{
+    ExtractionStrategyInterface,
+    Exception\LogicException
+};
+use Innmind\Immutable\Str;
 
 class HasserStrategy implements ExtractionStrategyInterface
 {
@@ -12,7 +15,7 @@ class HasserStrategy implements ExtractionStrategyInterface
 
     public function __construct()
     {
-        $this->hasser = new StringPrimitive('has%s');
+        $this->hasser = new Str('has%s');
     }
 
     /**
@@ -22,7 +25,7 @@ class HasserStrategy implements ExtractionStrategyInterface
     {
         $refl = new \ReflectionObject($object);
         $hasser = (string) $this->hasser->sprintf(
-            (string) (new StringPrimitive($property))->camelize()
+            (string) (new Str($property))->camelize()
         );
 
         if (!$refl->hasMethod($hasser)) {
@@ -48,7 +51,7 @@ class HasserStrategy implements ExtractionStrategyInterface
         }
 
         $hasser = (string) $this->hasser->sprintf(
-            (string) (new StringPrimitive($property))->camelize()
+            (string) (new Str($property))->camelize()
         );
 
         return $object->$hasser();

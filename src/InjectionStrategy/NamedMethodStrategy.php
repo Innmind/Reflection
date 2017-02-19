@@ -3,8 +3,11 @@ declare(strict_types = 1);
 
 namespace Innmind\Reflection\InjectionStrategy;
 
-use Innmind\Reflection\Exception\LogicException;
-use Innmind\Immutable\StringPrimitive;
+use Innmind\Reflection\{
+    InjectionStrategyInterface,
+    Exception\LogicException
+};
+use Innmind\Immutable\Str;
 
 /**
  * Looks for a method named exactly like the property
@@ -25,7 +28,7 @@ class NamedMethodStrategy implements InjectionStrategyInterface
     {
         $refl = new \ReflectionObject($object);
 
-        $property = (string) (new StringPrimitive($property))
+        $property = (string) (new Str($property))
             ->camelize()
             ->lcfirst();
 
@@ -45,13 +48,13 @@ class NamedMethodStrategy implements InjectionStrategyInterface
     /**
      * {@inheritdoc}
      */
-    public function inject($object, string $property, $value)
+    public function inject($object, string $property, $value): void
     {
         if (!$this->supports($object, $property, $value)) {
             throw new LogicException;
         }
 
-        $property = (string) (new StringPrimitive($property))
+        $property = (string) (new Str($property))
             ->camelize()
             ->lcfirst();
 

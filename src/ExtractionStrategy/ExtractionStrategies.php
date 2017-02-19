@@ -2,76 +2,26 @@
 
 namespace Innmind\Reflection\ExtractionStrategy;
 
-use Innmind\Reflection\{
-    Cache\StrategyCachingCapabilities,
-    Exception\LogicException,
-    Exception\InvalidArgumentException
-};
-use Innmind\Immutable\{
-    TypedCollection,
-    TypedCollectionInterface
-};
+use Innmind\Reflection\ExtractionStrategyInterface;
+use Innmind\Immutable\Stream;
 
-/**
- * DefaultExtractionStrategies
- *
- * @author Hugues Maignol <hugues@hmlb.fr>
- */
-final class ExtractionStrategies implements ExtractionStrategiesInterface
+final class ExtractionStrategies
 {
-    use StrategyCachingCapabilities;
+    private static $default;
 
-    private $strategies;
-
-    public function __construct(TypedCollectionInterface $strategies = null)
+    public static function default(): ExtractionStrategyInterface
     {
-        $this->strategies = $strategies ?? $this->all();
-
-        if ($this->strategies->getType() !== ExtractionStrategyInterface::class) {
-            throw new InvalidArgumentException;
-        }
-    }
-
-    public function all(): TypedCollectionInterface
-    {
-        if ($this->strategies === null) {
-            return $this->strategies = new TypedCollection(
-                ExtractionStrategyInterface::class,
-                [
-                    new GetterStrategy,
-                    new NamedMethodStrategy,
-                    new IsserStrategy,
-                    new HasserStrategy,
-                    new ReflectionStrategy,
-                ]
+        if (self::$default == null) {
+            self::$default = new DelegationStrategy(
+                (new Stream(ExtractionStrategyInterface::class))
+                    ->add(new GetterStrategy)
+                    ->add(new NamedMethodStrategy)
+                    ->add(new IsserStrategy)
+                    ->add(new HasserStrategy)
+                    ->add(new ReflectionStrategy)
             );
         }
 
-        return $this->strategies;
+        return self::$default;
     }
-
-    public function get($object, string $key): ExtractionStrategyInterface
-    {
-        $strategy = $this->getCachedStrategy(get_class($object), $key);
-        if (null !== $strategy) {
-            return $strategy;
-        }
-
-        foreach ($this->all() as $strategy) {
-            if ($strategy->supports($object, $key)) {
-
-                $this->setCachedStrategy(get_class($object), $key, $strategy);
-
-                return $strategy;
-            }
-        }
-
-        throw new LogicException(
-            sprintf(
-                'Property "%s" cannot be extracted',
-                $key
-            )
-        );
-    }
-
 }
