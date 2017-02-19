@@ -3,11 +3,13 @@ declare(strict_types = 1);
 
 namespace Innmind\Reflection;
 
-use Innmind\Reflection\Exception\InvalidArgumentException;
-use Innmind\Reflection\ExtractionStrategy\ExtractionStrategies;
-use Innmind\Reflection\ExtractionStrategy\ExtractionStrategiesInterface;
-use Innmind\Reflection\InjectionStrategy\InjectionStrategies;
-use Innmind\Reflection\InjectionStrategyInterface;
+use Innmind\Reflection\{
+    InjectionStrategyInterface,
+    ExtractionStrategyInterface,
+    ExtractionStrategy\ExtractionStrategies,
+    InjectionStrategy\InjectionStrategies,
+    Exception\InvalidArgumentException
+};
 use Innmind\Immutable\{
     MapInterface,
     Map
@@ -18,13 +20,13 @@ class ReflectionObject
     private $object;
     private $properties;
     private $injectionStrategy;
-    private $extractionStrategies;
+    private $extractionStrategy;
 
     public function __construct(
         $object,
         MapInterface $properties = null,
         InjectionStrategyInterface $injectionStrategy = null,
-        ExtractionStrategiesInterface $extractionStrategies = null
+        ExtractionStrategyInterface $extractionStrategy = null
     ) {
         $properties = $properties ?? new Map('string', 'mixed');
 
@@ -39,7 +41,7 @@ class ReflectionObject
         $this->object = $object;
         $this->properties = $properties;
         $this->injectionStrategy = $injectionStrategy ?? InjectionStrategies::default();
-        $this->extractionStrategies = $extractionStrategies ?? new ExtractionStrategies();
+        $this->extractionStrategy = $extractionStrategy ?? ExtractionStrategies::default();
     }
 
     /**
@@ -56,7 +58,7 @@ class ReflectionObject
             $this->object,
             $this->properties->put($name, $value),
             $this->injectionStrategy,
-            $this->extractionStrategies
+            $this->extractionStrategy
         );
     }
 
@@ -79,7 +81,7 @@ class ReflectionObject
             $this->object,
             $map,
             $this->injectionStrategy,
-            $this->extractionStrategies
+            $this->extractionStrategy
         );
     }
 
@@ -106,11 +108,11 @@ class ReflectionObject
     /**
      * Return the list of extraction strategies used
      *
-     * @return ExtractionStrategiesInterface
+     * @return ExtractionStrategyInterface
      */
-    public function extractionStrategies(): ExtractionStrategiesInterface
+    public function extractionStrategy(): ExtractionStrategyInterface
     {
-        return $this->extractionStrategies;
+        return $this->extractionStrategy;
     }
 
     /**
@@ -170,9 +172,6 @@ class ReflectionObject
      */
     private function extractProperty(string $property)
     {
-        return $this
-            ->extractionStrategies
-            ->get($this->object, $property)
-            ->extract($this->object, $property);
+        return $this->extractionStrategy->extract($this->object, $property);
     }
 }

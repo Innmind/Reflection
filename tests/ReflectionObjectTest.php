@@ -3,7 +3,7 @@ declare(strict_types = 1);
 
 namespace Tests\Innmind\Reflection;
 
-use Innmind\Reflection\ExtractionStrategy\ExtractionStrategiesInterface;
+use Innmind\Reflection\ExtractionStrategy\ExtractionStrategies;
 use Innmind\Reflection\ExtractionStrategyInterface;
 use Innmind\Reflection\ExtractionStrategy\GetterStrategy;
 use Innmind\Reflection\ExtractionStrategy\NamedMethodStrategy as ENamedMethodStrategy;
@@ -187,46 +187,24 @@ class ReflectionObjectTest extends TestCase
         $this->assertSame($strategy, $refl->injectionStrategy());
     }
 
-    public function testGetExtractionStrategies()
+    public function testGetExtractionStrategy()
     {
         $refl = new ReflectionObject(new \stdClass);
 
-        $s = $refl->extractionStrategies()->all();
-        $this->assertInstanceOf(SetInterface::class, $s);
-        $this->assertSame(ExtractionStrategyInterface::class, (string) $s->type());
-        $this->assertCount(5, $s);
-        $s = $s->toPrimitive();
-        $this->assertInstanceOf(GetterStrategy::class, $s[0]);
-        $this->assertInstanceOf(ENamedMethodStrategy::class, $s[1]);
-        $this->assertInstanceOf(IsserStrategy::class, $s[2]);
-        $this->assertInstanceOf(HasserStrategy::class, $s[3]);
-        $this->assertInstanceOf(EReflectionStrategy::class, $s[4]);
+        $this->assertSame(
+            ExtractionStrategies::default(),
+            $refl->extractionStrategy()
+        );
 
-        $testExtractionStrategies = $this
-            ->getMockBuilder(ExtractionStrategiesInterface::class)
-            ->getMock();
-        $testExtractionStrategies
-            ->expects($this->any())
-            ->method('all')
-            ->will(
-                $this->returnValue(
-                    (new Set(ExtractionStrategyInterface::class))
-                        ->add($g = new GetterStrategy)
-                )
-            );
-
+        $strategy = $this->createMock(ExtractionStrategyInterface::class);
         $refl = new ReflectionObject(
             new \stdClass,
             null,
             null,
-            $testExtractionStrategies
+            $strategy
         );
 
-        $s = $refl->extractionStrategies()->all();
-        $this->assertInstanceOf(SetInterface::class, $s);
-        $this->assertSame(ExtractionStrategyInterface::class, (string) $s->type());
-        $this->assertCount(1, $s);
-        $this->assertInstanceOf(GetterStrategy::class, $s->current());
+        $this->assertSame($strategy, $refl->extractionStrategy());
     }
 
     public function testExtract()
