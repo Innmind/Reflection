@@ -6,7 +6,7 @@ namespace Innmind\Reflection\ExtractionStrategy;
 use Innmind\Reflection\{
     ExtractionStrategyInterface,
     Exception\InvalidArgumentException,
-    Exception\PropertyNotFoundException
+    Exception\PropertyCannotBeExtractedException
 };
 use Innmind\Immutable\{
     StreamInterface,
@@ -78,7 +78,7 @@ final class DelegationStrategy implements ExtractionStrategyInterface
         );
 
         if (!$strategy instanceof ExtractionStrategyInterface) {
-            throw new PropertyNotFoundException;
+            throw new PropertyCannotBeExtractedException($property);
         }
 
         $this->cache = $this->cache->put($key, $strategy);

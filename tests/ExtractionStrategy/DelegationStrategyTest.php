@@ -169,7 +169,8 @@ class DelegationStrategyTest extends TestCase
     }
 
     /**
-     * @expectedException Innmind\Reflection\Exception\PropertyNotFoundException
+     * @expectedException Innmind\Reflection\Exception\PropertyCannotBeExtractedException
+     * @expectedExceptionMessage Property "foo" cannot be extracted
      */
     public function testThrowWhenNoStrategySupporting()
     {
