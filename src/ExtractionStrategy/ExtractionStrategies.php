@@ -8,8 +8,8 @@ use Innmind\Reflection\{
     Exception\InvalidArgumentException
 };
 use Innmind\Immutable\{
-    TypedCollection,
-    TypedCollectionInterface
+    SetInterface,
+    Set
 };
 
 /**
@@ -23,28 +23,24 @@ final class ExtractionStrategies implements ExtractionStrategiesInterface
 
     private $strategies;
 
-    public function __construct(TypedCollectionInterface $strategies = null)
+    public function __construct(SetInterface $strategies = null)
     {
         $this->strategies = $strategies ?? $this->all();
 
-        if ($this->strategies->getType() !== ExtractionStrategyInterface::class) {
+        if ((string) $this->strategies->type() !== ExtractionStrategyInterface::class) {
             throw new InvalidArgumentException;
         }
     }
 
-    public function all(): TypedCollectionInterface
+    public function all(): SetInterface
     {
         if ($this->strategies === null) {
-            return $this->strategies = new TypedCollection(
-                ExtractionStrategyInterface::class,
-                [
-                    new GetterStrategy,
-                    new NamedMethodStrategy,
-                    new IsserStrategy,
-                    new HasserStrategy,
-                    new ReflectionStrategy,
-                ]
-            );
+            return $this->strategies = (new Set(ExtractionStrategyInterface::class))
+                ->add(new GetterStrategy)
+                ->add(new NamedMethodStrategy)
+                ->add(new IsserStrategy)
+                ->add(new HasserStrategy)
+                ->add(new ReflectionStrategy);
         }
 
         return $this->strategies;
@@ -53,7 +49,8 @@ final class ExtractionStrategies implements ExtractionStrategiesInterface
     public function get($object, string $key): ExtractionStrategyInterface
     {
         $strategy = $this->getCachedStrategy(get_class($object), $key);
-        if (null !== $strategy) {
+
+        if ($strategy !== null) {
             return $strategy;
         }
 

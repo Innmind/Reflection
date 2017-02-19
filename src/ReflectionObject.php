@@ -3,13 +3,15 @@ declare(strict_types = 1);
 
 namespace Innmind\Reflection;
 
-use Innmind\Immutable\Collection;
-use Innmind\Immutable\CollectionInterface;
 use Innmind\Reflection\Exception\InvalidArgumentException;
 use Innmind\Reflection\ExtractionStrategy\ExtractionStrategies;
 use Innmind\Reflection\ExtractionStrategy\ExtractionStrategiesInterface;
 use Innmind\Reflection\InjectionStrategy\InjectionStrategies;
 use Innmind\Reflection\InjectionStrategy\InjectionStrategiesInterface;
+use Innmind\Immutable\{
+    MapInterface,
+    Map
+};
 
 class ReflectionObject
 {
@@ -20,20 +22,24 @@ class ReflectionObject
 
     public function __construct(
         $object,
-        CollectionInterface $properties = null,
+        MapInterface $properties = null,
         InjectionStrategiesInterface $injectionStrategies = null,
         ExtractionStrategiesInterface $extractionStrategies = null
     ) {
-        if (!is_object($object)) {
+        $properties = $properties ?? new Map('string', 'mixed');
+
+        if (
+            !is_object($object) ||
+            (string) $properties->keyType() !== 'string' ||
+            (string) $properties->valueType() !== 'mixed'
+        ) {
             throw new InvalidArgumentException;
         }
 
+        $this->object = $object;
+        $this->properties = $properties;
         $this->injectionStrategies = $injectionStrategies ?? new InjectionStrategies();
         $this->extractionStrategies = $extractionStrategies ?? new ExtractionStrategies();
-
-        $this->object = $object;
-
-        $this->properties = $properties ?? new Collection([]);
     }
 
     /**
@@ -48,7 +54,7 @@ class ReflectionObject
     {
         return new self(
             $this->object,
-            $this->properties->set($name, $value),
+            $this->properties->put($name, $value),
             $this->injectionStrategies,
             $this->extractionStrategies
         );
@@ -57,15 +63,21 @@ class ReflectionObject
     /**
      * Add a set of properties that need to be injected
      *
-     * @param array $properties
+     * @param array<string, mixed> $properties
      *
      * @return self
      */
     public function withProperties(array $properties): self
     {
+        $map = $this->properties;
+
+        foreach ($properties as $key => $value) {
+            $map = $map->put($key, $value);
+        }
+
         return new self(
             $this->object,
-            $this->properties->merge(new Collection($properties)),
+            $map,
             $this->injectionStrategies,
             $this->extractionStrategies
         );
@@ -74,9 +86,9 @@ class ReflectionObject
     /**
      * Return the collection of properties that will be injected in the object
      *
-     * @return CollectionInterface
+     * @return MapInterface<string, mixed>
      */
-    public function getProperties(): CollectionInterface
+    public function properties(): MapInterface
     {
         return $this->properties;
     }
@@ -86,7 +98,7 @@ class ReflectionObject
      *
      * @return InjectionStrategiesInterface
      */
-    public function getInjectionStrategies(): InjectionStrategiesInterface
+    public function injectionStrategies(): InjectionStrategiesInterface
     {
         return $this->injectionStrategies;
     }
@@ -96,7 +108,7 @@ class ReflectionObject
      *
      * @return ExtractionStrategiesInterface
      */
-    public function getExtractionStrategies(): ExtractionStrategiesInterface
+    public function extractionStrategies(): ExtractionStrategiesInterface
     {
         return $this->extractionStrategies;
     }
@@ -106,11 +118,11 @@ class ReflectionObject
      *
      * @return object
      */
-    public function buildObject()
+    public function build()
     {
-        foreach ($this->properties as $key => $value) {
+        $this->properties->foreach(function(string $key, $value): void {
             $this->inject($key, $value);
-        }
+        });
 
         return $this->object;
     }
@@ -118,19 +130,22 @@ class ReflectionObject
     /**
      * Extract the given list of properties
      *
-     * @param array $properties
+     * @param string[] $properties
      *
-     * @return CollectionInterface
+     * @return MapInterface<string, mixed>
      */
-    public function extract(array $properties): CollectionInterface
+    public function extract(array $properties): MapInterface
     {
-        $values = [];
+        $map = new Map('string', 'mixed');
 
         foreach ($properties as $property) {
-            $values[$property] = $this->extractProperty($property);
+            $map = $map->put(
+                $property,
+                $this->extractProperty($property)
+            );
         }
 
-        return new Collection($values);
+        return $map;
     }
 
     /**
@@ -141,7 +156,7 @@ class ReflectionObject
      *
      * @return void
      */
-    private function inject(string $key, $value)
+    private function inject(string $key, $value): void
     {
         $this
             ->injectionStrategies

@@ -11,7 +11,10 @@ use Innmind\Reflection\ExtractionStrategy\NamedMethodStrategy;
 use Innmind\Reflection\ExtractionStrategy\ReflectionStrategy;
 use Innmind\Reflection\ExtractionStrategy\IsserStrategy;
 use Innmind\Reflection\ExtractionStrategy\HasserStrategy;
-use Innmind\Immutable\TypedCollection;
+use Innmind\Immutable\{
+    SetInterface,
+    Set
+};
 use PHPUnit\Framework\TestCase;
 
 class ExtractionStrategiesTest extends TestCase
@@ -21,8 +24,9 @@ class ExtractionStrategiesTest extends TestCase
         $defaults = (new ExtractionStrategies())->all();
 
         $this->assertInstanceOf(ExtractionStrategiesInterface::class, new ExtractionStrategies);
-        $this->assertInstanceOf(TypedCollection::class, $defaults);
-        $this->assertSame(ExtractionStrategyInterface::class, $defaults->getType());
+        $this->assertInstanceOf(SetInterface::class, $defaults);
+        $this->assertSame(ExtractionStrategyInterface::class, (string) $defaults->type());
+        $defaults = $defaults->toPrimitive();
         $this->assertInstanceOf(GetterStrategy::class, $defaults[0]);
         $this->assertInstanceOf(NamedMethodStrategy::class, $defaults[1]);
         $this->assertInstanceOf(IsserStrategy::class, $defaults[2]);
@@ -32,10 +36,8 @@ class ExtractionStrategiesTest extends TestCase
 
     public function testCustomStrategies()
     {
-        $expected = new TypedCollection(
-            ExtractionStrategyInterface::class,
-            [new ReflectionStrategy]
-        );
+        $expected = (new Set(ExtractionStrategyInterface::class))
+            ->add(new ReflectionStrategy);
         $strategies = (new ExtractionStrategies($expected))->all();
 
         $this->assertSame($expected, $strategies);
@@ -47,10 +49,7 @@ class ExtractionStrategiesTest extends TestCase
     public function testThrowWhenInjectingInvalidCollection()
     {
         new ExtractionStrategies(
-            new TypedCollection(
-                'stdClass',
-                []
-            )
+            new Set('stdClass')
         );
     }
 }

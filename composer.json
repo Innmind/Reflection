@@ -15,8 +15,8 @@
         "issues": "http://github.com/Innmind/Reflection/issues"
     },
     "require": {
-        "php": "~7.0",
-        "innmind/immutable": "~1.0"
+        "php": "~7.1",
+        "innmind/immutable": "~2.2"
     },
     "autoload": {
         "psr-4": {

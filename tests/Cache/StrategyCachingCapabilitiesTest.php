@@ -19,7 +19,7 @@ class StrategyCachingCapabilitiesTest extends TestCase
         $object = new CacheTestObject('unicorn');
         $reflection = new ReflectionObject($object);
 
-        $extractionStrategies = $reflection->getExtractionStrategies();
+        $extractionStrategies = $reflection->extractionStrategies();
 
         //Strategy should not be already cached for CacheTestObject
         $cachedStrategies = $this->getCachedStrategies($extractionStrategies);
@@ -39,7 +39,7 @@ class StrategyCachingCapabilitiesTest extends TestCase
         );
 
         $secondReflection = new ReflectionObject($object);
-        $secondExtractionStrategies = $secondReflection->getExtractionStrategies();
+        $secondExtractionStrategies = $secondReflection->extractionStrategies();
 
         //Strategy should still be cached for CacheTestObject::name and returned strategies should be equal.
         $secondCachedStrategies = $this->getCachedStrategies($secondExtractionStrategies);

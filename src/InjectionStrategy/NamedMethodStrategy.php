@@ -4,7 +4,7 @@ declare(strict_types = 1);
 namespace Innmind\Reflection\InjectionStrategy;
 
 use Innmind\Reflection\Exception\LogicException;
-use Innmind\Immutable\StringPrimitive;
+use Innmind\Immutable\Str;
 
 /**
  * Looks for a method named exactly like the property
@@ -25,7 +25,7 @@ class NamedMethodStrategy implements InjectionStrategyInterface
     {
         $refl = new \ReflectionObject($object);
 
-        $property = (string) (new StringPrimitive($property))
+        $property = (string) (new Str($property))
             ->camelize()
             ->lcfirst();
 
@@ -51,7 +51,7 @@ class NamedMethodStrategy implements InjectionStrategyInterface
             throw new LogicException;
         }
 
-        $property = (string) (new StringPrimitive($property))
+        $property = (string) (new Str($property))
             ->camelize()
             ->lcfirst();
 

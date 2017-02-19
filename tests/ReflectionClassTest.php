@@ -3,8 +3,6 @@ declare(strict_types = 1);
 
 namespace Tests\Innmind\Reflection;
 
-use Innmind\Immutable\CollectionInterface;
-use Innmind\Immutable\TypedCollection;
 use Innmind\Reflection\InjectionStrategy\InjectionStrategiesInterface;
 use Innmind\Reflection\InjectionStrategy\InjectionStrategyInterface;
 use Innmind\Reflection\InjectionStrategy\NamedMethodStrategy;
@@ -13,6 +11,11 @@ use Innmind\Reflection\InjectionStrategy\SetterStrategy;
 use Innmind\Reflection\Instanciator\ReflectionInstanciator;
 use Innmind\Reflection\InstanciatorInterface;
 use Innmind\Reflection\ReflectionClass;
+use Innmind\Immutable\{
+    MapInterface,
+    SetInterface,
+    Set
+};
 use PHPUnit\Framework\TestCase;
 
 class ReflectionClassTest extends TestCase
@@ -21,7 +24,7 @@ class ReflectionClassTest extends TestCase
     {
         $r = new ReflectionClass(NoConstruct::class);
 
-        $o = $r->buildObject();
+        $o = $r->build();
 
         $this->assertInstanceOf(NoConstruct::class, $o);
         $this->assertSame(null, $o->a());
@@ -31,7 +34,7 @@ class ReflectionClassTest extends TestCase
     {
         $o = (new ReflectionClass(NoConstruct::class))
             ->withProperty('a', 42)
-            ->buildObject();
+            ->build();
 
         $this->assertInstanceOf(NoConstruct::class, $o);
         $this->assertSame(42, $o->a());
@@ -43,7 +46,7 @@ class ReflectionClassTest extends TestCase
                     'b' => 66,
                 ]
             )
-            ->buildObject();
+            ->build();
 
         $this->assertInstanceOf(WithConstruct::class, $o);
         $this->assertSame(24, $o->a());
@@ -54,8 +57,9 @@ class ReflectionClassTest extends TestCase
     {
         $refl = new ReflectionClass('stdClass');
 
-        $s = $refl->getInjectionStrategies()->all();
-        $this->assertSame(InjectionStrategyInterface::class, $s->getType());
+        $s = $refl->injectionStrategies()->all();
+        $this->assertSame(InjectionStrategyInterface::class, (string) $s->type());
+        $s = $s->toPrimitive();
         $this->assertInstanceOf(SetterStrategy::class, $s[0]);
         $this->assertInstanceOf(NamedMethodStrategy::class, $s[1]);
         $this->assertInstanceOf(ReflectionStrategy::class, $s[2]);
@@ -66,10 +70,8 @@ class ReflectionClassTest extends TestCase
             ->method('all')
             ->will(
                 $this->returnValue(
-                    new TypedCollection(
-                        InjectionStrategyInterface::class,
-                        [$s = new ReflectionStrategy]
-                    )
+                    (new Set(InjectionStrategyInterface::class))
+                        ->add($s = new ReflectionStrategy)
                 )
             );
 
@@ -78,7 +80,7 @@ class ReflectionClassTest extends TestCase
             null,
             $testInjectionStrategies
         );
-        $this->assertSame($s, $refl->getInjectionStrategies()->all()[0]);
+        $this->assertSame($s, $refl->injectionStrategies()->all()->current());
     }
 
     public function testGetProperties()
@@ -86,31 +88,34 @@ class ReflectionClassTest extends TestCase
         $r = (new ReflectionClass('foo'))
             ->withProperty('a', 'b');
 
-        $props = $r->getProperties();
+        $props = $r->properties();
 
-        $this->assertInstanceOf(CollectionInterface::class, $props);
-        $this->assertSame(['a' => 'b'], $props->toPrimitive());
+        $this->assertInstanceOf(MapInterface::class, $props);
+        $this->assertSame('string', (string) $props->keyType());
+        $this->assertSame('mixed', (string) $props->valueType());
+        $this->assertCount(1, $props);
+        $this->assertSame('b', $props->get('a'));
     }
 
     public function testGetInstanciator()
     {
         $r = new ReflectionClass('foo');
-        $i = $r->getInstanciator();
+        $i = $r->instanciator();
         $this->assertInstanceOf(ReflectionInstanciator::class, $i);
 
         $i = new class implements InstanciatorInterface
         {
-            public function build(string $class, CollectionInterface $properties)
+            public function build(string $class, MapInterface $properties)
             {
             }
 
-            public function getParameters(string $class): CollectionInterface
+            public function parameters(string $class): SetInterface
             {
             }
         };
 
         $r = new ReflectionClass('foo', null, null, $i);
-        $i2 = $r->getInstanciator();
+        $i2 = $r->instanciator();
         $this->assertSame($i, $i2);
     }
 }

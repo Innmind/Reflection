@@ -3,7 +3,10 @@ declare(strict_types = 1);
 
 namespace Innmind\Reflection;
 
-use Innmind\Immutable\CollectionInterface;
+use Innmind\Immutable\{
+    MapInterface,
+    SetInterface
+};
 
 interface InstanciatorInterface
 {
@@ -11,20 +14,20 @@ interface InstanciatorInterface
      * Build a new instance for the given class
      *
      * @param string $class
-     * @param CollectionInterface $properties
+     * @param MapInterface<string, mixed> $properties
      *
      * @throws InstanciationFailedException
      *
      * @return object
      */
-    public function build(string $class, CollectionInterface $properties);
+    public function build(string $class, MapInterface $properties);
 
     /**
      * Return a collection of parameters it can inject for the given class
      *
      * @param string $class
      *
-     * @return CollectionInterface
+     * @return SetInterface<string>
      */
-    public function getParameters(string $class): CollectionInterface;
+    public function parameters(string $class): SetInterface;
 }

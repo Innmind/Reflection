@@ -3,9 +3,6 @@ declare(strict_types = 1);
 
 namespace Tests\Innmind\Reflection;
 
-use Innmind\Immutable\CollectionInterface;
-use Innmind\Immutable\TypedCollection;
-use Innmind\Immutable\TypedCollectionInterface;
 use Innmind\Reflection\ExtractionStrategy\ExtractionStrategiesInterface;
 use Innmind\Reflection\ExtractionStrategy\ExtractionStrategyInterface;
 use Innmind\Reflection\ExtractionStrategy\GetterStrategy;
@@ -19,6 +16,11 @@ use Innmind\Reflection\InjectionStrategy\NamedMethodStrategy;
 use Innmind\Reflection\InjectionStrategy\ReflectionStrategy;
 use Innmind\Reflection\InjectionStrategy\SetterStrategy;
 use Innmind\Reflection\ReflectionObject;
+use Innmind\Immutable\{
+    MapInterface,
+    SetInterface,
+    Set
+};
 use PHPUnit\Framework\TestCase;
 
 class ReflectionObjectTest extends TestCase
@@ -28,10 +30,10 @@ class ReflectionObjectTest extends TestCase
         $o = new \stdClass;
         $refl = new ReflectionObject($o);
 
-        $o2 = $refl->buildObject();
+        $o2 = $refl->build();
 
         $this->assertSame($o, $o2);
-        $this->assertSame([], $refl->getProperties()->toPrimitive());
+        $this->assertCount(0, $refl->properties());
     }
 
     /**
@@ -50,11 +52,9 @@ class ReflectionObjectTest extends TestCase
 
         $this->assertInstanceOf(ReflectionObject::class, $refl2);
         $this->assertNotSame($refl, $refl2);
-        $this->assertSame([], $refl->getProperties()->toPrimitive());
-        $this->assertSame(
-            ['foo' => 'bar'],
-            $refl2->getProperties()->toPrimitive()
-        );
+        $this->assertCount(0, $refl->properties());
+        $this->assertCount(1, $refl2->properties());
+        $this->assertSame('bar', $refl2->properties()->get('foo'));
     }
 
     public function testBuild()
@@ -89,7 +89,7 @@ class ReflectionObjectTest extends TestCase
             ->withProperty('b', 2)
             ->withProperty('c', 3)
             ->withProperty('d', 4)
-            ->buildObject();
+            ->build();
 
         $this->assertSame([1, 2, 3, 4], $o->dump());
     }
@@ -134,7 +134,7 @@ class ReflectionObjectTest extends TestCase
                     'd' => 4,
                 ]
             )
-            ->buildObject();
+            ->build();
 
         $this->assertSame([1, 2, 3, 4], $o->dump());
     }
@@ -147,7 +147,7 @@ class ReflectionObjectTest extends TestCase
     {
         (new ReflectionObject(new \stdClass))
             ->withProperty('a', 1)
-            ->buildObject();
+            ->build();
     }
 
     /**
@@ -165,30 +165,31 @@ class ReflectionObjectTest extends TestCase
         };
         (new ReflectionObject($o))
             ->withProperty('a', 1)
-            ->buildObject();
+            ->build();
     }
 
     public function testGetInjectionStrategies()
     {
         $refl = new ReflectionObject(new \stdClass);
 
-        $s = $refl->getInjectionStrategies()->all();
-        $this->assertSame(InjectionStrategyInterface::class, $s->getType());
+        $s = $refl->injectionStrategies()->all();
+        $this->assertSame(InjectionStrategyInterface::class, (string) $s->type());
+        $this->assertCount(3, $s);
+        $s = $s->toPrimitive();
         $this->assertInstanceOf(SetterStrategy::class, $s[0]);
         $this->assertInstanceOf(NamedMethodStrategy::class, $s[1]);
         $this->assertInstanceOf(ReflectionStrategy::class, $s[2]);
-        $this->assertSame(3, $s->count());
 
-        $testInjectionStrategies = $this->getMockBuilder(InjectionStrategiesInterface::class)
+        $testInjectionStrategies = $this
+            ->getMockBuilder(InjectionStrategiesInterface::class)
             ->getMock();
-        $testInjectionStrategies->expects($this->any())
+        $testInjectionStrategies
+            ->expects($this->any())
             ->method('all')
             ->will(
                 $this->returnValue(
-                    new TypedCollection(
-                        InjectionStrategyInterface::class,
-                        [$s = new ReflectionStrategy]
-                    )
+                    (new Set(InjectionStrategyInterface::class))
+                        ->add($s = new ReflectionStrategy)
                 )
             );
 
@@ -197,34 +198,35 @@ class ReflectionObjectTest extends TestCase
             null,
             $testInjectionStrategies
         );
-        $this->assertSame($s, $refl->getInjectionStrategies()->all()[0]);
-        $this->assertSame(1, $refl->getInjectionStrategies()->all()->count());
+        $this->assertSame($s, $refl->injectionStrategies()->all()->current());
+        $this->assertCount(1, $refl->injectionStrategies()->all());
     }
 
     public function testGetExtractionStrategies()
     {
         $refl = new ReflectionObject(new \stdClass);
 
-        $s = $refl->getExtractionStrategies()->all();
-        $this->assertInstanceOf(TypedCollectionInterface::class, $s);
-        $this->assertSame(ExtractionStrategyInterface::class, $s->getType());
+        $s = $refl->extractionStrategies()->all();
+        $this->assertInstanceOf(SetInterface::class, $s);
+        $this->assertSame(ExtractionStrategyInterface::class, (string) $s->type());
+        $this->assertCount(5, $s);
+        $s = $s->toPrimitive();
         $this->assertInstanceOf(GetterStrategy::class, $s[0]);
         $this->assertInstanceOf(ENamedMethodStrategy::class, $s[1]);
         $this->assertInstanceOf(IsserStrategy::class, $s[2]);
         $this->assertInstanceOf(HasserStrategy::class, $s[3]);
         $this->assertInstanceOf(EReflectionStrategy::class, $s[4]);
-        $this->assertSame(5, $s->count());
 
-        $testExtractionStrategies = $this->getMockBuilder(ExtractionStrategiesInterface::class)
+        $testExtractionStrategies = $this
+            ->getMockBuilder(ExtractionStrategiesInterface::class)
             ->getMock();
-        $testExtractionStrategies->expects($this->any())
+        $testExtractionStrategies
+            ->expects($this->any())
             ->method('all')
             ->will(
                 $this->returnValue(
-                    new TypedCollection(
-                        ExtractionStrategyInterface::class,
-                        [$g = new GetterStrategy]
-                    )
+                    (new Set(ExtractionStrategyInterface::class))
+                        ->add($g = new GetterStrategy)
                 )
             );
 
@@ -235,11 +237,11 @@ class ReflectionObjectTest extends TestCase
             $testExtractionStrategies
         );
 
-        $s = $refl->getExtractionStrategies()->all();
-        $this->assertInstanceOf(TypedCollectionInterface::class, $s);
-        $this->assertSame(ExtractionStrategyInterface::class, $s->getType());
-        $this->assertInstanceOf(GetterStrategy::class, $s[0]);
-        $this->assertSame(1, $s->count());
+        $s = $refl->extractionStrategies()->all();
+        $this->assertInstanceOf(SetInterface::class, $s);
+        $this->assertSame(ExtractionStrategyInterface::class, (string) $s->type());
+        $this->assertCount(1, $s);
+        $this->assertInstanceOf(GetterStrategy::class, $s->current());
     }
 
     public function testExtract()
@@ -262,12 +264,13 @@ class ReflectionObjectTest extends TestCase
 
         $values = $refl->extract(['a', 'b', 'c']);
 
-        $this->assertInstanceOf(CollectionInterface::class, $values);
-        $this->assertSame(3, $values->count());
-        $this->assertSame(
-            ['a' => 24, 'b' => 42, 'c' => 66],
-            $values->toPrimitive()
-        );
+        $this->assertInstanceOf(MapInterface::class, $values);
+        $this->assertSame('string', (string) $values->keyType());
+        $this->assertSame('mixed', (string) $values->valueType());
+        $this->assertCount(3, $values);
+        $this->assertSame(24, $values->get('a'));
+        $this->assertSame(42, $values->get('b'));
+        $this->assertSame(66, $values->get('c'));
     }
 
     /**

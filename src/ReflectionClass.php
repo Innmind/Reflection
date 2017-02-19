@@ -3,11 +3,14 @@ declare(strict_types = 1);
 
 namespace Innmind\Reflection;
 
-use Innmind\Immutable\Collection;
-use Innmind\Immutable\CollectionInterface;
+use Innmind\Reflection\Exception\InvalidArgumentException;
 use Innmind\Reflection\InjectionStrategy\InjectionStrategies;
 use Innmind\Reflection\InjectionStrategy\InjectionStrategiesInterface;
 use Innmind\Reflection\Instanciator\ReflectionInstanciator;
+use Innmind\Immutable\{
+    MapInterface,
+    Map
+};
 
 class ReflectionClass
 {
@@ -18,15 +21,22 @@ class ReflectionClass
 
     public function __construct(
         string $class,
-        CollectionInterface $properties = null,
+        MapInterface $properties = null,
         InjectionStrategiesInterface $injectionStrategies = null,
         InstanciatorInterface $instanciator = null
     ) {
-        $injectionStrategies = $injectionStrategies ?? new InjectionStrategies();
+        $properties = $properties ?? new Map('string', 'mixed');
+
+        if (
+            (string) $properties->keyType() !== 'string' ||
+            (string) $properties->valueType() !== 'mixed'
+        ) {
+            throw new InvalidArgumentException;
+        }
 
         $this->class = $class;
-        $this->properties = $properties ?? new Collection([]);
-        $this->injectionStrategies = $injectionStrategies;
+        $this->properties = $properties;
+        $this->injectionStrategies = $injectionStrategies ?? new InjectionStrategies;
         $this->instanciator = $instanciator ?? new ReflectionInstanciator;
     }
 
@@ -42,7 +52,7 @@ class ReflectionClass
     {
         return new self(
             $this->class,
-            $this->properties->set($property, $value),
+            $this->properties->put($property, $value),
             $this->injectionStrategies,
             $this->instanciator
         );
@@ -51,15 +61,21 @@ class ReflectionClass
     /**
      * Add a set of properties that need to be injected
      *
-     * @param array $properties
+     * @param array<string, mixed> $properties
      *
      * @return self
      */
     public function withProperties(array $properties): self
     {
+        $map = $this->properties;
+
+        foreach ($properties as $key => $value) {
+            $map = $map->put($key, $value);
+        }
+
         return new self(
             $this->class,
-            $this->properties->merge(new Collection($properties)),
+            $map,
             $this->injectionStrategies,
             $this->instanciator
         );
@@ -68,9 +84,9 @@ class ReflectionClass
     /**
      * Return the collection of properties that will be injected in the object
      *
-     * @return CollectionInterface
+     * @return MapInterface<string, mixed>
      */
-    public function getProperties(): CollectionInterface
+    public function properties(): MapInterface
     {
         return $this->properties;
     }
@@ -80,7 +96,7 @@ class ReflectionClass
      *
      * @return InjectionStrategiesInterface
      */
-    public function getInjectionStrategies(): InjectionStrategiesInterface
+    public function injectionStrategies(): InjectionStrategiesInterface
     {
         return $this->injectionStrategies;
     }
@@ -90,7 +106,7 @@ class ReflectionClass
      *
      * @return InstanciatorInterface
      */
-    public function getInstanciator(): InstanciatorInterface
+    public function instanciator(): InstanciatorInterface
     {
         return $this->instanciator;
     }
@@ -100,25 +116,23 @@ class ReflectionClass
      *
      * @return object
      */
-    public function buildObject()
+    public function build()
     {
         $object = $this->instanciator->build($this->class, $this->properties);
-        $parameters = $this->instanciator->getParameters($this->class);
+        $parameters = $this->instanciator->parameters($this->class);
 
         //avoid injecting the properties already used in the constructor
         $properties = $this
             ->properties
-            ->filter(
-                function($value, $property) use ($parameters) {
-                    return !$parameters->contains($property);
-                }
-            );
+            ->filter(function(string $property) use ($parameters) {
+                return !$parameters->contains($property);
+            });
         $refl = new ReflectionObject(
             $object,
             $properties,
             $this->injectionStrategies
         );
 
-        return $refl->buildObject();
+        return $refl->build();
     }
 }

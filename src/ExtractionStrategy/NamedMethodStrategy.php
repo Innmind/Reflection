@@ -4,7 +4,7 @@ declare(strict_types = 1);
 namespace Innmind\Reflection\ExtractionStrategy;
 
 use Innmind\Reflection\Exception\LogicException;
-use Innmind\Immutable\StringPrimitive;
+use Innmind\Immutable\Str;
 
 class NamedMethodStrategy implements ExtractionStrategyInterface
 {
@@ -15,7 +15,7 @@ class NamedMethodStrategy implements ExtractionStrategyInterface
     {
         $refl = new \ReflectionObject($object);
 
-        $property = (string) (new StringPrimitive($property))
+        $property = (string) (new Str($property))
             ->camelize()
             ->lcfirst();
 
@@ -41,7 +41,7 @@ class NamedMethodStrategy implements ExtractionStrategyInterface
             throw new LogicException;
         }
 
-        $property = (string) (new StringPrimitive($property))
+        $property = (string) (new Str($property))
             ->camelize()
             ->lcfirst();
 

@@ -8,8 +8,8 @@ use Innmind\Reflection\{
     Exception\InvalidArgumentException
 };
 use Innmind\Immutable\{
-    TypedCollection,
-    TypedCollectionInterface
+    SetInterface,
+    Set
 };
 
 /**
@@ -23,26 +23,22 @@ final class InjectionStrategies implements InjectionStrategiesInterface
 
     private $strategies;
 
-    public function __construct(TypedCollectionInterface $strategies = null)
+    public function __construct(SetInterface $strategies = null)
     {
         $this->strategies = $strategies ?? $this->all();
 
-        if ($this->strategies->getType() !== InjectionStrategyInterface::class) {
+        if ((string) $this->strategies->type() !== InjectionStrategyInterface::class) {
             throw new InvalidArgumentException;
         }
     }
 
-    public function all(): TypedCollectionInterface
+    public function all(): SetInterface
     {
         if ($this->strategies === null) {
-            return $this->strategies = new TypedCollection(
-                InjectionStrategyInterface::class,
-                [
-                    new SetterStrategy,
-                    new NamedMethodStrategy,
-                    new ReflectionStrategy,
-                ]
-            );
+            return $this->strategies = (new Set(InjectionStrategyInterface::class))
+                ->add(new SetterStrategy)
+                ->add(new NamedMethodStrategy)
+                ->add(new ReflectionStrategy);
         }
 
         return $this->strategies;
@@ -51,7 +47,8 @@ final class InjectionStrategies implements InjectionStrategiesInterface
     public function get($object, string $key, $value): InjectionStrategyInterface
     {
         $strategy = $this->getCachedStrategy(get_class($object), $key);
-        if (null !== $strategy) {
+
+        if ($strategy !== null) {
             return $strategy;
         }
 

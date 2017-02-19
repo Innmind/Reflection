@@ -3,7 +3,7 @@ declare(strict_types = 1);
 
 namespace Innmind\Reflection\InjectionStrategy;
 
-use Innmind\Immutable\TypedCollectionInterface;
+use Innmind\Immutable\SetInterface;
 
 /**
  * Repository of InjectionStrategies
@@ -16,9 +16,9 @@ interface InjectionStrategiesInterface
     /**
      * All the InjectionStrategies.
      *
-     * @return TypedCollectionInterface
+     * @return SetInterface<InjectionStrategyInterface>
      */
-    public function all(): TypedCollectionInterface;
+    public function all(): SetInterface;
 
     /**
      * Returns the relevant injection strategy for the given object, key and value.

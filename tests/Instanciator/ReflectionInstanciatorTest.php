@@ -4,8 +4,11 @@ declare(strict_types = 1);
 namespace Tests\Innmind\Reflection\Instanciator;
 
 use Innmind\Reflection\Instanciator\ReflectionInstanciator;
-use Innmind\Immutable\Collection;
-use Innmind\Immutable\CollectionInterface;
+use Innmind\Immutable\{
+    MapInterface,
+    Map,
+    SetInterface
+};
 use PHPUnit\Framework\TestCase;
 
 class ReflectionInstanciatorTest extends TestCase
@@ -16,10 +19,9 @@ class ReflectionInstanciatorTest extends TestCase
 
         $object = $i->build(
             Foo::class,
-            new Collection([
-                'o' => $o = new \stdClass,
-                'bar' => 'foo',
-            ])
+            (new Map('string', 'mixed'))
+                ->put('o', $o = new \stdClass)
+                ->put('bar', 'foo')
         );
 
         $this->assertInstanceOf(Foo::class, $object);
@@ -27,17 +29,16 @@ class ReflectionInstanciatorTest extends TestCase
 
         $object = $i->build(
             Foo::class,
-            new Collection([
-                'o' => $o = new \stdClass,
-                'bar' => 'foo',
-                'baz' => 42,
-            ])
+            (new Map('string', 'mixed'))
+                ->put('o', $o = new \stdClass)
+                ->put('bar', 'foo')
+                ->put('baz', 42)
         );
 
         $this->assertInstanceOf(Foo::class, $object);
         $this->assertSame([$o, 'foo', 42], $object->properties);
 
-        $object = $i->build('stdClass', new Collection([]));
+        $object = $i->build('stdClass', new Map('string', 'mixed'));
 
         $this->assertInstanceOf('stdClass', $object);
     }
@@ -50,19 +51,20 @@ class ReflectionInstanciatorTest extends TestCase
     {
         $i = new ReflectionInstanciator;
 
-        $i->build(Foo::class, new Collection([]));
+        $i->build(Foo::class, new Map('string', 'mixed'));
     }
 
     public function testGetParameters()
     {
         $i = new ReflectionInstanciator;
 
-        $parameters = $i->getParameters(Foo::class);
+        $parameters = $i->parameters(Foo::class);
 
-        $this->assertInstanceOf(CollectionInterface::class, $parameters);
+        $this->assertInstanceOf(SetInterface::class, $parameters);
+        $this->assertSame('string', (string) $parameters->type());
         $this->assertSame(['o', 'bar', 'baz'], $parameters->toPrimitive());
 
-        $parameters = $i->getParameters('stdClass');
+        $parameters = $i->parameters('stdClass');
 
         $this->assertSame(0, $parameters->count());
     }
