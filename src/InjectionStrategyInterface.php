@@ -26,7 +26,7 @@ interface InjectionStrategyInterface
      * @param string $property
      * @param mixed $value
      *
-     * @throws LogicException If the property is not supported
+     * @throws PropertyCannotBeInjectedException If the property is not supported
      *
      * @return void
      */

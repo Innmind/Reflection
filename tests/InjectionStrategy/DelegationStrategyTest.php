@@ -170,7 +170,8 @@ class DelegationStrategyTest extends TestCase
     }
 
     /**
-     * @expectedException Innmind\Reflection\Exception\PropertyNotFoundException
+     * @expectedException Innmind\Reflection\Exception\PropertyCannotBeInjectedException
+     * @expectedExceptionMessage Property "foo" cannot be injected
      */
     public function testThrowWhenNoStrategySupporting()
     {
