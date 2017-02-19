@@ -3,12 +3,23 @@ declare(strict_types = 1);
 
 namespace Tests\Innmind\Reflection\InjectionStrategy;
 
-use Innmind\Reflection\InjectionStrategy\NamedMethodStrategy;
+use Innmind\Reflection\{
+    InjectionStrategy\NamedMethodStrategy,
+    InjectionStrategyInterface
+};
 use Fixtures\Innmind\Reflection\Foo;
 use PHPUnit\Framework\TestCase;
 
 class NamedMethodStrategyTest extends TestCase
 {
+    public function testInterface()
+    {
+        $this->assertInstanceOf(
+            InjectionStrategyInterface::class,
+            new NamedMethodStrategy
+        );
+    }
+
     public function testSupports()
     {
         $s = new NamedMethodStrategy;

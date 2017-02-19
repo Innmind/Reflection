@@ -3,12 +3,23 @@ declare(strict_types = 1);
 
 namespace Tests\Innmind\Reflection\ExtractionStrategy;
 
-use Innmind\Reflection\ExtractionStrategy\GetterStrategy;
+use Innmind\Reflection\{
+    ExtractionStrategy\GetterStrategy,
+    ExtractionStrategyInterface
+};
 use Fixtures\Innmind\Reflection\Foo;
 use PHPUnit\Framework\TestCase;
 
 class GetterStrategyTest extends TestCase
 {
+    public function testInterface()
+    {
+        $this->assertInstanceOf(
+            ExtractionStrategyInterface::class,
+            new GetterStrategy
+        );
+    }
+
     public function testSupports()
     {
         $o = new class {

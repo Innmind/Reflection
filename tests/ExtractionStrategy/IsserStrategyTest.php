@@ -3,12 +3,23 @@ declare(strict_types = 1);
 
 namespace Tests\Innmind\Reflection\ExtractionStrategy;
 
-use Innmind\Reflection\ExtractionStrategy\IsserStrategy;
+use Innmind\Reflection\{
+    ExtractionStrategy\IsserStrategy,
+    ExtractionStrategyInterface
+};
 use Fixtures\Innmind\Reflection\Foo;
 use PHPUnit\Framework\TestCase;
 
 class IsserStrategyTest extends TestCase
 {
+    public function testInterface()
+    {
+        $this->assertInstanceOf(
+            ExtractionStrategyInterface::class,
+            new IsserStrategy
+        );
+    }
+
     public function testSupports()
     {
         $o = new class {
