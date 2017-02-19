@@ -13,6 +13,10 @@ use Innmind\Reflection\{
     Instanciator\ReflectionInstanciator,
     InstanciatorInterface
 };
+use Fixtures\Innmind\Reflection\{
+    NoConstructor,
+    WithConstructor
+};
 use Innmind\Immutable\{
     MapInterface,
     SetInterface,
@@ -24,24 +28,24 @@ class ReflectionClassTest extends TestCase
 {
     public function testBuildWithoutProperties()
     {
-        $r = new ReflectionClass(NoConstruct::class);
+        $r = new ReflectionClass(NoConstructor::class);
 
         $o = $r->build();
 
-        $this->assertInstanceOf(NoConstruct::class, $o);
+        $this->assertInstanceOf(NoConstructor::class, $o);
         $this->assertSame(null, $o->a());
     }
 
     public function testBuild()
     {
-        $o = (new ReflectionClass(NoConstruct::class))
+        $o = (new ReflectionClass(NoConstructor::class))
             ->withProperty('a', 42)
             ->build();
 
-        $this->assertInstanceOf(NoConstruct::class, $o);
+        $this->assertInstanceOf(NoConstructor::class, $o);
         $this->assertSame(42, $o->a());
 
-        $o = (new ReflectionClass(WithConstruct::class))
+        $o = (new ReflectionClass(WithConstructor::class))
             ->withProperties(
                 [
                     'a' => 24,
@@ -50,7 +54,7 @@ class ReflectionClassTest extends TestCase
             )
             ->build();
 
-        $this->assertInstanceOf(WithConstruct::class, $o);
+        $this->assertInstanceOf(WithConstructor::class, $o);
         $this->assertSame(24, $o->a());
         $this->assertSame(66, $o->b());
     }
@@ -105,41 +109,5 @@ class ReflectionClassTest extends TestCase
         $r = new ReflectionClass('foo', null, null, $i);
         $i2 = $r->instanciator();
         $this->assertSame($i, $i2);
-    }
-}
-
-class NoConstruct
-{
-    private $a;
-
-    public function a()
-    {
-        return $this->a;
-    }
-}
-
-class WithConstruct
-{
-    private $a;
-    private $b;
-
-    public function __construct($a)
-    {
-        $this->a = $a;
-    }
-
-    public function setA($a)
-    {
-        $this->a = 42;
-    }
-
-    public function a()
-    {
-        return $this->a;
-    }
-
-    public function b()
-    {
-        return $this->b;
     }
 }
