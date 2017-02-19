@@ -53,15 +53,17 @@ final class DelegationStrategy implements InjectionStrategyInterface
     /**
      * {@inheritdoc}
      */
-    public function inject($object, string $property, $value)
+    public function inject($object, string $property, $value): void
     {
         $key = $this->generateKey($object, $property);
 
         if ($this->cache->contains($key)) {
-            return $this
+            $this
                 ->cache
                 ->get($key)
                 ->inject($object, $property, $value);
+
+            return;
         }
 
         $strategy = $this->strategies->reduce(
@@ -83,7 +85,7 @@ final class DelegationStrategy implements InjectionStrategyInterface
 
         $this->cache = $this->cache->put($key, $strategy);
 
-        return $strategy->inject($object, $property, $value);
+        $strategy->inject($object, $property, $value);
     }
 
     private function generateKey($object, string $property): string

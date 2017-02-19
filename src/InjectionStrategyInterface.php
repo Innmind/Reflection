@@ -30,5 +30,5 @@ interface InjectionStrategyInterface
      *
      * @return void
      */
-    public function inject($object, string $property, $value);
+    public function inject($object, string $property, $value): void;
 }

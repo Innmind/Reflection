@@ -28,7 +28,7 @@ class ReflectionStrategy implements InjectionStrategyInterface
     /**
      * {@inheritdoc}
      */
-    public function inject($object, string $property, $value)
+    public function inject($object, string $property, $value): void
     {
         if (!$this->supports($object, $property, $value)) {
             throw new LogicException;
