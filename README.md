@@ -42,7 +42,7 @@ class Foo
     }
 }
 
-$foo = (new ReflectionClass(Foo:class))
+$foo = (new ReflectionClass(Foo::class))
     ->withProperty('foo', 'bar')
     ->buildObject();
 ```
