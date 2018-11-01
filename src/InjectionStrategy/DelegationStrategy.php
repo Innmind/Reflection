@@ -34,11 +34,7 @@ final class DelegationStrategy implements InjectionStrategy
             ->reduce(
                 false,
                 function(bool $supports, InjectionStrategy $strategy) use ($object, $property, $value): bool {
-                    if ($supports === true) {
-                        return true;
-                    }
-
-                    return $strategy->supports($object, $property, $value);
+                    return $supports || $strategy->supports($object, $property, $value);
                 }
             );
     }
@@ -59,14 +55,8 @@ final class DelegationStrategy implements InjectionStrategy
 
         $strategy = $this->strategies->reduce(
             null,
-            function($target, InjectionStrategy $strategy) use ($object, $property, $value) {
-                if ($target instanceof InjectionStrategy) {
-                    return $target;
-                }
-
-                if ($strategy->supports($object, $property, $value)) {
-                    return $strategy;
-                }
+            function(?InjectionStrategy $target, InjectionStrategy $strategy) use ($object, $property, $value): ?InjectionStrategy {
+                return $target ?? ($strategy->supports($object, $property, $value) ? $strategy : null);
             }
         );
 
