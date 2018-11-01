@@ -5,7 +5,8 @@ namespace Tests\Innmind\Reflection\ExtractionStrategy;
 
 use Innmind\Reflection\{
     ExtractionStrategy\GetterStrategy,
-    ExtractionStrategyInterface
+    ExtractionStrategy,
+    Exception\LogicException,
 };
 use Fixtures\Innmind\Reflection\Foo;
 use PHPUnit\Framework\TestCase;
@@ -15,7 +16,7 @@ class GetterStrategyTest extends TestCase
     public function testInterface()
     {
         $this->assertInstanceOf(
-            ExtractionStrategyInterface::class,
+            ExtractionStrategy::class,
             new GetterStrategy
         );
     }
@@ -56,13 +57,12 @@ class GetterStrategyTest extends TestCase
         $this->assertFalse($s->supports($o, 'bar'));
     }
 
-    /**
-     * @expectedException Innmind\Reflection\Exception\LogicException
-     */
     public function testThrowWhenExtractingUnsuppportedProperty()
     {
         $o = new \stdClass;
         $s = new GetterStrategy;
+
+        $this->expectException(LogicException::class);
 
         $s->extract($o, 'a');
     }

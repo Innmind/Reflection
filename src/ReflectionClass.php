@@ -6,14 +6,16 @@ namespace Innmind\Reflection;
 use Innmind\Reflection\{
     InjectionStrategy\InjectionStrategies,
     Instanciator\ReflectionInstanciator,
-    Exception\InvalidArgumentException
+    Exception\InvalidArgumentException,
 };
 use Innmind\Immutable\{
     MapInterface,
-    Map
+    Map,
+    SetInterface,
+    Set,
 };
 
-class ReflectionClass
+final class ReflectionClass
 {
     private $class;
     private $properties;
@@ -23,8 +25,8 @@ class ReflectionClass
     public function __construct(
         string $class,
         MapInterface $properties = null,
-        InjectionStrategyInterface $injectionStrategy = null,
-        InstanciatorInterface $instanciator = null
+        InjectionStrategy $injectionStrategy = null,
+        Instanciator $instanciator = null
     ) {
         $properties = $properties ?? new Map('string', 'mixed');
 
@@ -32,7 +34,7 @@ class ReflectionClass
             (string) $properties->keyType() !== 'string' ||
             (string) $properties->valueType() !== 'mixed'
         ) {
-            throw new InvalidArgumentException;
+            throw new \TypeError('Argument 2 must be of type MapInterface<string, mixed>');
         }
 
         $this->class = $class;
@@ -41,13 +43,19 @@ class ReflectionClass
         $this->instanciator = $instanciator ?? new ReflectionInstanciator;
     }
 
+    public static function of(
+        string $class,
+        MapInterface $properties = null,
+        InjectionStrategy $injectionStrategy = null,
+        Instanciator $instanciator = null
+    ): self {
+        return new self($class, $properties, $injectionStrategy, $instanciator);
+    }
+
     /**
      * Add a property to be injected in the new object
      *
-     * @param string $property
      * @param mixed  $value
-     *
-     * @return self
      */
     public function withProperty(string $property, $value): self
     {
@@ -63,8 +71,6 @@ class ReflectionClass
      * Add a set of properties that need to be injected
      *
      * @param array<string, mixed> $properties
-     *
-     * @return self
      */
     public function withProperties(array $properties): self
     {
@@ -83,41 +89,9 @@ class ReflectionClass
     }
 
     /**
-     * Return the collection of properties that will be injected in the object
-     *
-     * @return MapInterface<string, mixed>
-     */
-    public function properties(): MapInterface
-    {
-        return $this->properties;
-    }
-
-    /**
-     * Return the list of injection strategies used
-     *
-     * @return InjectionStrategiesInterface
-     */
-    public function injectionStrategy(): InjectionStrategyInterface
-    {
-        return $this->injectionStrategy;
-    }
-
-    /**
-     * Return the object instanciator
-     *
-     * @return InstanciatorInterface
-     */
-    public function instanciator(): InstanciatorInterface
-    {
-        return $this->instanciator;
-    }
-
-    /**
      * Return a new instance of the class
-     *
-     * @return object
      */
-    public function build()
+    public function build(): object
     {
         $object = $this->instanciator->build($this->class, $this->properties);
         $parameters = $this->instanciator->parameters($this->class);
@@ -135,5 +109,24 @@ class ReflectionClass
         );
 
         return $refl->build();
+    }
+
+    /**
+     * Return all the properties defined on the class
+     *
+     * It will not extract properties defined in a parent class
+     *
+     * @return SetInterface<string>
+     */
+    public function properties(): SetInterface
+    {
+        $refl = new \ReflectionClass($this->class);
+        $properties = Set::of('string');
+
+        foreach ($refl->getProperties() as $property) {
+            $properties = $properties->add($property->getName());
+        }
+
+        return $properties;
     }
 }

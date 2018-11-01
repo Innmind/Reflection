@@ -5,9 +5,9 @@ namespace Tests\Innmind\Reflection\InjectionStrategy;
 
 use Innmind\Reflection\{
     InjectionStrategy\DelegationStrategy,
-    InjectionStrategyInterface
+    InjectionStrategy,
+    Exception\PropertyCannotBeInjected,
 };
-use Innmind\Immutable\Stream;
 use PHPUnit\Framework\TestCase;
 
 class DelegationStrategyTest extends TestCase
@@ -15,23 +15,16 @@ class DelegationStrategyTest extends TestCase
     public function testInterface()
     {
         $this->assertInstanceOf(
-            InjectionStrategyInterface::class,
-            new DelegationStrategy(
-                new Stream(InjectionStrategyInterface::class)
-            )
+            InjectionStrategy::class,
+            new DelegationStrategy
         );
     }
 
     public function testSupports()
     {
         $strategy = new DelegationStrategy(
-            (new Stream(InjectionStrategyInterface::class))
-                ->add(
-                    $mock1 = $this->createMock(InjectionStrategyInterface::class)
-                )
-                ->add(
-                    $mock2 = $this->createMock(InjectionStrategyInterface::class)
-                )
+            $mock1 = $this->createMock(InjectionStrategy::class),
+            $mock2 = $this->createMock(InjectionStrategy::class)
         );
         $object = new \stdClass;
         $property = 'foo';
@@ -70,13 +63,8 @@ class DelegationStrategyTest extends TestCase
     public function testInjectWithFirstStrategy()
     {
         $strategy = new DelegationStrategy(
-            (new Stream(InjectionStrategyInterface::class))
-                ->add(
-                    $mock1 = $this->createMock(InjectionStrategyInterface::class)
-                )
-                ->add(
-                    $mock2 = $this->createMock(InjectionStrategyInterface::class)
-                )
+            $mock1 = $this->createMock(InjectionStrategy::class),
+            $mock2 = $this->createMock(InjectionStrategy::class)
         );
         $object = new \stdClass;
         $property = 'foo';
@@ -92,24 +80,20 @@ class DelegationStrategyTest extends TestCase
         $mock1
             ->expects($this->once())
             ->method('inject')
-            ->with($object, $property, $value);
+            ->with($object, $property, $value)
+            ->willReturn($object);
         $mock2
             ->expects($this->never())
             ->method('inject');
 
-        $this->assertNull($strategy->inject($object, $property, $value));
+        $this->assertSame($object, $strategy->inject($object, $property, $value));
     }
 
     public function testCacheStrategy()
     {
         $strategy = new DelegationStrategy(
-            (new Stream(InjectionStrategyInterface::class))
-                ->add(
-                    $mock1 = $this->createMock(InjectionStrategyInterface::class)
-                )
-                ->add(
-                    $mock2 = $this->createMock(InjectionStrategyInterface::class)
-                )
+            $mock1 = $this->createMock(InjectionStrategy::class),
+            $mock2 = $this->createMock(InjectionStrategy::class)
         );
         $object = new \stdClass;
         $property = 'foo';
@@ -125,25 +109,21 @@ class DelegationStrategyTest extends TestCase
         $mock1
             ->expects($this->exactly(2))
             ->method('inject')
-            ->with($object, $property, $value);
+            ->with($object, $property, $value)
+            ->willReturn($object);
         $mock2
             ->expects($this->never())
             ->method('inject');
 
-        $this->assertNull($strategy->inject($object, $property, $value));
-        $this->assertNull($strategy->inject($object, $property, $value));
+        $this->assertSame($object, $strategy->inject($object, $property, $value));
+        $this->assertSame($object, $strategy->inject($object, $property, $value));
     }
 
     public function testExtractWithSecondStrategy()
     {
         $strategy = new DelegationStrategy(
-            (new Stream(InjectionStrategyInterface::class))
-                ->add(
-                    $mock1 = $this->createMock(InjectionStrategyInterface::class)
-                )
-                ->add(
-                    $mock2 = $this->createMock(InjectionStrategyInterface::class)
-                )
+            $mock1 = $this->createMock(InjectionStrategy::class),
+            $mock2 = $this->createMock(InjectionStrategy::class)
         );
         $object = new \stdClass;
         $property = 'foo';
@@ -164,25 +144,17 @@ class DelegationStrategyTest extends TestCase
         $mock2
             ->expects($this->once())
             ->method('inject')
-            ->with($object, $property, $value);
+            ->with($object, $property, $value)
+            ->willReturn($object);
 
-        $this->assertNull($strategy->inject($object, $property, $value));
+        $this->assertSame($object, $strategy->inject($object, $property, $value));
     }
 
-    /**
-     * @expectedException Innmind\Reflection\Exception\PropertyCannotBeInjectedException
-     * @expectedExceptionMessage Property "foo" cannot be injected
-     */
     public function testThrowWhenNoStrategySupporting()
     {
         $strategy = new DelegationStrategy(
-            (new Stream(InjectionStrategyInterface::class))
-                ->add(
-                    $mock1 = $this->createMock(InjectionStrategyInterface::class)
-                )
-                ->add(
-                    $mock2 = $this->createMock(InjectionStrategyInterface::class)
-                )
+            $mock1 = $this->createMock(InjectionStrategy::class),
+            $mock2 = $this->createMock(InjectionStrategy::class)
         );
         $object = new \stdClass;
         $property = 'foo';
@@ -203,6 +175,9 @@ class DelegationStrategyTest extends TestCase
         $mock2
             ->expects($this->never())
             ->method('inject');
+
+        $this->expectException(PropertyCannotBeInjected::class);
+        $this->expectExceptionMessage('Property "foo" cannot be injected');
 
         $strategy->inject($object, $property, $value);
     }

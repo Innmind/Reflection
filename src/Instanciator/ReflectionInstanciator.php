@@ -4,22 +4,22 @@ declare(strict_types = 1);
 namespace Innmind\Reflection\Instanciator;
 
 use Innmind\Reflection\{
-    InstanciatorInterface,
-    Exception\InstanciationFailedException
+    Instanciator,
+    Exception\InstanciationFailed,
 };
 use Innmind\Immutable\{
     MapInterface,
     SetInterface,
     Map,
-    Set
+    Set,
 };
 
-class ReflectionInstanciator implements InstanciatorInterface
+final class ReflectionInstanciator implements Instanciator
 {
     /**
      * {@inheritdoc}
      */
-    public function build(string $class, MapInterface $properties)
+    public function build(string $class, MapInterface $properties): object
     {
         try {
             $refl = new \ReflectionClass($class);
@@ -43,14 +43,7 @@ class ReflectionInstanciator implements InstanciatorInterface
                     )
             );
         } catch (\TypeError $e) {
-            throw new InstanciationFailedException(
-                sprintf(
-                    'Class "%s" cannot be instanciated',
-                    $class
-                ),
-                $e->getCode(),
-                $e
-            );
+            throw new InstanciationFailed($class, $e);
         }
     }
 

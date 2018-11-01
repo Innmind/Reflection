@@ -4,8 +4,8 @@ declare(strict_types = 1);
 namespace Tests\Innmind\Reflection\Instanciator;
 
 use Innmind\Reflection\{
-    InstanciatorInterface,
-    Instanciator\ConstructorLessInstanciator
+    Instanciator\ConstructorLessInstanciator,
+    Instanciator,
 };
 use Innmind\Immutable\Map;
 use PHPUnit\Framework\TestCase;
@@ -15,7 +15,7 @@ class ConstructorLessInstanciatorTest extends TestCase
     public function testInterface()
     {
         $this->assertInstanceOf(
-            InstanciatorInterface::class,
+            Instanciator::class,
             new ConstructorLessInstanciator
         );
     }

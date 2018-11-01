@@ -15,8 +15,8 @@
         "issues": "http://github.com/Innmind/Reflection/issues"
     },
     "require": {
-        "php": "~7.1",
-        "innmind/immutable": "~2.2"
+        "php": "~7.2",
+        "innmind/immutable": "~2.10"
     },
     "autoload": {
         "psr-4": {
@@ -30,7 +30,7 @@
         }
     },
     "require-dev": {
-        "phpunit/phpunit": "~6.0"
+        "phpunit/phpunit": "~7.0"
     },
     "scripts": {
         "tests": "vendor/bin/phpunit --colors=always"

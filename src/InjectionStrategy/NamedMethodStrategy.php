@@ -4,8 +4,8 @@ declare(strict_types = 1);
 namespace Innmind\Reflection\InjectionStrategy;
 
 use Innmind\Reflection\{
-    InjectionStrategyInterface,
-    Exception\LogicException
+    InjectionStrategy,
+    Exception\LogicException,
 };
 use Innmind\Immutable\Str;
 
@@ -19,12 +19,12 @@ use Innmind\Immutable\Str;
  * public function foo($foo);
  * </code>
  */
-class NamedMethodStrategy implements InjectionStrategyInterface
+final class NamedMethodStrategy implements InjectionStrategy
 {
     /**
      * {@inheritdoc}
      */
-    public function supports($object, string $property, $value): bool
+    public function supports(object $object, string $property, $value): bool
     {
         $refl = new \ReflectionObject($object);
 
@@ -48,7 +48,7 @@ class NamedMethodStrategy implements InjectionStrategyInterface
     /**
      * {@inheritdoc}
      */
-    public function inject($object, string $property, $value): void
+    public function inject(object $object, string $property, $value): object
     {
         if (!$this->supports($object, $property, $value)) {
             throw new LogicException;
@@ -59,5 +59,7 @@ class NamedMethodStrategy implements InjectionStrategyInterface
             ->lcfirst();
 
         $object->$property($value);
+
+        return $object;
     }
 }

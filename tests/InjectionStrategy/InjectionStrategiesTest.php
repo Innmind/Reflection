@@ -5,7 +5,7 @@ namespace Tests\Innmind\Reflection\InjectionStrategy;
 
 use Innmind\Reflection\InjectionStrategy\{
     InjectionStrategies,
-    DelegationStrategy
+    DelegationStrategy,
 };
 use PHPUnit\Framework\TestCase;
 

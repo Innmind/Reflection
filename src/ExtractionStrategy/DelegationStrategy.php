@@ -4,48 +4,37 @@ declare(strict_types = 1);
 namespace Innmind\Reflection\ExtractionStrategy;
 
 use Innmind\Reflection\{
-    ExtractionStrategyInterface,
+    ExtractionStrategy,
     Exception\InvalidArgumentException,
-    Exception\PropertyCannotBeExtractedException
+    Exception\PropertyCannotBeExtracted,
 };
 use Innmind\Immutable\{
-    StreamInterface,
-    Map
+    Stream,
+    Map,
 };
 
-final class DelegationStrategy implements ExtractionStrategyInterface
+final class DelegationStrategy implements ExtractionStrategy
 {
     private $strategies;
     private $cache;
 
-    /**
-     * @param StreamInterface<ExtractionStrategyInterface> $strategies
-     */
-    public function __construct(StreamInterface $strategies)
+    public function __construct(ExtractionStrategy ...$strategies)
     {
-        if ((string) $strategies->type() !== ExtractionStrategyInterface::class) {
-            throw new InvalidArgumentException;
-        }
-
-        $this->strategies = $strategies;
-        $this->cache = new Map('string', ExtractionStrategyInterface::class);
+        $this->strategies = Stream::of(ExtractionStrategy::class, ...$strategies);
+        $this->cache = new Map('string', ExtractionStrategy::class);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function supports($object, string $property): bool
+    public function supports(object $object, string $property): bool
     {
         return $this
             ->strategies
             ->reduce(
                 false,
-                function(bool $supports, ExtractionStrategyInterface $strategy) use ($object, $property): bool {
-                    if ($supports === true) {
-                        return true;
-                    }
-
-                    return $strategy->supports($object, $property);
+                function(bool $supports, ExtractionStrategy $strategy) use ($object, $property): bool {
+                    return $supports || $strategy->supports($object, $property);
                 }
             );
     }
@@ -53,7 +42,7 @@ final class DelegationStrategy implements ExtractionStrategyInterface
     /**
      * {@inheritdoc}
      */
-    public function extract($object, string $property)
+    public function extract(object $object, string $property)
     {
         $key = $this->generateKey($object, $property);
 
@@ -66,19 +55,13 @@ final class DelegationStrategy implements ExtractionStrategyInterface
 
         $strategy = $this->strategies->reduce(
             null,
-            function($target, ExtractionStrategyInterface $strategy) use ($object, $property) {
-                if ($target instanceof ExtractionStrategyInterface) {
-                    return $target;
-                }
-
-                if ($strategy->supports($object, $property)) {
-                    return $strategy;
-                }
+            function(?ExtractionStrategy $target, ExtractionStrategy $strategy) use ($object, $property): ?ExtractionStrategy {
+                return $target ?? ($strategy->supports($object, $property) ? $strategy : null);
             }
         );
 
-        if (!$strategy instanceof ExtractionStrategyInterface) {
-            throw new PropertyCannotBeExtractedException($property);
+        if (!$strategy instanceof ExtractionStrategy) {
+            throw new PropertyCannotBeExtracted($property);
         }
 
         $this->cache = $this->cache->put($key, $strategy);
@@ -86,7 +69,7 @@ final class DelegationStrategy implements ExtractionStrategyInterface
         return $strategy->extract($object, $property);
     }
 
-    private function generateKey($object, string $property): string
+    private function generateKey(object $object, string $property): string
     {
         return get_class($object).'::'.$property;
     }

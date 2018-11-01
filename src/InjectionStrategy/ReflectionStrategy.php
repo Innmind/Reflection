@@ -4,17 +4,17 @@ declare(strict_types = 1);
 namespace Innmind\Reflection\InjectionStrategy;
 
 use Innmind\Reflection\{
-    InjectionStrategyInterface,
+    InjectionStrategy,
     Exception\LogicException,
-    Visitor\AccessProperty
+    Visitor\AccessProperty,
 };
 
-class ReflectionStrategy implements InjectionStrategyInterface
+final class ReflectionStrategy implements InjectionStrategy
 {
     /**
      * {@inheritdoc}
      */
-    public function supports($object, string $property, $value): bool
+    public function supports(object $object, string $property, $value): bool
     {
         try {
             (new AccessProperty)($object, $property);
@@ -28,7 +28,7 @@ class ReflectionStrategy implements InjectionStrategyInterface
     /**
      * {@inheritdoc}
      */
-    public function inject($object, string $property, $value): void
+    public function inject(object $object, string $property, $value): object
     {
         if (!$this->supports($object, $property, $value)) {
             throw new LogicException;
@@ -45,5 +45,7 @@ class ReflectionStrategy implements InjectionStrategyInterface
         if (!$refl->isPublic()) {
             $refl->setAccessible(false);
         }
+
+        return $object;
     }
 }

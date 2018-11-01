@@ -3,16 +3,28 @@ declare(strict_types = 1);
 
 namespace Tests\Innmind\Reflection\Instanciator;
 
-use Innmind\Reflection\Instanciator\ReflectionInstanciator;
+use Innmind\Reflection\{
+    Instanciator\ReflectionInstanciator,
+    Instanciator,
+    Exception\InstanciationFailed,
+};
 use Innmind\Immutable\{
     MapInterface,
     Map,
-    SetInterface
+    SetInterface,
 };
 use PHPUnit\Framework\TestCase;
 
 class ReflectionInstanciatorTest extends TestCase
 {
+    public function testInterface()
+    {
+        $this->assertInstanceOf(
+            Instanciator::class,
+            new ReflectionInstanciator
+        );
+    }
+
     public function testBuild()
     {
         $i = new ReflectionInstanciator;
@@ -43,13 +55,12 @@ class ReflectionInstanciatorTest extends TestCase
         $this->assertInstanceOf('stdClass', $object);
     }
 
-    /**
-     * @expectedException Innmind\Reflection\Exception\InstanciationFailedException
-     * @expectedExceptionMessage Class "Tests\Innmind\Reflection\Instanciator\Foo" cannot be instanciated
-     */
     public function testThrowWhenClassCannotBeInstanciated()
     {
         $i = new ReflectionInstanciator;
+
+        $this->expectException(InstanciationFailed::class);
+        $this->expectExceptionMessage('Class "Tests\Innmind\Reflection\Instanciator\Foo" cannot be instanciated');
 
         $i->build(Foo::class, new Map('string', 'mixed'));
     }

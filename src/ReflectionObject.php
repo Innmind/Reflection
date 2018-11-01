@@ -4,18 +4,16 @@ declare(strict_types = 1);
 namespace Innmind\Reflection;
 
 use Innmind\Reflection\{
-    InjectionStrategyInterface,
-    ExtractionStrategyInterface,
     ExtractionStrategy\ExtractionStrategies,
     InjectionStrategy\InjectionStrategies,
-    Exception\InvalidArgumentException
+    Exception\InvalidArgumentException,
 };
 use Innmind\Immutable\{
     MapInterface,
-    Map
+    Map,
 };
 
-class ReflectionObject
+final class ReflectionObject
 {
     private $object;
     private $properties;
@@ -23,19 +21,18 @@ class ReflectionObject
     private $extractionStrategy;
 
     public function __construct(
-        $object,
+        object $object,
         MapInterface $properties = null,
-        InjectionStrategyInterface $injectionStrategy = null,
-        ExtractionStrategyInterface $extractionStrategy = null
+        InjectionStrategy $injectionStrategy = null,
+        ExtractionStrategy $extractionStrategy = null
     ) {
         $properties = $properties ?? new Map('string', 'mixed');
 
         if (
-            !is_object($object) ||
             (string) $properties->keyType() !== 'string' ||
             (string) $properties->valueType() !== 'mixed'
         ) {
-            throw new InvalidArgumentException;
+            throw new \TypeError('Argument 2 must be of type MapInterface<string, mixed>');
         }
 
         $this->object = $object;
@@ -44,15 +41,21 @@ class ReflectionObject
         $this->extractionStrategy = $extractionStrategy ?? ExtractionStrategies::default();
     }
 
+    public static function of(
+        object $object,
+        MapInterface $properties = null,
+        InjectionStrategy $injectionStrategy = null,
+        ExtractionStrategy $extractionStrategy = null
+    ): self {
+        return new self($object, $properties, $injectionStrategy, $extractionStrategy);
+    }
+
     /**
      * Add a property that will be injected
      *
-     * @param string $name
      * @param mixed  $value
-     *
-     * @return self
      */
-    public function withProperty(string $name, $value)
+    public function withProperty(string $name, $value): self
     {
         return new self(
             $this->object,
@@ -86,57 +89,24 @@ class ReflectionObject
     }
 
     /**
-     * Return the collection of properties that will be injected in the object
-     *
-     * @return MapInterface<string, mixed>
-     */
-    public function properties(): MapInterface
-    {
-        return $this->properties;
-    }
-
-    /**
-     * Return the list of injection strategies used
-     *
-     * @return InjectionStrategyInterface
-     */
-    public function injectionStrategy(): InjectionStrategyInterface
-    {
-        return $this->injectionStrategy;
-    }
-
-    /**
-     * Return the list of extraction strategies used
-     *
-     * @return ExtractionStrategyInterface
-     */
-    public function extractionStrategy(): ExtractionStrategyInterface
-    {
-        return $this->extractionStrategy;
-    }
-
-    /**
      * Return the object with the list of properties set on it
-     *
-     * @return object
      */
-    public function build()
+    public function build(): object
     {
-        $this->properties->foreach(function(string $key, $value): void {
-            $this->inject($key, $value);
-        });
-
-        return $this->object;
+        return $this->properties->reduce(
+            $this->object,
+            function(object $object, string $key, $value): object {
+                return $this->inject($object, $key, $value);
+            }
+        );
     }
 
     /**
      * Extract the given list of properties
      *
-     * @param string[] $properties
-     *
      * @return MapInterface<string, mixed>
      */
-    public function extract(array $properties): MapInterface
+    public function extract(string ...$properties): MapInterface
     {
         $map = new Map('string', 'mixed');
 
@@ -153,20 +123,15 @@ class ReflectionObject
     /**
      * Inject the given key/value pair into the object
      *
-     * @param string $key
      * @param mixed  $value
-     *
-     * @return void
      */
-    private function inject(string $key, $value): void
+    private function inject(object $object, string $key, $value): object
     {
-        $this->injectionStrategy->inject($this->object, $key, $value);
+        return $this->injectionStrategy->inject($object, $key, $value);
     }
 
     /**
      * Extract the given property out of the object
-     *
-     * @param string $property
      *
      * @return mixed
      */

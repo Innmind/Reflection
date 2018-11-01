@@ -4,17 +4,17 @@ declare(strict_types = 1);
 namespace Innmind\Reflection\ExtractionStrategy;
 
 use Innmind\Reflection\{
-    ExtractionStrategyInterface,
+    ExtractionStrategy,
     Exception\LogicException,
-    Visitor\AccessProperty
+    Visitor\AccessProperty,
 };
 
-class ReflectionStrategy implements ExtractionStrategyInterface
+final class ReflectionStrategy implements ExtractionStrategy
 {
     /**
      * {@inheritdoc}
      */
-    public function supports($object, string $property): bool
+    public function supports(object $object, string $property): bool
     {
         try {
             (new AccessProperty)($object, $property);
@@ -28,7 +28,7 @@ class ReflectionStrategy implements ExtractionStrategyInterface
     /**
      * {@inheritdoc}
      */
-    public function extract($object, string $property)
+    public function extract(object $object, string $property)
     {
         if (!$this->supports($object, $property)) {
             throw new LogicException;

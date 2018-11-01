@@ -4,48 +4,37 @@ declare(strict_types = 1);
 namespace Innmind\Reflection\InjectionStrategy;
 
 use Innmind\Reflection\{
-    InjectionStrategyInterface,
+    InjectionStrategy,
     Exception\InvalidArgumentException,
-    Exception\PropertyCannotBeInjectedException
+    Exception\PropertyCannotBeInjected,
 };
 use Innmind\Immutable\{
-    StreamInterface,
-    Map
+    Stream,
+    Map,
 };
 
-final class DelegationStrategy implements InjectionStrategyInterface
+final class DelegationStrategy implements InjectionStrategy
 {
     private $strategies;
     private $cache;
 
-    /**
-     * @param StreamInterface<InjectionStrategyInterface> $strategies
-     */
-    public function __construct(StreamInterface $strategies)
+    public function __construct(InjectionStrategy ...$strategies)
     {
-        if ((string) $strategies->type() !== InjectionStrategyInterface::class) {
-            throw new InvalidArgumentException;
-        }
-
-        $this->strategies = $strategies;
-        $this->cache = new Map('string', InjectionStrategyInterface::class);
+        $this->strategies = Stream::of(InjectionStrategy::class, ...$strategies);
+        $this->cache = new Map('string', InjectionStrategy::class);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function supports($object, string $property, $value): bool
+    public function supports(object $object, string $property, $value): bool
     {
         return $this
             ->strategies
             ->reduce(
                 false,
-                function(bool $supports, InjectionStrategyInterface $strategy) use ($object, $property, $value): bool {
-                    if ($supports === true) {
-                        return true;
-                    }
-
-                    return $strategy->supports($object, $property, $value);
+                function(bool $supports, InjectionStrategy $strategy) use ($object, $property, $value): bool {
+                    return $supports || $strategy->supports($object, $property, $value);
                 }
             );
     }
@@ -53,42 +42,34 @@ final class DelegationStrategy implements InjectionStrategyInterface
     /**
      * {@inheritdoc}
      */
-    public function inject($object, string $property, $value): void
+    public function inject(object $object, string $property, $value): object
     {
         $key = $this->generateKey($object, $property);
 
         if ($this->cache->contains($key)) {
-            $this
+            return $this
                 ->cache
                 ->get($key)
                 ->inject($object, $property, $value);
-
-            return;
         }
 
         $strategy = $this->strategies->reduce(
             null,
-            function($target, InjectionStrategyInterface $strategy) use ($object, $property, $value) {
-                if ($target instanceof InjectionStrategyInterface) {
-                    return $target;
-                }
-
-                if ($strategy->supports($object, $property, $value)) {
-                    return $strategy;
-                }
+            function(?InjectionStrategy $target, InjectionStrategy $strategy) use ($object, $property, $value): ?InjectionStrategy {
+                return $target ?? ($strategy->supports($object, $property, $value) ? $strategy : null);
             }
         );
 
-        if (!$strategy instanceof InjectionStrategyInterface) {
-            throw new PropertyCannotBeInjectedException($property);
+        if (!$strategy instanceof InjectionStrategy) {
+            throw new PropertyCannotBeInjected($property);
         }
 
         $this->cache = $this->cache->put($key, $strategy);
 
-        $strategy->inject($object, $property, $value);
+        return $strategy->inject($object, $property, $value);
     }
 
-    private function generateKey($object, string $property): string
+    private function generateKey(object $object, string $property): string
     {
         return get_class($object).'::'.$property;
     }

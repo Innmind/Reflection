@@ -4,12 +4,12 @@ declare(strict_types = 1);
 namespace Innmind\Reflection\InjectionStrategy;
 
 use Innmind\Reflection\{
-    InjectionStrategyInterface,
-    Exception\LogicException
+    InjectionStrategy,
+    Exception\LogicException,
 };
 use Innmind\Immutable\Str;
 
-class SetterStrategy implements InjectionStrategyInterface
+final class SetterStrategy implements InjectionStrategy
 {
     private $setter;
 
@@ -21,7 +21,7 @@ class SetterStrategy implements InjectionStrategyInterface
     /**
      * {@inheritdoc}
      */
-    public function supports($object, string $property, $value): bool
+    public function supports(object $object, string $property, $value): bool
     {
         $refl = new \ReflectionObject($object);
         $setter = (string) $this->setter->sprintf(
@@ -38,7 +38,7 @@ class SetterStrategy implements InjectionStrategyInterface
     /**
      * {@inheritdoc}
      */
-    public function inject($object, string $property, $value): void
+    public function inject(object $object, string $property, $value): object
     {
         if (!$this->supports($object, $property, $value)) {
             throw new LogicException;
@@ -48,5 +48,7 @@ class SetterStrategy implements InjectionStrategyInterface
             (string) (new Str($property))->camelize()
         );
         $object->$setter($value);
+
+        return $object;
     }
 }

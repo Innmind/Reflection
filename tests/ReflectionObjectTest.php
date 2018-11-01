@@ -6,14 +6,15 @@ namespace Tests\Innmind\Reflection;
 use Innmind\Reflection\{
     ReflectionObject,
     ExtractionStrategy\ExtractionStrategies,
-    ExtractionStrategyInterface,
+    ExtractionStrategy,
     InjectionStrategy\InjectionStrategies,
-    InjectionStrategyInterface
+    InjectionStrategy,
+    Exception\LogicException,
 };
 use Innmind\Immutable\{
     MapInterface,
     SetInterface,
-    Set
+    Set,
 };
 use PHPUnit\Framework\TestCase;
 
@@ -27,15 +28,6 @@ class ReflectionObjectTest extends TestCase
         $o2 = $refl->build();
 
         $this->assertSame($o, $o2);
-        $this->assertCount(0, $refl->properties());
-    }
-
-    /**
-     * @expectedException Innmind\Reflection\Exception\InvalidArgumentException
-     */
-    public function testThrowWhenNotUsingAnObject()
-    {
-        new ReflectionObject([]);
     }
 
     public function testAddPropertyToInject()
@@ -46,9 +38,6 @@ class ReflectionObjectTest extends TestCase
 
         $this->assertInstanceOf(ReflectionObject::class, $refl2);
         $this->assertNotSame($refl, $refl2);
-        $this->assertCount(0, $refl->properties());
-        $this->assertCount(1, $refl2->properties());
-        $this->assertSame('bar', $refl2->properties()->get('foo'));
     }
 
     public function testBuild()
@@ -78,13 +67,14 @@ class ReflectionObjectTest extends TestCase
 
         $this->assertSame([null, null, null, null], $o->dump());
 
-        (new ReflectionObject($o))
+        $result = ReflectionObject::of($o)
             ->withProperty('a', 1)
             ->withProperty('b', 2)
             ->withProperty('c', 3)
             ->withProperty('d', 4)
             ->build();
 
+        $this->assertSame($o, $result);
         $this->assertSame([1, 2, 3, 4], $o->dump());
     }
 
@@ -115,7 +105,7 @@ class ReflectionObjectTest extends TestCase
 
         $this->assertSame([null, null, null, null], $o->dump());
 
-        (new ReflectionObject($o))
+        ReflectionObject::of($o)
             ->withProperties(
                 [
                     'a' => 1,
@@ -133,21 +123,16 @@ class ReflectionObjectTest extends TestCase
         $this->assertSame([1, 2, 3, 4], $o->dump());
     }
 
-    /**
-     * @expectedException Innmind\Reflection\Exception\LogicException
-     * @expectedExceptionMessage Property "a" cannot be injected
-     */
     public function testThrowWhenPropertyNotFound()
     {
-        (new ReflectionObject(new \stdClass))
+        $this->expectException(LogicException::class);
+        $this->expectExceptionMessage('Property "a" cannot be injected');
+
+        ReflectionObject::of(new \stdClass)
             ->withProperty('a', 1)
             ->build();
     }
 
-    /**
-     * @expectedException Innmind\Reflection\Exception\LogicException
-     * @expectedExceptionMessage Property "a" cannot be injected
-     */
     public function testThrowWhenNameMethodDoesntHaveParameter()
     {
         $o = new class()
@@ -157,48 +142,13 @@ class ReflectionObjectTest extends TestCase
                 //pass
             }
         };
-        (new ReflectionObject($o))
+
+        $this->expectException(LogicException::class);
+        $this->expectExceptionMessage('Property "a" cannot be injected');
+
+        ReflectionObject::of($o)
             ->withProperty('a', 1)
             ->build();
-    }
-
-    public function testGetInjectionStrategy()
-    {
-        $refl = new ReflectionObject(new \stdClass);
-
-        $this->assertSame(
-            $refl->injectionStrategy(),
-            InjectionStrategies::default()
-        );
-
-        $strategy = $this->createMock(InjectionStrategyInterface::class);
-        $refl = new ReflectionObject(
-            new \stdClass,
-            null,
-            $strategy
-        );
-
-        $this->assertSame($strategy, $refl->injectionStrategy());
-    }
-
-    public function testGetExtractionStrategy()
-    {
-        $refl = new ReflectionObject(new \stdClass);
-
-        $this->assertSame(
-            ExtractionStrategies::default(),
-            $refl->extractionStrategy()
-        );
-
-        $strategy = $this->createMock(ExtractionStrategyInterface::class);
-        $refl = new ReflectionObject(
-            new \stdClass,
-            null,
-            null,
-            $strategy
-        );
-
-        $this->assertSame($strategy, $refl->extractionStrategy());
     }
 
     public function testExtract()
@@ -219,7 +169,7 @@ class ReflectionObjectTest extends TestCase
         };
         $refl = new ReflectionObject($o);
 
-        $values = $refl->extract(['a', 'b', 'c']);
+        $values = $refl->extract('a', 'b', 'c');
 
         $this->assertInstanceOf(MapInterface::class, $values);
         $this->assertSame('string', (string) $values->keyType());
@@ -230,12 +180,11 @@ class ReflectionObjectTest extends TestCase
         $this->assertSame(66, $values->get('c'));
     }
 
-    /**
-     * @expectedException Innmind\Reflection\Exception\LogicException
-     * @expectedExceptionMessage Property "a" cannot be extracted
-     */
     public function testThrowWhenCannotExtractProperty()
     {
-        (new ReflectionObject(new \stdClass))->extract(['a']);
+        $this->expectException(LogicException::class);
+        $this->expectExceptionMessage('Property "a" cannot be extracted');
+
+        ReflectionObject::of(new \stdClass)->extract('a');
     }
 }

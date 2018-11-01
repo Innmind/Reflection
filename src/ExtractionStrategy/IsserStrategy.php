@@ -4,12 +4,12 @@ declare(strict_types = 1);
 namespace Innmind\Reflection\ExtractionStrategy;
 
 use Innmind\Reflection\{
-    ExtractionStrategyInterface,
-    Exception\LogicException
+    ExtractionStrategy,
+    Exception\LogicException,
 };
 use Innmind\Immutable\Str;
 
-class IsserStrategy implements ExtractionStrategyInterface
+final class IsserStrategy implements ExtractionStrategy
 {
     private $isser;
 
@@ -21,7 +21,7 @@ class IsserStrategy implements ExtractionStrategyInterface
     /**
      * {@inheritdoc}
      */
-    public function supports($object, string $property): bool
+    public function supports(object $object, string $property): bool
     {
         $refl = new \ReflectionObject($object);
         $isser = (string) $this->isser->sprintf(
@@ -44,7 +44,7 @@ class IsserStrategy implements ExtractionStrategyInterface
     /**
      * {@inheritdoc}
      */
-    public function extract($object, string $property)
+    public function extract(object $object, string $property)
     {
         if (!$this->supports($object, $property)) {
             throw new LogicException;

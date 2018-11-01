@@ -4,29 +4,25 @@ declare(strict_types = 1);
 namespace Innmind\Reflection\Visitor;
 
 use Innmind\Reflection\Exception\{
-    PropertyNotFoundException,
-    InvalidArgumentException
+    PropertyNotFound,
+    InvalidArgumentException,
 };
 
 final class AccessProperty
 {
     /**
-     * @throws PropertyNotFoundException
+     * @throws PropertyNotFound
      */
-    public function __invoke($object, string $property): \ReflectionProperty
+    public function __invoke(object $object, string $property): \ReflectionProperty
     {
-        if (!is_object($object)) {
-            throw new InvalidArgumentException;
-        }
-
         try {
             return $this->byObject($object, $property);
-        } catch (PropertyNotFoundException $e) {
+        } catch (PropertyNotFound $e) {
             return $this->byClass(get_class($object), $property);
         }
     }
 
-    private function byObject($object, string $property): \ReflectionProperty
+    private function byObject(object $object, string $property): \ReflectionProperty
     {
         $refl = new \ReflectionObject($object);
 
@@ -34,7 +30,7 @@ final class AccessProperty
             return $refl->getProperty($property);
         }
 
-        throw new PropertyNotFoundException;
+        throw new PropertyNotFound($property);
     }
 
     private function byClass(string $class, string $property): \ReflectionProperty
@@ -52,6 +48,6 @@ final class AccessProperty
             );
         }
 
-        throw new PropertyNotFoundException;
+        throw new PropertyNotFound($property);
     }
 }
