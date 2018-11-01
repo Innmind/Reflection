@@ -8,12 +8,12 @@ use Innmind\Reflection\{
     ExtractionStrategy\ExtractionStrategies,
     ExtractionStrategy,
     InjectionStrategy\InjectionStrategies,
-    InjectionStrategy
+    InjectionStrategy,
 };
 use Innmind\Immutable\{
     MapInterface,
     SetInterface,
-    Set
+    Set,
 };
 use PHPUnit\Framework\TestCase;
 

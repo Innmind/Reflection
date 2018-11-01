@@ -5,7 +5,7 @@ namespace Innmind\Reflection\InjectionStrategy;
 
 use Innmind\Reflection\{
     InjectionStrategy,
-    Exception\LogicException
+    Exception\LogicException,
 };
 use Innmind\Immutable\Str;
 

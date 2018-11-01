@@ -5,7 +5,7 @@ namespace Tests\Innmind\Reflection\InjectionStrategy;
 
 use Innmind\Reflection\{
     InjectionStrategy\ReflectionStrategy,
-    InjectionStrategy
+    InjectionStrategy,
 };
 use Fixtures\Innmind\Reflection\Foo;
 use PHPUnit\Framework\TestCase;

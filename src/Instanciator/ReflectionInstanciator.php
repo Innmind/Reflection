@@ -5,13 +5,13 @@ namespace Innmind\Reflection\Instanciator;
 
 use Innmind\Reflection\{
     Instanciator,
-    Exception\InstanciationFailedException
+    Exception\InstanciationFailedException,
 };
 use Innmind\Immutable\{
     MapInterface,
     SetInterface,
     Map,
-    Set
+    Set,
 };
 
 class ReflectionInstanciator implements Instanciator

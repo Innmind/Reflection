@@ -6,7 +6,7 @@ namespace Innmind\Reflection\ExtractionStrategy;
 use Innmind\Reflection\{
     ExtractionStrategy,
     Exception\LogicException,
-    Visitor\AccessProperty
+    Visitor\AccessProperty,
 };
 
 class ReflectionStrategy implements ExtractionStrategy

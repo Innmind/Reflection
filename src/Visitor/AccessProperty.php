@@ -5,7 +5,7 @@ namespace Innmind\Reflection\Visitor;
 
 use Innmind\Reflection\Exception\{
     PropertyNotFoundException,
-    InvalidArgumentException
+    InvalidArgumentException,
 };
 
 final class AccessProperty

@@ -6,7 +6,7 @@ namespace Innmind\Reflection\InjectionStrategy;
 use Innmind\Reflection\{
     InjectionStrategy,
     Exception\LogicException,
-    Visitor\AccessProperty
+    Visitor\AccessProperty,
 };
 
 class ReflectionStrategy implements InjectionStrategy

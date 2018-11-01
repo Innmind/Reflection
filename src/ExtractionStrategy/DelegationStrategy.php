@@ -6,11 +6,11 @@ namespace Innmind\Reflection\ExtractionStrategy;
 use Innmind\Reflection\{
     ExtractionStrategy,
     Exception\InvalidArgumentException,
-    Exception\PropertyCannotBeExtractedException
+    Exception\PropertyCannotBeExtractedException,
 };
 use Innmind\Immutable\{
     Stream,
-    Map
+    Map,
 };
 
 final class DelegationStrategy implements ExtractionStrategy

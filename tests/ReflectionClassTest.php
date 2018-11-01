@@ -11,16 +11,16 @@ use Innmind\Reflection\{
     InjectionStrategy\ReflectionStrategy,
     InjectionStrategy\SetterStrategy,
     Instanciator\ReflectionInstanciator,
-    Instanciator
+    Instanciator,
 };
 use Fixtures\Innmind\Reflection\{
     NoConstructor,
-    WithConstructor
+    WithConstructor,
 };
 use Innmind\Immutable\{
     MapInterface,
     SetInterface,
-    Set
+    Set,
 };
 use PHPUnit\Framework\TestCase;
 

@@ -5,7 +5,7 @@ namespace Tests\Innmind\Reflection\ExtractionStrategy;
 
 use Innmind\Reflection\{
     ExtractionStrategy\DelegationStrategy,
-    ExtractionStrategy
+    ExtractionStrategy,
 };
 use PHPUnit\Framework\TestCase;
 

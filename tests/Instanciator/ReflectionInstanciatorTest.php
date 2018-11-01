@@ -10,7 +10,7 @@ use Innmind\Reflection\{
 use Innmind\Immutable\{
     MapInterface,
     Map,
-    SetInterface
+    SetInterface,
 };
 use PHPUnit\Framework\TestCase;
 

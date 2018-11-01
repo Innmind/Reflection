@@ -6,11 +6,11 @@ namespace Innmind\Reflection\InjectionStrategy;
 use Innmind\Reflection\{
     InjectionStrategy,
     Exception\InvalidArgumentException,
-    Exception\PropertyCannotBeInjectedException
+    Exception\PropertyCannotBeInjectedException,
 };
 use Innmind\Immutable\{
     Stream,
-    Map
+    Map,
 };
 
 final class DelegationStrategy implements InjectionStrategy

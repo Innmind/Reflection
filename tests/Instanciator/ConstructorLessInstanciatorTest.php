@@ -4,8 +4,8 @@ declare(strict_types = 1);
 namespace Tests\Innmind\Reflection\Instanciator;
 
 use Innmind\Reflection\{
+    Instanciator\ConstructorLessInstanciator,
     Instanciator,
-    Instanciator\ConstructorLessInstanciator
 };
 use Innmind\Immutable\Map;
 use PHPUnit\Framework\TestCase;

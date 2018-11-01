@@ -6,11 +6,11 @@ namespace Innmind\Reflection;
 use Innmind\Reflection\{
     InjectionStrategy\InjectionStrategies,
     Instanciator\ReflectionInstanciator,
-    Exception\InvalidArgumentException
+    Exception\InvalidArgumentException,
 };
 use Innmind\Immutable\{
     MapInterface,
-    Map
+    Map,
 };
 
 class ReflectionClass

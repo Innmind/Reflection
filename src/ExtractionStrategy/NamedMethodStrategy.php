@@ -5,7 +5,7 @@ namespace Innmind\Reflection\ExtractionStrategy;
 
 use Innmind\Reflection\{
     ExtractionStrategy,
-    Exception\LogicException
+    Exception\LogicException,
 };
 use Innmind\Immutable\Str;
 
