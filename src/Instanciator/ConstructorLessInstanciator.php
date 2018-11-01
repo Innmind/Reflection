@@ -26,14 +26,7 @@ final class ConstructorLessInstanciator implements Instanciator
 
             return $refl->newInstanceWithoutConstructor();
         } catch (\TypeError $e) {
-            throw new InstanciationFailed(
-                sprintf(
-                    'Class "%s" cannot be instanciated',
-                    $class
-                ),
-                $e->getCode(),
-                $e
-            );
+            throw new InstanciationFailed($class, $e);
         }
     }
 
