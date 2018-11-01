@@ -6,6 +6,7 @@ namespace Tests\Innmind\Reflection\Instanciator;
 use Innmind\Reflection\{
     Instanciator\ReflectionInstanciator,
     Instanciator,
+    Exception\InstanciationFailed,
 };
 use Innmind\Immutable\{
     MapInterface,
@@ -54,13 +55,12 @@ class ReflectionInstanciatorTest extends TestCase
         $this->assertInstanceOf('stdClass', $object);
     }
 
-    /**
-     * @expectedException Innmind\Reflection\Exception\InstanciationFailedException
-     * @expectedExceptionMessage Class "Tests\Innmind\Reflection\Instanciator\Foo" cannot be instanciated
-     */
     public function testThrowWhenClassCannotBeInstanciated()
     {
         $i = new ReflectionInstanciator;
+
+        $this->expectException(InstanciationFailed::class);
+        $this->expectExceptionMessage('Class "Tests\Innmind\Reflection\Instanciator\Foo" cannot be instanciated');
 
         $i->build(Foo::class, new Map('string', 'mixed'));
     }

@@ -5,7 +5,7 @@ namespace Innmind\Reflection\Instanciator;
 
 use Innmind\Reflection\{
     Instanciator,
-    Exception\InstanciationFailedException,
+    Exception\InstanciationFailed,
 };
 use Innmind\Immutable\{
     MapInterface,
@@ -43,7 +43,7 @@ class ReflectionInstanciator implements Instanciator
                     )
             );
         } catch (\TypeError $e) {
-            throw new InstanciationFailedException(
+            throw new InstanciationFailed(
                 sprintf(
                     'Class "%s" cannot be instanciated',
                     $class

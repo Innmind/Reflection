@@ -3,7 +3,10 @@ declare(strict_types = 1);
 
 namespace Tests\Innmind\Reflection\Visitor;
 
-use Innmind\Reflection\Visitor\AccessProperty;
+use Innmind\Reflection\{
+    Visitor\AccessProperty,
+    Exception\PropertyNotFound,
+};
 use Fixtures\Innmind\Reflection\Foo;
 use PHPUnit\Framework\TestCase;
 
@@ -20,11 +23,10 @@ class AccessPropertyTest extends TestCase
         );
     }
 
-    /**
-     * @expectedException Innmind\Reflection\Exception\PropertyNotFoundException
-     */
     public function testThrowWhenPropertyNotFound()
     {
+        $this->expectException(PropertyNotFound::class);
+
         (new AccessProperty)(new \stdClass, 'foo');
     }
 

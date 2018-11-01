@@ -6,6 +6,7 @@ namespace Tests\Innmind\Reflection\ExtractionStrategy;
 use Innmind\Reflection\{
     ExtractionStrategy\DelegationStrategy,
     ExtractionStrategy,
+    Exception\PropertyCannotBeExtracted,
 };
 use PHPUnit\Framework\TestCase;
 
@@ -145,10 +146,6 @@ class DelegationStrategyTest extends TestCase
         $this->assertSame('baz', $strategy->extract($object, $property));
     }
 
-    /**
-     * @expectedException Innmind\Reflection\Exception\PropertyCannotBeExtractedException
-     * @expectedExceptionMessage Property "foo" cannot be extracted
-     */
     public function testThrowWhenNoStrategySupporting()
     {
         $strategy = new DelegationStrategy(
@@ -173,6 +170,9 @@ class DelegationStrategyTest extends TestCase
         $mock2
             ->expects($this->never())
             ->method('extract');
+
+        $this->expectException(PropertyCannotBeExtracted::class);
+        $this->expectExceptionMessage('Property "foo" cannot be extracted');
 
         $strategy->extract($object, $property);
     }

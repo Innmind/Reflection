@@ -5,7 +5,7 @@ namespace Innmind\Reflection\Instanciator;
 
 use Innmind\Reflection\{
     Instanciator,
-    Exception\InstanciationFailedException,
+    Exception\InstanciationFailed,
 };
 use Innmind\Immutable\{
     MapInterface,
@@ -26,7 +26,7 @@ final class ConstructorLessInstanciator implements Instanciator
 
             return $refl->newInstanceWithoutConstructor();
         } catch (\TypeError $e) {
-            throw new InstanciationFailedException(
+            throw new InstanciationFailed(
                 sprintf(
                     'Class "%s" cannot be instanciated',
                     $class

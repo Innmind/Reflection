@@ -6,7 +6,7 @@ namespace Innmind\Reflection\InjectionStrategy;
 use Innmind\Reflection\{
     InjectionStrategy,
     Exception\InvalidArgumentException,
-    Exception\PropertyCannotBeInjectedException,
+    Exception\PropertyCannotBeInjected,
 };
 use Innmind\Immutable\{
     Stream,
@@ -61,7 +61,7 @@ final class DelegationStrategy implements InjectionStrategy
         );
 
         if (!$strategy instanceof InjectionStrategy) {
-            throw new PropertyCannotBeInjectedException($property);
+            throw new PropertyCannotBeInjected($property);
         }
 
         $this->cache = $this->cache->put($key, $strategy);

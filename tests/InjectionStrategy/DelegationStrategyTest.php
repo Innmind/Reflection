@@ -6,6 +6,7 @@ namespace Tests\Innmind\Reflection\InjectionStrategy;
 use Innmind\Reflection\{
     InjectionStrategy\DelegationStrategy,
     InjectionStrategy,
+    Exception\PropertyCannotBeInjected,
 };
 use PHPUnit\Framework\TestCase;
 
@@ -149,10 +150,6 @@ class DelegationStrategyTest extends TestCase
         $this->assertSame($object, $strategy->inject($object, $property, $value));
     }
 
-    /**
-     * @expectedException Innmind\Reflection\Exception\PropertyCannotBeInjectedException
-     * @expectedExceptionMessage Property "foo" cannot be injected
-     */
     public function testThrowWhenNoStrategySupporting()
     {
         $strategy = new DelegationStrategy(
@@ -178,6 +175,9 @@ class DelegationStrategyTest extends TestCase
         $mock2
             ->expects($this->never())
             ->method('inject');
+
+        $this->expectException(PropertyCannotBeInjected::class);
+        $this->expectExceptionMessage('Property "foo" cannot be injected');
 
         $strategy->inject($object, $property, $value);
     }
