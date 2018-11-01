@@ -44,10 +44,7 @@ class ReflectionClass
     /**
      * Add a property to be injected in the new object
      *
-     * @param string $property
      * @param mixed  $value
-     *
-     * @return self
      */
     public function withProperty(string $property, $value): self
     {
@@ -63,8 +60,6 @@ class ReflectionClass
      * Add a set of properties that need to be injected
      *
      * @param array<string, mixed> $properties
-     *
-     * @return self
      */
     public function withProperties(array $properties): self
     {
@@ -94,8 +89,6 @@ class ReflectionClass
 
     /**
      * Return the list of injection strategies used
-     *
-     * @return InjectionStrategiesInterface
      */
     public function injectionStrategy(): InjectionStrategyInterface
     {
@@ -104,8 +97,6 @@ class ReflectionClass
 
     /**
      * Return the object instanciator
-     *
-     * @return InstanciatorInterface
      */
     public function instanciator(): InstanciatorInterface
     {
@@ -114,8 +105,6 @@ class ReflectionClass
 
     /**
      * Return a new instance of the class
-     *
-     * @return object
      */
     public function build(): object
     {

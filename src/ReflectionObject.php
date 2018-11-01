@@ -46,10 +46,7 @@ class ReflectionObject
     /**
      * Add a property that will be injected
      *
-     * @param string $name
      * @param mixed  $value
-     *
-     * @return self
      */
     public function withProperty(string $name, $value): self
     {
@@ -96,8 +93,6 @@ class ReflectionObject
 
     /**
      * Return the list of injection strategies used
-     *
-     * @return InjectionStrategyInterface
      */
     public function injectionStrategy(): InjectionStrategyInterface
     {
@@ -106,8 +101,6 @@ class ReflectionObject
 
     /**
      * Return the list of extraction strategies used
-     *
-     * @return ExtractionStrategyInterface
      */
     public function extractionStrategy(): ExtractionStrategyInterface
     {
@@ -116,8 +109,6 @@ class ReflectionObject
 
     /**
      * Return the object with the list of properties set on it
-     *
-     * @return object
      */
     public function build(): object
     {
@@ -152,10 +143,7 @@ class ReflectionObject
     /**
      * Inject the given key/value pair into the object
      *
-     * @param string $key
      * @param mixed  $value
-     *
-     * @return void
      */
     private function inject(string $key, $value): void
     {
@@ -164,8 +152,6 @@ class ReflectionObject
 
     /**
      * Extract the given property out of the object
-     *
-     * @param string $property
      *
      * @return mixed
      */

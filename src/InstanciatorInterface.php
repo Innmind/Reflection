@@ -13,19 +13,14 @@ interface InstanciatorInterface
     /**
      * Build a new instance for the given class
      *
-     * @param string $class
      * @param MapInterface<string, mixed> $properties
      *
      * @throws InstanciationFailedException
-     *
-     * @return object
      */
     public function build(string $class, MapInterface $properties): object;
 
     /**
      * Return a collection of parameters it can inject for the given class
-     *
-     * @param string $class
      *
      * @return SetInterface<string>
      */
