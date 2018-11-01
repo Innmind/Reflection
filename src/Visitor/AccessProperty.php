@@ -30,7 +30,7 @@ final class AccessProperty
             return $refl->getProperty($property);
         }
 
-        throw new PropertyNotFound;
+        throw new PropertyNotFound($property);
     }
 
     private function byClass(string $class, string $property): \ReflectionProperty
@@ -48,6 +48,6 @@ final class AccessProperty
             );
         }
 
-        throw new PropertyNotFound;
+        throw new PropertyNotFound($property);
     }
 }

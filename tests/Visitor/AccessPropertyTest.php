@@ -26,6 +26,7 @@ class AccessPropertyTest extends TestCase
     public function testThrowWhenPropertyNotFound()
     {
         $this->expectException(PropertyNotFound::class);
+        $this->expectExceptionMessage('foo');
 
         (new AccessProperty)(new \stdClass, 'foo');
     }
