@@ -16,7 +16,7 @@ use Innmind\Reflection\ReflectionObject;
 $refl = (new ReflectionObject($myObject))
     ->withProperty('foo', 'bar')
     ->withProperty('bar', 'baz');
-$refl->buildObject();
+$refl->build();
 ```
 
 This simple code will inject both `foo` and `bar` into your `$myObject` following this strategy:
@@ -44,7 +44,7 @@ class Foo
 
 $foo = (new ReflectionClass(Foo:class))
     ->withProperty('foo', 'bar')
-    ->buildObject();
+    ->build();
 ```
 
 The `ReflectionClass` uses the `ReflectionInstanciator` to build the new instance of your class; it's replaceable by any object implementing the `InstanciatorInterface` and giving it as the fourth argument of `ReflectionClass`.
