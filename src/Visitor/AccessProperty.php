@@ -22,7 +22,7 @@ final class AccessProperty
         }
     }
 
-    private function byObject($object, string $property): \ReflectionProperty
+    private function byObject(object $object, string $property): \ReflectionProperty
     {
         $refl = new \ReflectionObject($object);
 
