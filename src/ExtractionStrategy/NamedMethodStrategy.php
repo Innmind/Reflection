@@ -14,7 +14,7 @@ class NamedMethodStrategy implements ExtractionStrategyInterface
     /**
      * {@inheritdoc}
      */
-    public function supports($object, string $property): bool
+    public function supports(object $object, string $property): bool
     {
         $refl = new \ReflectionObject($object);
 
@@ -38,7 +38,7 @@ class NamedMethodStrategy implements ExtractionStrategyInterface
     /**
      * {@inheritdoc}
      */
-    public function extract($object, string $property)
+    public function extract(object $object, string $property)
     {
         if (!$this->supports($object, $property)) {
             throw new LogicException;

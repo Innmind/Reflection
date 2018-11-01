@@ -15,7 +15,7 @@ interface ExtractionStrategyInterface
      *
      * @return bool
      */
-    public function supports($object, string $property): bool;
+    public function supports(object $object, string $property): bool;
 
     /**
      * Extract the given property value out of the given object
@@ -27,5 +27,5 @@ interface ExtractionStrategyInterface
      *
      * @return mixed
      */
-    public function extract($object, string $property);
+    public function extract(object $object, string $property);
 }

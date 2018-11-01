@@ -34,7 +34,7 @@ final class DelegationStrategy implements ExtractionStrategyInterface
     /**
      * {@inheritdoc}
      */
-    public function supports($object, string $property): bool
+    public function supports(object $object, string $property): bool
     {
         return $this
             ->strategies
@@ -53,7 +53,7 @@ final class DelegationStrategy implements ExtractionStrategyInterface
     /**
      * {@inheritdoc}
      */
-    public function extract($object, string $property)
+    public function extract(object $object, string $property)
     {
         $key = $this->generateKey($object, $property);
 
@@ -86,7 +86,7 @@ final class DelegationStrategy implements ExtractionStrategyInterface
         return $strategy->extract($object, $property);
     }
 
-    private function generateKey($object, string $property): string
+    private function generateKey(object $object, string $property): string
     {
         return get_class($object).'::'.$property;
     }

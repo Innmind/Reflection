@@ -19,7 +19,7 @@ final class ConstructorLessInstanciator implements InstanciatorInterface
     /**
      * {@inheritdoc}
      */
-    public function build(string $class, MapInterface $properties)
+    public function build(string $class, MapInterface $properties): object
     {
         try {
             $refl = new \ReflectionClass($class);

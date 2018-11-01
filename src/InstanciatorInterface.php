@@ -20,7 +20,7 @@ interface InstanciatorInterface
      *
      * @return object
      */
-    public function build(string $class, MapInterface $properties);
+    public function build(string $class, MapInterface $properties): object;
 
     /**
      * Return a collection of parameters it can inject for the given class

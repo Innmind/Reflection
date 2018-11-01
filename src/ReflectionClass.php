@@ -117,7 +117,7 @@ class ReflectionClass
      *
      * @return object
      */
-    public function build()
+    public function build(): object
     {
         $object = $this->instanciator->build($this->class, $this->properties);
         $parameters = $this->instanciator->parameters($this->class);

@@ -21,14 +21,6 @@ class AccessPropertyTest extends TestCase
     }
 
     /**
-     * @expectedException Innmind\Reflection\Exception\InvalidArgumentException
-     */
-    public function testThrowWhenNotAnObject()
-    {
-        (new AccessProperty)(['foo' => 'bar'], 'foo');
-    }
-
-    /**
      * @expectedException Innmind\Reflection\Exception\PropertyNotFoundException
      */
     public function testThrowWhenPropertyNotFound()

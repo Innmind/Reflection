@@ -14,7 +14,7 @@ class ReflectionStrategy implements InjectionStrategyInterface
     /**
      * {@inheritdoc}
      */
-    public function supports($object, string $property, $value): bool
+    public function supports(object $object, string $property, $value): bool
     {
         try {
             (new AccessProperty)($object, $property);
@@ -28,7 +28,7 @@ class ReflectionStrategy implements InjectionStrategyInterface
     /**
      * {@inheritdoc}
      */
-    public function inject($object, string $property, $value): void
+    public function inject(object $object, string $property, $value): void
     {
         if (!$this->supports($object, $property, $value)) {
             throw new LogicException;

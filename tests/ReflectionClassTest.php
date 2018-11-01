@@ -97,7 +97,7 @@ class ReflectionClassTest extends TestCase
 
         $i = new class implements InstanciatorInterface
         {
-            public function build(string $class, MapInterface $properties)
+            public function build(string $class, MapInterface $properties): object
             {
             }
 

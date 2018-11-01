@@ -17,7 +17,7 @@ interface InjectionStrategyInterface
      *
      * @return bool
      */
-    public function supports($object, string $property, $value): bool;
+    public function supports(object $object, string $property, $value): bool;
 
     /**
      * Inject the given value into the given object
@@ -30,5 +30,5 @@ interface InjectionStrategyInterface
      *
      * @return void
      */
-    public function inject($object, string $property, $value): void;
+    public function inject(object $object, string $property, $value): void;
 }

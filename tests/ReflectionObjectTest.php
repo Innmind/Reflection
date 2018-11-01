@@ -30,14 +30,6 @@ class ReflectionObjectTest extends TestCase
         $this->assertCount(0, $refl->properties());
     }
 
-    /**
-     * @expectedException Innmind\Reflection\Exception\InvalidArgumentException
-     */
-    public function testThrowWhenNotUsingAnObject()
-    {
-        new ReflectionObject([]);
-    }
-
     public function testAddPropertyToInject()
     {
         $o = new \stdClass;

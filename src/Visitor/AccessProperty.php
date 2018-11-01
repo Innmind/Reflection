@@ -13,12 +13,8 @@ final class AccessProperty
     /**
      * @throws PropertyNotFoundException
      */
-    public function __invoke($object, string $property): \ReflectionProperty
+    public function __invoke(object $object, string $property): \ReflectionProperty
     {
-        if (!is_object($object)) {
-            throw new InvalidArgumentException;
-        }
-
         try {
             return $this->byObject($object, $property);
         } catch (PropertyNotFoundException $e) {

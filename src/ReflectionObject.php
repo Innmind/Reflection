@@ -23,7 +23,7 @@ class ReflectionObject
     private $extractionStrategy;
 
     public function __construct(
-        $object,
+        object $object,
         MapInterface $properties = null,
         InjectionStrategyInterface $injectionStrategy = null,
         ExtractionStrategyInterface $extractionStrategy = null
@@ -31,7 +31,6 @@ class ReflectionObject
         $properties = $properties ?? new Map('string', 'mixed');
 
         if (
-            !is_object($object) ||
             (string) $properties->keyType() !== 'string' ||
             (string) $properties->valueType() !== 'mixed'
         ) {
@@ -120,7 +119,7 @@ class ReflectionObject
      *
      * @return object
      */
-    public function build()
+    public function build(): object
     {
         $this->properties->foreach(function(string $key, $value): void {
             $this->inject($key, $value);
