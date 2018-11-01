@@ -58,4 +58,13 @@ class ReflectionClassTest extends TestCase
         $this->assertSame(24, $o->a());
         $this->assertSame(66, $o->b());
     }
+
+    public function testProperties()
+    {
+        $properties = (new ReflectionClass(WithConstructor::class))->properties();
+
+        $this->assertInstanceOf(SetInterface::class, $properties);
+        $this->assertSame('string', (string) $properties->type());
+        $this->assertSame(['a', 'b'], $properties->toPrimitive());
+    }
 }

@@ -11,6 +11,8 @@ use Innmind\Reflection\{
 use Innmind\Immutable\{
     MapInterface,
     Map,
+    SetInterface,
+    Set,
 };
 
 class ReflectionClass
@@ -98,5 +100,24 @@ class ReflectionClass
         );
 
         return $refl->build();
+    }
+
+    /**
+     * Return all the properties defined on the class
+     *
+     * It will not extract properties defined in a parent class
+     *
+     * @return SetInterface<string>
+     */
+    public function properties(): SetInterface
+    {
+        $refl = new \ReflectionClass($this->class);
+        $properties = Set::of('string');
+
+        foreach ($refl->getProperties() as $property) {
+            $properties = $properties->add($property->getName());
+        }
+
+        return $properties;
     }
 }
