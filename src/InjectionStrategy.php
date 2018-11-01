@@ -22,5 +22,5 @@ interface InjectionStrategy
      *
      * @throws PropertyCannotBeInjectedException If the property is not supported
      */
-    public function inject(object $object, string $property, $value): void;
+    public function inject(object $object, string $property, $value): object;
 }

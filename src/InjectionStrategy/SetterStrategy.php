@@ -38,7 +38,7 @@ class SetterStrategy implements InjectionStrategy
     /**
      * {@inheritdoc}
      */
-    public function inject(object $object, string $property, $value): void
+    public function inject(object $object, string $property, $value): object
     {
         if (!$this->supports($object, $property, $value)) {
             throw new LogicException;
@@ -48,5 +48,7 @@ class SetterStrategy implements InjectionStrategy
             (string) (new Str($property))->camelize()
         );
         $object->$setter($value);
+
+        return $object;
     }
 }

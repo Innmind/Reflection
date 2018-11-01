@@ -66,13 +66,14 @@ class ReflectionObjectTest extends TestCase
 
         $this->assertSame([null, null, null, null], $o->dump());
 
-        (new ReflectionObject($o))
+        $result = (new ReflectionObject($o))
             ->withProperty('a', 1)
             ->withProperty('b', 2)
             ->withProperty('c', 3)
             ->withProperty('d', 4)
             ->build();
 
+        $this->assertSame($o, $result);
         $this->assertSame([1, 2, 3, 4], $o->dump());
     }
 

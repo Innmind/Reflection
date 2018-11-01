@@ -79,12 +79,13 @@ class DelegationStrategyTest extends TestCase
         $mock1
             ->expects($this->once())
             ->method('inject')
-            ->with($object, $property, $value);
+            ->with($object, $property, $value)
+            ->willReturn($object);
         $mock2
             ->expects($this->never())
             ->method('inject');
 
-        $this->assertNull($strategy->inject($object, $property, $value));
+        $this->assertSame($object, $strategy->inject($object, $property, $value));
     }
 
     public function testCacheStrategy()
@@ -107,13 +108,14 @@ class DelegationStrategyTest extends TestCase
         $mock1
             ->expects($this->exactly(2))
             ->method('inject')
-            ->with($object, $property, $value);
+            ->with($object, $property, $value)
+            ->willReturn($object);
         $mock2
             ->expects($this->never())
             ->method('inject');
 
-        $this->assertNull($strategy->inject($object, $property, $value));
-        $this->assertNull($strategy->inject($object, $property, $value));
+        $this->assertSame($object, $strategy->inject($object, $property, $value));
+        $this->assertSame($object, $strategy->inject($object, $property, $value));
     }
 
     public function testExtractWithSecondStrategy()
@@ -141,9 +143,10 @@ class DelegationStrategyTest extends TestCase
         $mock2
             ->expects($this->once())
             ->method('inject')
-            ->with($object, $property, $value);
+            ->with($object, $property, $value)
+            ->willReturn($object);
 
-        $this->assertNull($strategy->inject($object, $property, $value));
+        $this->assertSame($object, $strategy->inject($object, $property, $value));
     }
 
     /**

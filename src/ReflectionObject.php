@@ -84,11 +84,12 @@ class ReflectionObject
      */
     public function build(): object
     {
-        $this->properties->foreach(function(string $key, $value): void {
-            $this->inject($key, $value);
-        });
-
-        return $this->object;
+        return $this->properties->reduce(
+            $this->object,
+            function(object $object, string $key, $value): object {
+                return $this->inject($object, $key, $value);
+            }
+        );
     }
 
     /**
@@ -115,9 +116,9 @@ class ReflectionObject
      *
      * @param mixed  $value
      */
-    private function inject(string $key, $value): void
+    private function inject(object $object, string $key, $value): object
     {
-        $this->injectionStrategy->inject($this->object, $key, $value);
+        return $this->injectionStrategy->inject($object, $key, $value);
     }
 
     /**

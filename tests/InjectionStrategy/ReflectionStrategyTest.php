@@ -50,11 +50,11 @@ class ReflectionStrategyTest extends TestCase
             }
         };
 
-        $this->assertSame(null, $s->inject($o, 'a', 'bar'));
+        $this->assertSame($o, $s->inject($o, 'a', 'bar'));
         $this->assertSame('bar', $o->a());
-        $this->assertSame(null, $s->inject($o, 'b', 'bar'));
+        $this->assertSame($o, $s->inject($o, 'b', 'bar'));
         $this->assertSame('bar', $o->b());
-        $this->assertSame(null, $s->inject($o, 'c', 'bar'));
+        $this->assertSame($o, $s->inject($o, 'c', 'bar'));
         $this->assertSame('bar', $o->c);
     }
 
@@ -64,7 +64,7 @@ class ReflectionStrategyTest extends TestCase
         $object = new class extends Foo {};
 
         $this->assertSame(42, $object->someProperty());
-        $this->assertNull($strategy->inject($object, 'someProperty', 24));
+        $this->assertSame($object, $strategy->inject($object, 'someProperty', 24));
         $this->assertSame(24, $object->someProperty());
     }
 

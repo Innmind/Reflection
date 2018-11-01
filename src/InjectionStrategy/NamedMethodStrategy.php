@@ -48,7 +48,7 @@ class NamedMethodStrategy implements InjectionStrategy
     /**
      * {@inheritdoc}
      */
-    public function inject(object $object, string $property, $value): void
+    public function inject(object $object, string $property, $value): object
     {
         if (!$this->supports($object, $property, $value)) {
             throw new LogicException;
@@ -59,5 +59,7 @@ class NamedMethodStrategy implements InjectionStrategy
             ->lcfirst();
 
         $object->$property($value);
+
+        return $object;
     }
 }
