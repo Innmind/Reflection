@@ -28,7 +28,7 @@ class ReflectionClassTest extends TestCase
 {
     public function testBuildWithoutProperties()
     {
-        $r = new ReflectionClass(NoConstructor::class);
+        $r = ReflectionClass::of(NoConstructor::class);
 
         $o = $r->build();
 
@@ -38,14 +38,14 @@ class ReflectionClassTest extends TestCase
 
     public function testBuild()
     {
-        $o = (new ReflectionClass(NoConstructor::class))
+        $o = ReflectionClass::of(NoConstructor::class)
             ->withProperty('a', 42)
             ->build();
 
         $this->assertInstanceOf(NoConstructor::class, $o);
         $this->assertSame(42, $o->a());
 
-        $o = (new ReflectionClass(WithConstructor::class))
+        $o = ReflectionClass::of(WithConstructor::class)
             ->withProperties(
                 [
                     'a' => 24,
@@ -61,7 +61,7 @@ class ReflectionClassTest extends TestCase
 
     public function testProperties()
     {
-        $properties = (new ReflectionClass(WithConstructor::class))->properties();
+        $properties = ReflectionClass::of(WithConstructor::class)->properties();
 
         $this->assertInstanceOf(SetInterface::class, $properties);
         $this->assertSame('string', (string) $properties->type());

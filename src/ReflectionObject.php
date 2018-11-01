@@ -41,6 +41,15 @@ class ReflectionObject
         $this->extractionStrategy = $extractionStrategy ?? ExtractionStrategies::default();
     }
 
+    public static function of(
+        object $object,
+        MapInterface $properties = null,
+        InjectionStrategy $injectionStrategy = null,
+        ExtractionStrategy $extractionStrategy = null
+    ): self {
+        return new self($object, $properties, $injectionStrategy, $extractionStrategy);
+    }
+
     /**
      * Add a property that will be injected
      *

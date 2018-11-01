@@ -43,6 +43,15 @@ class ReflectionClass
         $this->instanciator = $instanciator ?? new ReflectionInstanciator;
     }
 
+    public static function of(
+        string $class,
+        MapInterface $properties = null,
+        InjectionStrategy $injectionStrategy = null,
+        Instanciator $instanciator = null
+    ): self {
+        return new self($class, $properties, $injectionStrategy, $instanciator);
+    }
+
     /**
      * Add a property to be injected in the new object
      *

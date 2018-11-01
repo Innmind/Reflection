@@ -66,7 +66,7 @@ class ReflectionObjectTest extends TestCase
 
         $this->assertSame([null, null, null, null], $o->dump());
 
-        $result = (new ReflectionObject($o))
+        $result = ReflectionObject::of($o)
             ->withProperty('a', 1)
             ->withProperty('b', 2)
             ->withProperty('c', 3)
@@ -104,7 +104,7 @@ class ReflectionObjectTest extends TestCase
 
         $this->assertSame([null, null, null, null], $o->dump());
 
-        (new ReflectionObject($o))
+        ReflectionObject::of($o)
             ->withProperties(
                 [
                     'a' => 1,
@@ -128,7 +128,7 @@ class ReflectionObjectTest extends TestCase
      */
     public function testThrowWhenPropertyNotFound()
     {
-        (new ReflectionObject(new \stdClass))
+        ReflectionObject::of(new \stdClass)
             ->withProperty('a', 1)
             ->build();
     }
@@ -146,7 +146,7 @@ class ReflectionObjectTest extends TestCase
                 //pass
             }
         };
-        (new ReflectionObject($o))
+        ReflectionObject::of($o)
             ->withProperty('a', 1)
             ->build();
     }
@@ -186,6 +186,6 @@ class ReflectionObjectTest extends TestCase
      */
     public function testThrowWhenCannotExtractProperty()
     {
-        (new ReflectionObject(new \stdClass))->extract('a');
+        ReflectionObject::of(new \stdClass)->extract('a');
     }
 }
