@@ -27,7 +27,6 @@ class ReflectionObjectTest extends TestCase
         $o2 = $refl->build();
 
         $this->assertSame($o, $o2);
-        $this->assertCount(0, $refl->properties());
     }
 
     public function testAddPropertyToInject()
@@ -38,9 +37,6 @@ class ReflectionObjectTest extends TestCase
 
         $this->assertInstanceOf(ReflectionObject::class, $refl2);
         $this->assertNotSame($refl, $refl2);
-        $this->assertCount(0, $refl->properties());
-        $this->assertCount(1, $refl2->properties());
-        $this->assertSame('bar', $refl2->properties()->get('foo'));
     }
 
     public function testBuild()
@@ -152,45 +148,6 @@ class ReflectionObjectTest extends TestCase
         (new ReflectionObject($o))
             ->withProperty('a', 1)
             ->build();
-    }
-
-    public function testGetInjectionStrategy()
-    {
-        $refl = new ReflectionObject(new \stdClass);
-
-        $this->assertSame(
-            $refl->injectionStrategy(),
-            InjectionStrategies::default()
-        );
-
-        $strategy = $this->createMock(InjectionStrategy::class);
-        $refl = new ReflectionObject(
-            new \stdClass,
-            null,
-            $strategy
-        );
-
-        $this->assertSame($strategy, $refl->injectionStrategy());
-    }
-
-    public function testGetExtractionStrategy()
-    {
-        $refl = new ReflectionObject(new \stdClass);
-
-        $this->assertSame(
-            ExtractionStrategies::default(),
-            $refl->extractionStrategy()
-        );
-
-        $strategy = $this->createMock(ExtractionStrategy::class);
-        $refl = new ReflectionObject(
-            new \stdClass,
-            null,
-            null,
-            $strategy
-        );
-
-        $this->assertSame($strategy, $refl->extractionStrategy());
     }
 
     public function testExtract()

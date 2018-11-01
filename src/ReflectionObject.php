@@ -80,32 +80,6 @@ class ReflectionObject
     }
 
     /**
-     * Return the collection of properties that will be injected in the object
-     *
-     * @return MapInterface<string, mixed>
-     */
-    public function properties(): MapInterface
-    {
-        return $this->properties;
-    }
-
-    /**
-     * Return the list of injection strategies used
-     */
-    public function injectionStrategy(): InjectionStrategy
-    {
-        return $this->injectionStrategy;
-    }
-
-    /**
-     * Return the list of extraction strategies used
-     */
-    public function extractionStrategy(): ExtractionStrategy
-    {
-        return $this->extractionStrategy;
-    }
-
-    /**
      * Return the object with the list of properties set on it
      */
     public function build(): object
