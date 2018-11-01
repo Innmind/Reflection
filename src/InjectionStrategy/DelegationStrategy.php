@@ -9,7 +9,7 @@ use Innmind\Reflection\{
     Exception\PropertyCannotBeInjectedException
 };
 use Innmind\Immutable\{
-    StreamInterface,
+    Stream,
     Map
 };
 
@@ -18,16 +18,9 @@ final class DelegationStrategy implements InjectionStrategyInterface
     private $strategies;
     private $cache;
 
-    /**
-     * @param StreamInterface<InjectionStrategyInterface> $strategies
-     */
-    public function __construct(StreamInterface $strategies)
+    public function __construct(InjectionStrategyInterface ...$strategies)
     {
-        if ((string) $strategies->type() !== InjectionStrategyInterface::class) {
-            throw new InvalidArgumentException;
-        }
-
-        $this->strategies = $strategies;
+        $this->strategies = Stream::of(InjectionStrategyInterface::class, ...$strategies);
         $this->cache = new Map('string', InjectionStrategyInterface::class);
     }
 

@@ -7,7 +7,6 @@ use Innmind\Reflection\{
     ExtractionStrategy\DelegationStrategy,
     ExtractionStrategyInterface
 };
-use Innmind\Immutable\Stream;
 use PHPUnit\Framework\TestCase;
 
 class DelegationStrategyTest extends TestCase
@@ -16,22 +15,15 @@ class DelegationStrategyTest extends TestCase
     {
         $this->assertInstanceOf(
             ExtractionStrategyInterface::class,
-            new DelegationStrategy(
-                new Stream(ExtractionStrategyInterface::class)
-            )
+            new DelegationStrategy
         );
     }
 
     public function testSupports()
     {
         $strategy = new DelegationStrategy(
-            (new Stream(ExtractionStrategyInterface::class))
-                ->add(
-                    $mock1 = $this->createMock(ExtractionStrategyInterface::class)
-                )
-                ->add(
-                    $mock2 = $this->createMock(ExtractionStrategyInterface::class)
-                )
+            $mock1 = $this->createMock(ExtractionStrategyInterface::class),
+            $mock2 = $this->createMock(ExtractionStrategyInterface::class)
         );
         $object = new \stdClass;
         $property = 'foo';
@@ -69,13 +61,8 @@ class DelegationStrategyTest extends TestCase
     public function testExtractWithFirstStrategy()
     {
         $strategy = new DelegationStrategy(
-            (new Stream(ExtractionStrategyInterface::class))
-                ->add(
-                    $mock1 = $this->createMock(ExtractionStrategyInterface::class)
-                )
-                ->add(
-                    $mock2 = $this->createMock(ExtractionStrategyInterface::class)
-                )
+            $mock1 = $this->createMock(ExtractionStrategyInterface::class),
+            $mock2 = $this->createMock(ExtractionStrategyInterface::class)
         );
         $object = new \stdClass;
         $property = 'foo';
@@ -102,13 +89,8 @@ class DelegationStrategyTest extends TestCase
     public function testCacheStrategy()
     {
         $strategy = new DelegationStrategy(
-            (new Stream(ExtractionStrategyInterface::class))
-                ->add(
-                    $mock1 = $this->createMock(ExtractionStrategyInterface::class)
-                )
-                ->add(
-                    $mock2 = $this->createMock(ExtractionStrategyInterface::class)
-                )
+            $mock1 = $this->createMock(ExtractionStrategyInterface::class),
+            $mock2 = $this->createMock(ExtractionStrategyInterface::class)
         );
         $object = new \stdClass;
         $property = 'foo';
@@ -136,13 +118,8 @@ class DelegationStrategyTest extends TestCase
     public function testExtractWithSecondStrategy()
     {
         $strategy = new DelegationStrategy(
-            (new Stream(ExtractionStrategyInterface::class))
-                ->add(
-                    $mock1 = $this->createMock(ExtractionStrategyInterface::class)
-                )
-                ->add(
-                    $mock2 = $this->createMock(ExtractionStrategyInterface::class)
-                )
+            $mock1 = $this->createMock(ExtractionStrategyInterface::class),
+            $mock2 = $this->createMock(ExtractionStrategyInterface::class)
         );
         $object = new \stdClass;
         $property = 'foo';
@@ -175,13 +152,8 @@ class DelegationStrategyTest extends TestCase
     public function testThrowWhenNoStrategySupporting()
     {
         $strategy = new DelegationStrategy(
-            (new Stream(ExtractionStrategyInterface::class))
-                ->add(
-                    $mock1 = $this->createMock(ExtractionStrategyInterface::class)
-                )
-                ->add(
-                    $mock2 = $this->createMock(ExtractionStrategyInterface::class)
-                )
+            $mock1 = $this->createMock(ExtractionStrategyInterface::class),
+            $mock2 = $this->createMock(ExtractionStrategyInterface::class)
         );
         $object = new \stdClass;
         $property = 'foo';

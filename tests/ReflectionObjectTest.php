@@ -211,7 +211,7 @@ class ReflectionObjectTest extends TestCase
         };
         $refl = new ReflectionObject($o);
 
-        $values = $refl->extract(['a', 'b', 'c']);
+        $values = $refl->extract('a', 'b', 'c');
 
         $this->assertInstanceOf(MapInterface::class, $values);
         $this->assertSame('string', (string) $values->keyType());
@@ -228,6 +228,6 @@ class ReflectionObjectTest extends TestCase
      */
     public function testThrowWhenCannotExtractProperty()
     {
-        (new ReflectionObject(new \stdClass))->extract(['a']);
+        (new ReflectionObject(new \stdClass))->extract('a');
     }
 }

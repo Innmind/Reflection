@@ -9,7 +9,7 @@ use Innmind\Reflection\{
     Exception\PropertyCannotBeExtractedException
 };
 use Innmind\Immutable\{
-    StreamInterface,
+    Stream,
     Map
 };
 
@@ -18,16 +18,9 @@ final class DelegationStrategy implements ExtractionStrategyInterface
     private $strategies;
     private $cache;
 
-    /**
-     * @param StreamInterface<ExtractionStrategyInterface> $strategies
-     */
-    public function __construct(StreamInterface $strategies)
+    public function __construct(ExtractionStrategyInterface ...$strategies)
     {
-        if ((string) $strategies->type() !== ExtractionStrategyInterface::class) {
-            throw new InvalidArgumentException;
-        }
-
-        $this->strategies = $strategies;
+        $this->strategies = Stream::of(ExtractionStrategyInterface::class, ...$strategies);
         $this->cache = new Map('string', ExtractionStrategyInterface::class);
     }
 

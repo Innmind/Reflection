@@ -56,7 +56,7 @@ In case the properties you define to be injected can't be injected through the c
 ```php
 use Innmind\Reflection\ReflectionObject;
 
-$properties = (new ReflectionObject($myObject))->extract(['foo', 'bar', 'baz']);
+$properties = (new ReflectionObject($myObject))->extract('foo', 'bar', 'baz');
 ```
 
 Here `$properties` is a collection containing the values of `foo`, `bar` and `baz` that are set in your `$myObject`.

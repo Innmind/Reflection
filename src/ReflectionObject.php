@@ -122,11 +122,9 @@ class ReflectionObject
     /**
      * Extract the given list of properties
      *
-     * @param string[] $properties
-     *
      * @return MapInterface<string, mixed>
      */
-    public function extract(array $properties): MapInterface
+    public function extract(string ...$properties): MapInterface
     {
         $map = new Map('string', 'mixed');
 

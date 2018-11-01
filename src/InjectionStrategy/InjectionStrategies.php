@@ -3,7 +3,6 @@
 namespace Innmind\Reflection\InjectionStrategy;
 
 use Innmind\Reflection\InjectionStrategyInterface;
-use Innmind\Immutable\Stream;
 
 final class InjectionStrategies
 {
@@ -13,10 +12,9 @@ final class InjectionStrategies
     {
         if (self::$default === null) {
             self::$default = new DelegationStrategy(
-                (new Stream(InjectionStrategyInterface::class))
-                    ->add(new SetterStrategy)
-                    ->add(new NamedMethodStrategy)
-                    ->add(new ReflectionStrategy)
+                new SetterStrategy,
+                new NamedMethodStrategy,
+                new ReflectionStrategy
             );
         }
 

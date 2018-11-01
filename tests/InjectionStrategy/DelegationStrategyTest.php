@@ -7,7 +7,6 @@ use Innmind\Reflection\{
     InjectionStrategy\DelegationStrategy,
     InjectionStrategyInterface
 };
-use Innmind\Immutable\Stream;
 use PHPUnit\Framework\TestCase;
 
 class DelegationStrategyTest extends TestCase
@@ -16,22 +15,15 @@ class DelegationStrategyTest extends TestCase
     {
         $this->assertInstanceOf(
             InjectionStrategyInterface::class,
-            new DelegationStrategy(
-                new Stream(InjectionStrategyInterface::class)
-            )
+            new DelegationStrategy
         );
     }
 
     public function testSupports()
     {
         $strategy = new DelegationStrategy(
-            (new Stream(InjectionStrategyInterface::class))
-                ->add(
-                    $mock1 = $this->createMock(InjectionStrategyInterface::class)
-                )
-                ->add(
-                    $mock2 = $this->createMock(InjectionStrategyInterface::class)
-                )
+            $mock1 = $this->createMock(InjectionStrategyInterface::class),
+            $mock2 = $this->createMock(InjectionStrategyInterface::class)
         );
         $object = new \stdClass;
         $property = 'foo';
@@ -70,13 +62,8 @@ class DelegationStrategyTest extends TestCase
     public function testInjectWithFirstStrategy()
     {
         $strategy = new DelegationStrategy(
-            (new Stream(InjectionStrategyInterface::class))
-                ->add(
-                    $mock1 = $this->createMock(InjectionStrategyInterface::class)
-                )
-                ->add(
-                    $mock2 = $this->createMock(InjectionStrategyInterface::class)
-                )
+            $mock1 = $this->createMock(InjectionStrategyInterface::class),
+            $mock2 = $this->createMock(InjectionStrategyInterface::class)
         );
         $object = new \stdClass;
         $property = 'foo';
@@ -103,13 +90,8 @@ class DelegationStrategyTest extends TestCase
     public function testCacheStrategy()
     {
         $strategy = new DelegationStrategy(
-            (new Stream(InjectionStrategyInterface::class))
-                ->add(
-                    $mock1 = $this->createMock(InjectionStrategyInterface::class)
-                )
-                ->add(
-                    $mock2 = $this->createMock(InjectionStrategyInterface::class)
-                )
+            $mock1 = $this->createMock(InjectionStrategyInterface::class),
+            $mock2 = $this->createMock(InjectionStrategyInterface::class)
         );
         $object = new \stdClass;
         $property = 'foo';
@@ -137,13 +119,8 @@ class DelegationStrategyTest extends TestCase
     public function testExtractWithSecondStrategy()
     {
         $strategy = new DelegationStrategy(
-            (new Stream(InjectionStrategyInterface::class))
-                ->add(
-                    $mock1 = $this->createMock(InjectionStrategyInterface::class)
-                )
-                ->add(
-                    $mock2 = $this->createMock(InjectionStrategyInterface::class)
-                )
+            $mock1 = $this->createMock(InjectionStrategyInterface::class),
+            $mock2 = $this->createMock(InjectionStrategyInterface::class)
         );
         $object = new \stdClass;
         $property = 'foo';
@@ -176,13 +153,8 @@ class DelegationStrategyTest extends TestCase
     public function testThrowWhenNoStrategySupporting()
     {
         $strategy = new DelegationStrategy(
-            (new Stream(InjectionStrategyInterface::class))
-                ->add(
-                    $mock1 = $this->createMock(InjectionStrategyInterface::class)
-                )
-                ->add(
-                    $mock2 = $this->createMock(InjectionStrategyInterface::class)
-                )
+            $mock1 = $this->createMock(InjectionStrategyInterface::class),
+            $mock2 = $this->createMock(InjectionStrategyInterface::class)
         );
         $object = new \stdClass;
         $property = 'foo';
