@@ -32,7 +32,7 @@ class ReflectionClass
             (string) $properties->keyType() !== 'string' ||
             (string) $properties->valueType() !== 'mixed'
         ) {
-            throw new InvalidArgumentException;
+            throw new \TypeError('Argument 2 must be of type MapInterface<string, mixed>');
         }
 
         $this->class = $class;
