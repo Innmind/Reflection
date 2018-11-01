@@ -3,7 +3,10 @@ declare(strict_types = 1);
 
 namespace Tests\Innmind\Reflection\Instanciator;
 
-use Innmind\Reflection\Instanciator\ReflectionInstanciator;
+use Innmind\Reflection\{
+    Instanciator\ReflectionInstanciator,
+    Instanciator,
+};
 use Innmind\Immutable\{
     MapInterface,
     Map,
@@ -13,6 +16,14 @@ use PHPUnit\Framework\TestCase;
 
 class ReflectionInstanciatorTest extends TestCase
 {
+    public function testInterface()
+    {
+        $this->assertInstanceOf(
+            Instanciator::class,
+            new ReflectionInstanciator
+        );
+    }
+
     public function testBuild()
     {
         $i = new ReflectionInstanciator;

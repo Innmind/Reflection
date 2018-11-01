@@ -5,7 +5,7 @@ namespace Tests\Innmind\Reflection\InjectionStrategy;
 
 use Innmind\Reflection\{
     InjectionStrategy\NamedMethodStrategy,
-    InjectionStrategyInterface
+    InjectionStrategy
 };
 use Fixtures\Innmind\Reflection\Foo;
 use PHPUnit\Framework\TestCase;
@@ -15,7 +15,7 @@ class NamedMethodStrategyTest extends TestCase
     public function testInterface()
     {
         $this->assertInstanceOf(
-            InjectionStrategyInterface::class,
+            InjectionStrategy::class,
             new NamedMethodStrategy
         );
     }

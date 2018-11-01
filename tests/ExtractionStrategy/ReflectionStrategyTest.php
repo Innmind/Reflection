@@ -5,7 +5,7 @@ namespace Tests\Innmind\Reflection\ExtractionStrategy;
 
 use Innmind\Reflection\{
     ExtractionStrategy\ReflectionStrategy,
-    ExtractionStrategyInterface
+    ExtractionStrategy
 };
 use Fixtures\Innmind\Reflection\Foo;
 use PHPUnit\Framework\TestCase;
@@ -15,7 +15,7 @@ class ReflectionStrategyTest extends TestCase
     public function testInterface()
     {
         $this->assertInstanceOf(
-            ExtractionStrategyInterface::class,
+            ExtractionStrategy::class,
             new ReflectionStrategy
         );
     }

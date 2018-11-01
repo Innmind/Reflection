@@ -4,7 +4,7 @@ declare(strict_types = 1);
 namespace Innmind\Reflection\InjectionStrategy;
 
 use Innmind\Reflection\{
-    InjectionStrategyInterface,
+    InjectionStrategy,
     Exception\InvalidArgumentException,
     Exception\PropertyCannotBeInjectedException
 };
@@ -13,15 +13,15 @@ use Innmind\Immutable\{
     Map
 };
 
-final class DelegationStrategy implements InjectionStrategyInterface
+final class DelegationStrategy implements InjectionStrategy
 {
     private $strategies;
     private $cache;
 
-    public function __construct(InjectionStrategyInterface ...$strategies)
+    public function __construct(InjectionStrategy ...$strategies)
     {
-        $this->strategies = Stream::of(InjectionStrategyInterface::class, ...$strategies);
-        $this->cache = new Map('string', InjectionStrategyInterface::class);
+        $this->strategies = Stream::of(InjectionStrategy::class, ...$strategies);
+        $this->cache = new Map('string', InjectionStrategy::class);
     }
 
     /**
@@ -33,7 +33,7 @@ final class DelegationStrategy implements InjectionStrategyInterface
             ->strategies
             ->reduce(
                 false,
-                function(bool $supports, InjectionStrategyInterface $strategy) use ($object, $property, $value): bool {
+                function(bool $supports, InjectionStrategy $strategy) use ($object, $property, $value): bool {
                     if ($supports === true) {
                         return true;
                     }
@@ -61,8 +61,8 @@ final class DelegationStrategy implements InjectionStrategyInterface
 
         $strategy = $this->strategies->reduce(
             null,
-            function($target, InjectionStrategyInterface $strategy) use ($object, $property, $value) {
-                if ($target instanceof InjectionStrategyInterface) {
+            function($target, InjectionStrategy $strategy) use ($object, $property, $value) {
+                if ($target instanceof InjectionStrategy) {
                     return $target;
                 }
 
@@ -72,7 +72,7 @@ final class DelegationStrategy implements InjectionStrategyInterface
             }
         );
 
-        if (!$strategy instanceof InjectionStrategyInterface) {
+        if (!$strategy instanceof InjectionStrategy) {
             throw new PropertyCannotBeInjectedException($property);
         }
 

@@ -5,7 +5,7 @@ namespace Innmind\Reflection;
 
 use Innmind\Reflection\Exception\LogicException;
 
-interface ExtractionStrategyInterface
+interface ExtractionStrategy
 {
     /**
      * Check if the injection strategy can be used to extract the given property

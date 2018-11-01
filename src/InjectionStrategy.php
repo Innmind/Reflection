@@ -5,7 +5,7 @@ namespace Innmind\Reflection;
 
 use Innmind\Reflection\Exception\LogicException;
 
-interface InjectionStrategyInterface
+interface InjectionStrategy
 {
     /**
      * Check if the injection strategy can be used to inject the given

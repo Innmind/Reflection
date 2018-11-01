@@ -5,10 +5,10 @@ namespace Innmind\Reflection;
 
 use Innmind\Immutable\{
     MapInterface,
-    SetInterface
+    SetInterface,
 };
 
-interface InstanciatorInterface
+interface Instanciator
 {
     /**
      * Build a new instance for the given class

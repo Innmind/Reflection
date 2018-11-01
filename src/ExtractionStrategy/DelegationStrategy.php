@@ -4,7 +4,7 @@ declare(strict_types = 1);
 namespace Innmind\Reflection\ExtractionStrategy;
 
 use Innmind\Reflection\{
-    ExtractionStrategyInterface,
+    ExtractionStrategy,
     Exception\InvalidArgumentException,
     Exception\PropertyCannotBeExtractedException
 };
@@ -13,15 +13,15 @@ use Innmind\Immutable\{
     Map
 };
 
-final class DelegationStrategy implements ExtractionStrategyInterface
+final class DelegationStrategy implements ExtractionStrategy
 {
     private $strategies;
     private $cache;
 
-    public function __construct(ExtractionStrategyInterface ...$strategies)
+    public function __construct(ExtractionStrategy ...$strategies)
     {
-        $this->strategies = Stream::of(ExtractionStrategyInterface::class, ...$strategies);
-        $this->cache = new Map('string', ExtractionStrategyInterface::class);
+        $this->strategies = Stream::of(ExtractionStrategy::class, ...$strategies);
+        $this->cache = new Map('string', ExtractionStrategy::class);
     }
 
     /**
@@ -33,7 +33,7 @@ final class DelegationStrategy implements ExtractionStrategyInterface
             ->strategies
             ->reduce(
                 false,
-                function(bool $supports, ExtractionStrategyInterface $strategy) use ($object, $property): bool {
+                function(bool $supports, ExtractionStrategy $strategy) use ($object, $property): bool {
                     if ($supports === true) {
                         return true;
                     }
@@ -59,8 +59,8 @@ final class DelegationStrategy implements ExtractionStrategyInterface
 
         $strategy = $this->strategies->reduce(
             null,
-            function($target, ExtractionStrategyInterface $strategy) use ($object, $property) {
-                if ($target instanceof ExtractionStrategyInterface) {
+            function($target, ExtractionStrategy $strategy) use ($object, $property) {
+                if ($target instanceof ExtractionStrategy) {
                     return $target;
                 }
 
@@ -70,7 +70,7 @@ final class DelegationStrategy implements ExtractionStrategyInterface
             }
         );
 
-        if (!$strategy instanceof ExtractionStrategyInterface) {
+        if (!$strategy instanceof ExtractionStrategy) {
             throw new PropertyCannotBeExtractedException($property);
         }
 

@@ -4,7 +4,7 @@ declare(strict_types = 1);
 namespace Tests\Innmind\Reflection\Instanciator;
 
 use Innmind\Reflection\{
-    InstanciatorInterface,
+    Instanciator,
     Instanciator\ConstructorLessInstanciator
 };
 use Innmind\Immutable\Map;
@@ -15,7 +15,7 @@ class ConstructorLessInstanciatorTest extends TestCase
     public function testInterface()
     {
         $this->assertInstanceOf(
-            InstanciatorInterface::class,
+            Instanciator::class,
             new ConstructorLessInstanciator
         );
     }

@@ -4,12 +4,12 @@ declare(strict_types = 1);
 namespace Innmind\Reflection\InjectionStrategy;
 
 use Innmind\Reflection\{
-    InjectionStrategyInterface,
+    InjectionStrategy,
     Exception\LogicException,
     Visitor\AccessProperty
 };
 
-class ReflectionStrategy implements InjectionStrategyInterface
+class ReflectionStrategy implements InjectionStrategy
 {
     /**
      * {@inheritdoc}

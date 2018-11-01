@@ -4,12 +4,12 @@ declare(strict_types = 1);
 namespace Innmind\Reflection\ExtractionStrategy;
 
 use Innmind\Reflection\{
-    ExtractionStrategyInterface,
+    ExtractionStrategy,
     Exception\LogicException,
     Visitor\AccessProperty
 };
 
-class ReflectionStrategy implements ExtractionStrategyInterface
+class ReflectionStrategy implements ExtractionStrategy
 {
     /**
      * {@inheritdoc}

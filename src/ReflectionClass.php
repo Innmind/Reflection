@@ -23,8 +23,8 @@ class ReflectionClass
     public function __construct(
         string $class,
         MapInterface $properties = null,
-        InjectionStrategyInterface $injectionStrategy = null,
-        InstanciatorInterface $instanciator = null
+        InjectionStrategy $injectionStrategy = null,
+        Instanciator $instanciator = null
     ) {
         $properties = $properties ?? new Map('string', 'mixed');
 
@@ -90,7 +90,7 @@ class ReflectionClass
     /**
      * Return the list of injection strategies used
      */
-    public function injectionStrategy(): InjectionStrategyInterface
+    public function injectionStrategy(): InjectionStrategy
     {
         return $this->injectionStrategy;
     }
@@ -98,7 +98,7 @@ class ReflectionClass
     /**
      * Return the object instanciator
      */
-    public function instanciator(): InstanciatorInterface
+    public function instanciator(): Instanciator
     {
         return $this->instanciator;
     }

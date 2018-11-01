@@ -4,12 +4,12 @@ declare(strict_types = 1);
 namespace Innmind\Reflection\InjectionStrategy;
 
 use Innmind\Reflection\{
-    InjectionStrategyInterface,
+    InjectionStrategy,
     Exception\LogicException
 };
 use Innmind\Immutable\Str;
 
-class SetterStrategy implements InjectionStrategyInterface
+class SetterStrategy implements InjectionStrategy
 {
     private $setter;
 

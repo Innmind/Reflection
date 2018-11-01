@@ -4,7 +4,7 @@ declare(strict_types = 1);
 namespace Innmind\Reflection\InjectionStrategy;
 
 use Innmind\Reflection\{
-    InjectionStrategyInterface,
+    InjectionStrategy,
     Exception\LogicException
 };
 use Innmind\Immutable\Str;
@@ -19,7 +19,7 @@ use Innmind\Immutable\Str;
  * public function foo($foo);
  * </code>
  */
-class NamedMethodStrategy implements InjectionStrategyInterface
+class NamedMethodStrategy implements InjectionStrategy
 {
     /**
      * {@inheritdoc}

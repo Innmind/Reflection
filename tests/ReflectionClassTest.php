@@ -5,13 +5,13 @@ namespace Tests\Innmind\Reflection;
 
 use Innmind\Reflection\{
     ReflectionClass,
-    InjectionStrategyInterface,
+    InjectionStrategy,
     InjectionStrategy\InjectionStrategies,
     InjectionStrategy\NamedMethodStrategy,
     InjectionStrategy\ReflectionStrategy,
     InjectionStrategy\SetterStrategy,
     Instanciator\ReflectionInstanciator,
-    InstanciatorInterface
+    Instanciator
 };
 use Fixtures\Innmind\Reflection\{
     NoConstructor,
@@ -65,7 +65,7 @@ class ReflectionClassTest extends TestCase
 
         $this->assertSame($refl->injectionStrategy(), InjectionStrategies::default());
 
-        $strategy = $this->createMock(InjectionStrategyInterface::class);
+        $strategy = $this->createMock(InjectionStrategy::class);
         $refl = new ReflectionClass(
             'stdClass',
             null,
@@ -95,7 +95,7 @@ class ReflectionClassTest extends TestCase
         $i = $r->instanciator();
         $this->assertInstanceOf(ReflectionInstanciator::class, $i);
 
-        $i = new class implements InstanciatorInterface
+        $i = new class implements Instanciator
         {
             public function build(string $class, MapInterface $properties): object
             {

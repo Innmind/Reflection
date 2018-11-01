@@ -6,9 +6,9 @@ namespace Tests\Innmind\Reflection;
 use Innmind\Reflection\{
     ReflectionObject,
     ExtractionStrategy\ExtractionStrategies,
-    ExtractionStrategyInterface,
+    ExtractionStrategy,
     InjectionStrategy\InjectionStrategies,
-    InjectionStrategyInterface
+    InjectionStrategy
 };
 use Innmind\Immutable\{
     MapInterface,
@@ -163,7 +163,7 @@ class ReflectionObjectTest extends TestCase
             InjectionStrategies::default()
         );
 
-        $strategy = $this->createMock(InjectionStrategyInterface::class);
+        $strategy = $this->createMock(InjectionStrategy::class);
         $refl = new ReflectionObject(
             new \stdClass,
             null,
@@ -182,7 +182,7 @@ class ReflectionObjectTest extends TestCase
             $refl->extractionStrategy()
         );
 
-        $strategy = $this->createMock(ExtractionStrategyInterface::class);
+        $strategy = $this->createMock(ExtractionStrategy::class);
         $refl = new ReflectionObject(
             new \stdClass,
             null,

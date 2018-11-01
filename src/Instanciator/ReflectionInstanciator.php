@@ -4,7 +4,7 @@ declare(strict_types = 1);
 namespace Innmind\Reflection\Instanciator;
 
 use Innmind\Reflection\{
-    InstanciatorInterface,
+    Instanciator,
     Exception\InstanciationFailedException
 };
 use Innmind\Immutable\{
@@ -14,7 +14,7 @@ use Innmind\Immutable\{
     Set
 };
 
-class ReflectionInstanciator implements InstanciatorInterface
+class ReflectionInstanciator implements Instanciator
 {
     /**
      * {@inheritdoc}

@@ -4,12 +4,12 @@ declare(strict_types = 1);
 namespace Innmind\Reflection\ExtractionStrategy;
 
 use Innmind\Reflection\{
-    ExtractionStrategyInterface,
+    ExtractionStrategy,
     Exception\LogicException
 };
 use Innmind\Immutable\Str;
 
-class HasserStrategy implements ExtractionStrategyInterface
+class HasserStrategy implements ExtractionStrategy
 {
     private $hasser;
 

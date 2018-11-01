@@ -2,13 +2,13 @@
 
 namespace Innmind\Reflection\ExtractionStrategy;
 
-use Innmind\Reflection\ExtractionStrategyInterface;
+use Innmind\Reflection\ExtractionStrategy;
 
 final class ExtractionStrategies
 {
     private static $default;
 
-    public static function default(): ExtractionStrategyInterface
+    public static function default(): ExtractionStrategy
     {
         if (self::$default == null) {
             self::$default = new DelegationStrategy(

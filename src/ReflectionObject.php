@@ -4,8 +4,6 @@ declare(strict_types = 1);
 namespace Innmind\Reflection;
 
 use Innmind\Reflection\{
-    InjectionStrategyInterface,
-    ExtractionStrategyInterface,
     ExtractionStrategy\ExtractionStrategies,
     InjectionStrategy\InjectionStrategies,
     Exception\InvalidArgumentException
@@ -25,8 +23,8 @@ class ReflectionObject
     public function __construct(
         object $object,
         MapInterface $properties = null,
-        InjectionStrategyInterface $injectionStrategy = null,
-        ExtractionStrategyInterface $extractionStrategy = null
+        InjectionStrategy $injectionStrategy = null,
+        ExtractionStrategy $extractionStrategy = null
     ) {
         $properties = $properties ?? new Map('string', 'mixed');
 
@@ -94,7 +92,7 @@ class ReflectionObject
     /**
      * Return the list of injection strategies used
      */
-    public function injectionStrategy(): InjectionStrategyInterface
+    public function injectionStrategy(): InjectionStrategy
     {
         return $this->injectionStrategy;
     }
@@ -102,7 +100,7 @@ class ReflectionObject
     /**
      * Return the list of extraction strategies used
      */
-    public function extractionStrategy(): ExtractionStrategyInterface
+    public function extractionStrategy(): ExtractionStrategy
     {
         return $this->extractionStrategy;
     }
