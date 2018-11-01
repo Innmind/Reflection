@@ -9,7 +9,7 @@ use Innmind\Reflection\{
     Visitor\AccessProperty,
 };
 
-class ReflectionStrategy implements InjectionStrategy
+final class ReflectionStrategy implements InjectionStrategy
 {
     /**
      * {@inheritdoc}

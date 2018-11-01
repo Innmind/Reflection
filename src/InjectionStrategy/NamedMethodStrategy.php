@@ -19,7 +19,7 @@ use Innmind\Immutable\Str;
  * public function foo($foo);
  * </code>
  */
-class NamedMethodStrategy implements InjectionStrategy
+final class NamedMethodStrategy implements InjectionStrategy
 {
     /**
      * {@inheritdoc}

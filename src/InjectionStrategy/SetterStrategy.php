@@ -9,7 +9,7 @@ use Innmind\Reflection\{
 };
 use Innmind\Immutable\Str;
 
-class SetterStrategy implements InjectionStrategy
+final class SetterStrategy implements InjectionStrategy
 {
     private $setter;
 

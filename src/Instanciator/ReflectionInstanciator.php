@@ -14,7 +14,7 @@ use Innmind\Immutable\{
     Set,
 };
 
-class ReflectionInstanciator implements Instanciator
+final class ReflectionInstanciator implements Instanciator
 {
     /**
      * {@inheritdoc}

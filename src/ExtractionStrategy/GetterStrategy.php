@@ -9,7 +9,7 @@ use Innmind\Reflection\{
 };
 use Innmind\Immutable\Str;
 
-class GetterStrategy implements ExtractionStrategy
+final class GetterStrategy implements ExtractionStrategy
 {
     private $getter;
 

@@ -9,7 +9,7 @@ use Innmind\Reflection\{
 };
 use Innmind\Immutable\Str;
 
-class NamedMethodStrategy implements ExtractionStrategy
+final class NamedMethodStrategy implements ExtractionStrategy
 {
     /**
      * {@inheritdoc}

@@ -3,6 +3,6 @@ declare(strict_types = 1);
 
 namespace Innmind\Reflection\Exception;
 
-class InstanciationFailed extends \RuntimeException implements Exception
+final class InstanciationFailed extends \RuntimeException implements Exception
 {
 }

@@ -13,7 +13,7 @@ use Innmind\Immutable\{
     Map,
 };
 
-class ReflectionObject
+final class ReflectionObject
 {
     private $object;
     private $properties;

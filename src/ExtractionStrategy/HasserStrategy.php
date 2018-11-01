@@ -9,7 +9,7 @@ use Innmind\Reflection\{
 };
 use Innmind\Immutable\Str;
 
-class HasserStrategy implements ExtractionStrategy
+final class HasserStrategy implements ExtractionStrategy
 {
     private $hasser;
 

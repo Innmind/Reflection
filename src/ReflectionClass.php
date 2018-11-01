@@ -15,7 +15,7 @@ use Innmind\Immutable\{
     Set,
 };
 
-class ReflectionClass
+final class ReflectionClass
 {
     private $class;
     private $properties;
