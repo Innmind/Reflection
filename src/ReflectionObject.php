@@ -51,7 +51,7 @@ class ReflectionObject
      *
      * @return self
      */
-    public function withProperty(string $name, $value)
+    public function withProperty(string $name, $value): self
     {
         return new self(
             $this->object,
