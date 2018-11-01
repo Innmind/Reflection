@@ -6,6 +6,7 @@ namespace Tests\Innmind\Reflection\InjectionStrategy;
 use Innmind\Reflection\{
     InjectionStrategy\NamedMethodStrategy,
     InjectionStrategy,
+    Exception\LogicException,
 };
 use Fixtures\Innmind\Reflection\Foo;
 use PHPUnit\Framework\TestCase;
@@ -86,15 +87,15 @@ class NamedMethodStrategyTest extends TestCase
         $this->assertSame(42, $o->foo());
     }
 
-    /**
-     * @expectedException Innmind\Reflection\Exception\LogicException
-     */
     public function testThrowWhenInjectingUnsupportedProperty()
     {
         $s = new NamedMethodStrategy;
         $o = new class {
             public $a;
         };
+
+        $this->expectException(LogicException::class);
+
         $s->inject($o, 'a', 'foo');
     }
 

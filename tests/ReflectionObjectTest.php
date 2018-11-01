@@ -9,6 +9,7 @@ use Innmind\Reflection\{
     ExtractionStrategy,
     InjectionStrategy\InjectionStrategies,
     InjectionStrategy,
+    Exception\LogicException,
 };
 use Innmind\Immutable\{
     MapInterface,
@@ -122,21 +123,16 @@ class ReflectionObjectTest extends TestCase
         $this->assertSame([1, 2, 3, 4], $o->dump());
     }
 
-    /**
-     * @expectedException Innmind\Reflection\Exception\LogicException
-     * @expectedExceptionMessage Property "a" cannot be injected
-     */
     public function testThrowWhenPropertyNotFound()
     {
+        $this->expectException(LogicException::class);
+        $this->expectExceptionMessage('Property "a" cannot be injected');
+
         ReflectionObject::of(new \stdClass)
             ->withProperty('a', 1)
             ->build();
     }
 
-    /**
-     * @expectedException Innmind\Reflection\Exception\LogicException
-     * @expectedExceptionMessage Property "a" cannot be injected
-     */
     public function testThrowWhenNameMethodDoesntHaveParameter()
     {
         $o = new class()
@@ -146,6 +142,10 @@ class ReflectionObjectTest extends TestCase
                 //pass
             }
         };
+
+        $this->expectException(LogicException::class);
+        $this->expectExceptionMessage('Property "a" cannot be injected');
+
         ReflectionObject::of($o)
             ->withProperty('a', 1)
             ->build();
@@ -180,12 +180,11 @@ class ReflectionObjectTest extends TestCase
         $this->assertSame(66, $values->get('c'));
     }
 
-    /**
-     * @expectedException Innmind\Reflection\Exception\LogicException
-     * @expectedExceptionMessage Property "a" cannot be extracted
-     */
     public function testThrowWhenCannotExtractProperty()
     {
+        $this->expectException(LogicException::class);
+        $this->expectExceptionMessage('Property "a" cannot be extracted');
+
         ReflectionObject::of(new \stdClass)->extract('a');
     }
 }
