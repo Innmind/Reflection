@@ -3,10 +3,7 @@ declare(strict_types = 1);
 
 namespace Innmind\Reflection\Visitor;
 
-use Innmind\Reflection\Exception\{
-    PropertyNotFound,
-    InvalidArgumentException,
-};
+use Innmind\Reflection\Exception\PropertyNotFound;
 
 final class AccessProperty
 {
