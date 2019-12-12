@@ -98,9 +98,7 @@ final class ReflectionObject
     {
         return $this->properties->reduce(
             $this->object,
-            function(object $object, string $key, $value): object {
-                return $this->inject($object, $key, $value);
-            },
+            fn(object $object, string $key, $value): object => $this->inject($object, $key, $value),
         );
     }
 

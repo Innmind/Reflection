@@ -37,7 +37,7 @@ final class DelegationStrategy implements ExtractionStrategy
             ->strategies
             ->reduce(
                 false,
-                function(bool $supports, ExtractionStrategy $strategy) use ($object, $property): bool {
+                static function(bool $supports, ExtractionStrategy $strategy) use ($object, $property): bool {
                     return $supports || $strategy->supports($object, $property);
                 },
             );
@@ -59,7 +59,7 @@ final class DelegationStrategy implements ExtractionStrategy
 
         $strategy = $this->strategies->reduce(
             null,
-            function(?ExtractionStrategy $target, ExtractionStrategy $strategy) use ($object, $property): ?ExtractionStrategy {
+            static function(?ExtractionStrategy $target, ExtractionStrategy $strategy) use ($object, $property): ?ExtractionStrategy {
                 return $target ?? ($strategy->supports($object, $property) ? $strategy : null);
             },
         );

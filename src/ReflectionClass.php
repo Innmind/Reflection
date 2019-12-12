@@ -106,9 +106,7 @@ final class ReflectionClass
         //avoid injecting the properties already used in the constructor
         $properties = $this
             ->properties
-            ->filter(function(string $property) use ($parameters) {
-                return !$parameters->contains($property);
-            });
+            ->filter(static fn(string $property) => !$parameters->contains($property));
         $refl = new ReflectionObject(
             $object,
             $properties,
