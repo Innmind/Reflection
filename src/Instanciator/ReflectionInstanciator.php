@@ -118,7 +118,7 @@ final class ReflectionInstanciator implements Instanciator
             $type = $parameter->getType();
 
             if ($type->isBuiltin()) {
-                return $type->getName() === gettype($property);
+                return $type->getName() === \gettype($property);
             } else if (!\is_object($property)) {
                 return false;
             }
