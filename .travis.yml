@@ -7,3 +7,5 @@ matrix:
         - php: nightly
 before_script: composer install
 script: phpunit --coverage-clover=coverage.clover
+after_success:
+     - bash <(curl -s https://codecov.io/bash)
