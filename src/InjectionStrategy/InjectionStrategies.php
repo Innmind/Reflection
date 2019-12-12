@@ -6,7 +6,7 @@ use Innmind\Reflection\InjectionStrategy;
 
 final class InjectionStrategies
 {
-    private static InjectionStrategy $default;
+    private static ?InjectionStrategy $default;
 
     public static function default(): InjectionStrategy
     {

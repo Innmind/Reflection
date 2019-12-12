@@ -48,6 +48,7 @@ final class NamedMethodStrategy implements ExtractionStrategy
             ->camelize()
             ->toString();
 
+        /** @psalm-suppress MixedMethodCall */
         return $object->$property();
     }
 }

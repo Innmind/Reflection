@@ -14,17 +14,23 @@ use function Innmind\Immutable\assertMap;
 final class ReflectionObject
 {
     private object $object;
+    /** @var Map<string, mixed> */
     private Map $properties;
     private InjectionStrategy $injectionStrategy;
     private ExtractionStrategy $extractionStrategy;
 
+    /**
+     * @param Map<string, mixed>|null $properties
+     */
     public function __construct(
         object $object,
         Map $properties = null,
         InjectionStrategy $injectionStrategy = null,
         ExtractionStrategy $extractionStrategy = null
     ) {
-        $properties ??= Map::of('string', 'mixed');
+        /** @var Map<string, mixed> $default */
+        $default = Map::of('string', 'mixed');
+        $properties ??= $default;
 
         assertMap('string', 'mixed', $properties, 2);
 
@@ -34,6 +40,9 @@ final class ReflectionObject
         $this->extractionStrategy = $extractionStrategy ?? ExtractionStrategies::default();
     }
 
+    /**
+     * @param Map<string, mixed>|null $properties
+     */
     public static function of(
         object $object,
         Map $properties = null,
@@ -69,6 +78,7 @@ final class ReflectionObject
     {
         $map = $this->properties;
 
+        /** @var mixed $value */
         foreach ($properties as $key => $value) {
             $map = ($map)($key, $value);
         }
@@ -101,6 +111,7 @@ final class ReflectionObject
      */
     public function extract(string ...$properties): Map
     {
+        /** @var Map<string, mixed> */
         $map = Map::of('string', 'mixed');
 
         foreach ($properties as $property) {

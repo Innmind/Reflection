@@ -16,18 +16,26 @@ use function Innmind\Immutable\assertMap;
 
 final class ReflectionClass
 {
+    /** @var class-string */
     private string $class;
+    /** @var Map<string, mixed> */
     private Map $properties;
     private InjectionStrategy $injectionStrategy;
     private Instanciator $instanciator;
 
+    /**
+     * @param class-string $class
+     * @param Map<string, mixed>|null $properties
+     */
     public function __construct(
         string $class,
         Map $properties = null,
         InjectionStrategy $injectionStrategy = null,
         Instanciator $instanciator = null
     ) {
-        $properties ??= Map::of('string', 'mixed');
+        /** @var Map<string, mixed> $default */
+        $default = Map::of('string', 'mixed');
+        $properties ??= $default;
 
         assertMap('string', 'mixed', $properties, 2);
 
@@ -37,6 +45,10 @@ final class ReflectionClass
         $this->instanciator = $instanciator ?? new ReflectionInstanciator;
     }
 
+    /**
+     * @param class-string $class
+     * @param Map<string, mixed>|null $properties
+     */
     public static function of(
         string $class,
         Map $properties = null,
@@ -70,6 +82,7 @@ final class ReflectionClass
     {
         $map = $this->properties;
 
+        /** @var mixed $value */
         foreach ($properties as $key => $value) {
             $map = ($map)($key, $value);
         }

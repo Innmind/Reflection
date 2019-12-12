@@ -3,7 +3,7 @@ declare(strict_types = 1);
 
 namespace Innmind\Reflection;
 
-use Innmind\Reflection\Exception\LogicException;
+use Innmind\Reflection\Exception\PropertyCannotBeInjected;
 
 interface InjectionStrategy
 {
@@ -20,7 +20,7 @@ interface InjectionStrategy
      *
      * @param mixed $value
      *
-     * @throws PropertyCannotBeInjectedException If the property is not supported
+     * @throws PropertyCannotBeInjected If the property is not supported
      */
     public function inject(object $object, string $property, $value): object;
 }

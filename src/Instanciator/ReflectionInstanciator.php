@@ -10,7 +10,9 @@ use Innmind\Reflection\{
 use Innmind\Immutable\{
     Map,
     Set,
+    Sequence,
 };
+use function Innmind\Immutable\unwrap;
 
 final class ReflectionInstanciator implements Instanciator
 {
@@ -29,16 +31,7 @@ final class ReflectionInstanciator implements Instanciator
             $constructor = $refl->getMethod('__construct');
 
             return $refl->newInstanceArgs(
-                $this
-                    ->computeArguments($constructor, $properties)
-                    ->reduce(
-                        [],
-                        function(array $carry, string $property, $value): array {
-                            $carry[$property] = $value;
-
-                            return $carry;
-                        },
-                    ),
+                unwrap($this->computeArguments($constructor, $properties)),
             );
         } catch (\TypeError $e) {
             throw new InstanciationFailed($class, $e);
@@ -67,23 +60,19 @@ final class ReflectionInstanciator implements Instanciator
     }
 
     /**
-     * @param ReflectionMethod $constructor
-     * @param Map<string, variable> $properties
+     * @param Map<string, mixed> $properties
      *
-     * @return Map<string, variable>
+     * @return Sequence<mixed>
      */
     private function computeArguments(
         \ReflectionMethod $constructor,
         Map $properties
-    ): Map {
-        $arguments = $properties->clear();
+    ): Sequence {
+        $arguments = Sequence::mixed();
 
         foreach ($constructor->getParameters() as $parameter) {
             if ($this->canInject($parameter, $properties)) {
-                $arguments = ($arguments)(
-                    $parameter->name,
-                    $properties->get($parameter->name),
-                );
+                $arguments = ($arguments)($properties->get($parameter->name));
             }
         }
 
@@ -91,10 +80,7 @@ final class ReflectionInstanciator implements Instanciator
     }
 
     /**
-     * @param ReflectionParameter $parameter
-     * @param Map<string, variable> $properties
-     *
-     * @return bool
+     * @param Map<string, mixed> $properties
      */
     private function canInject(
         \ReflectionParameter $parameter,
@@ -112,14 +98,18 @@ final class ReflectionInstanciator implements Instanciator
             return false;
         }
 
+        /** @var mixed */
         $property = $properties->get($parameter->name);
 
         if ($parameter->hasType()) {
+            /** @var \ReflectionNamedType $type */
             $type = $parameter->getType();
 
             if ($type->isBuiltin()) {
                 return $type->getName() === \gettype($property);
-            } else if (!\is_object($property)) {
+            }
+
+            if (!\is_object($property)) {
                 return false;
             }
 

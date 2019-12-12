@@ -12,7 +12,7 @@ final class InstanciationFailed extends \RuntimeException implements Exception
                 'Class "%s" cannot be instanciated',
                 $class,
             ),
-            $e->getCode(),
+            (int) $e->getCode(),
             $e,
         );
     }

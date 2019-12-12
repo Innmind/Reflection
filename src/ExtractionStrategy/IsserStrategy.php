@@ -56,6 +56,7 @@ final class IsserStrategy implements ExtractionStrategy
             ->sprintf(Str::of($property)->camelize()->ucfirst()->toString())
             ->toString();
 
+        /** @psalm-suppress MixedMethodCall */
         return $object->$isser();
     }
 }

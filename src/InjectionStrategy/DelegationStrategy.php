@@ -15,12 +15,16 @@ use Innmind\Immutable\{
 
 final class DelegationStrategy implements InjectionStrategy
 {
+    /** @var Sequence<InjectionStrategy> */
     private Sequence $strategies;
+    /** @var Map<string, InjectionStrategy> */
     private Map $cache;
 
     public function __construct(InjectionStrategy ...$strategies)
     {
+        /** @var Sequence<InjectionStrategy> */
         $this->strategies = Sequence::of(InjectionStrategy::class, ...$strategies);
+        /** @var Map<string, InjectionStrategy> */
         $this->cache = Map::of('string', InjectionStrategy::class);
     }
 

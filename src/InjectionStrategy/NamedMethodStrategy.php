@@ -58,6 +58,7 @@ final class NamedMethodStrategy implements InjectionStrategy
             ->camelize()
             ->toString();
 
+        /** @psalm-suppress MixedMethodCall */
         $object->$property($value);
 
         return $object;

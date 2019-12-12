@@ -33,6 +33,9 @@ final class AccessProperty
         throw new PropertyNotFound($property);
     }
 
+    /**
+     * @param class-string $class
+     */
     private function byClass(string $class, string $property): \ReflectionProperty
     {
         $refl = new \ReflectionClass($class);

@@ -40,6 +40,7 @@ final class ReflectionStrategy implements ExtractionStrategy
             $refl->setAccessible(true);
         }
 
+        /** @var mixed $value */
         $value = $refl->getValue($object);
 
         if (!$refl->isPublic()) {

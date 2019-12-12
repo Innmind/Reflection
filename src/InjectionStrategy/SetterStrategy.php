@@ -49,6 +49,8 @@ final class SetterStrategy implements InjectionStrategy
             ->setter
             ->sprintf(Str::of($property)->camelize()->ucfirst()->toString())
             ->toString();
+
+        /** @psalm-suppress MixedMethodCall */
         $object->$setter($value);
 
         return $object;
