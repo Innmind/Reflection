@@ -4,8 +4,8 @@ declare(strict_types = 1);
 namespace Innmind\Reflection;
 
 use Innmind\Immutable\{
-    MapInterface,
-    SetInterface,
+    Map,
+    Set,
 };
 
 interface Instanciator
@@ -13,16 +13,16 @@ interface Instanciator
     /**
      * Build a new instance for the given class
      *
-     * @param MapInterface<string, mixed> $properties
+     * @param Map<string, mixed> $properties
      *
      * @throws InstanciationFailedException
      */
-    public function build(string $class, MapInterface $properties): object;
+    public function build(string $class, Map $properties): object;
 
     /**
      * Return a collection of parameters it can inject for the given class
      *
-     * @return SetInterface<string>
+     * @return Set<string>
      */
-    public function parameters(string $class): SetInterface;
+    public function parameters(string $class): Set;
 }

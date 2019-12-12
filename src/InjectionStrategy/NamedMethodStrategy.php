@@ -28,9 +28,9 @@ final class NamedMethodStrategy implements InjectionStrategy
     {
         $refl = new \ReflectionObject($object);
 
-        $property = (string) (new Str($property))
+        $property = Str::of($property)
             ->camelize()
-            ->lcfirst();
+            ->toString();
 
         if (!$refl->hasMethod($property)) {
             return false;
@@ -54,9 +54,9 @@ final class NamedMethodStrategy implements InjectionStrategy
             throw new LogicException;
         }
 
-        $property = (string) (new Str($property))
+        $property = Str::of($property)
             ->camelize()
-            ->lcfirst();
+            ->toString();
 
         $object->$property($value);
 

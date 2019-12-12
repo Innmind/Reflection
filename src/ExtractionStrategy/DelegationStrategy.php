@@ -9,7 +9,7 @@ use Innmind\Reflection\{
     Exception\PropertyCannotBeExtracted,
 };
 use Innmind\Immutable\{
-    Stream,
+    Sequence,
     Map,
 };
 
@@ -20,8 +20,8 @@ final class DelegationStrategy implements ExtractionStrategy
 
     public function __construct(ExtractionStrategy ...$strategies)
     {
-        $this->strategies = Stream::of(ExtractionStrategy::class, ...$strategies);
-        $this->cache = new Map('string', ExtractionStrategy::class);
+        $this->strategies = Sequence::of(ExtractionStrategy::class, ...$strategies);
+        $this->cache = Map::of('string', ExtractionStrategy::class);
     }
 
     /**
@@ -64,7 +64,7 @@ final class DelegationStrategy implements ExtractionStrategy
             throw new PropertyCannotBeExtracted($property);
         }
 
-        $this->cache = $this->cache->put($key, $strategy);
+        $this->cache = ($this->cache)($key, $strategy);
 
         return $strategy->extract($object, $property);
     }

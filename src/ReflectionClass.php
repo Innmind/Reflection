@@ -9,11 +9,10 @@ use Innmind\Reflection\{
     Exception\InvalidArgumentException,
 };
 use Innmind\Immutable\{
-    MapInterface,
     Map,
-    SetInterface,
     Set,
 };
+use function Innmind\Immutable\assertMap;
 
 final class ReflectionClass
 {
@@ -24,18 +23,13 @@ final class ReflectionClass
 
     public function __construct(
         string $class,
-        MapInterface $properties = null,
+        Map $properties = null,
         InjectionStrategy $injectionStrategy = null,
         Instanciator $instanciator = null
     ) {
-        $properties = $properties ?? new Map('string', 'mixed');
+        $properties ??= Map::of('string', 'mixed');
 
-        if (
-            (string) $properties->keyType() !== 'string' ||
-            (string) $properties->valueType() !== 'mixed'
-        ) {
-            throw new \TypeError('Argument 2 must be of type MapInterface<string, mixed>');
-        }
+        assertMap('string', 'mixed', $properties, 2);
 
         $this->class = $class;
         $this->properties = $properties;
@@ -45,7 +39,7 @@ final class ReflectionClass
 
     public static function of(
         string $class,
-        MapInterface $properties = null,
+        Map $properties = null,
         InjectionStrategy $injectionStrategy = null,
         Instanciator $instanciator = null
     ): self {
@@ -61,7 +55,7 @@ final class ReflectionClass
     {
         return new self(
             $this->class,
-            $this->properties->put($property, $value),
+            ($this->properties)($property, $value),
             $this->injectionStrategy,
             $this->instanciator
         );
@@ -77,7 +71,7 @@ final class ReflectionClass
         $map = $this->properties;
 
         foreach ($properties as $key => $value) {
-            $map = $map->put($key, $value);
+            $map = ($map)($key, $value);
         }
 
         return new self(
@@ -116,15 +110,15 @@ final class ReflectionClass
      *
      * It will not extract properties defined in a parent class
      *
-     * @return SetInterface<string>
+     * @return Set<string>
      */
-    public function properties(): SetInterface
+    public function properties(): Set
     {
         $refl = new \ReflectionClass($this->class);
-        $properties = Set::of('string');
+        $properties = Set::strings();
 
         foreach ($refl->getProperties() as $property) {
-            $properties = $properties->add($property->getName());
+            $properties = ($properties)($property->getName());
         }
 
         return $properties;

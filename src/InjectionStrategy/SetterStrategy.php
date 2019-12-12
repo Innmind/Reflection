@@ -15,7 +15,7 @@ final class SetterStrategy implements InjectionStrategy
 
     public function __construct()
     {
-        $this->setter = new Str('set%s');
+        $this->setter = Str::of('set%s');
     }
 
     /**
@@ -24,9 +24,10 @@ final class SetterStrategy implements InjectionStrategy
     public function supports(object $object, string $property, $value): bool
     {
         $refl = new \ReflectionObject($object);
-        $setter = (string) $this->setter->sprintf(
-            (string) (new Str($property))->camelize()
-        );
+        $setter = $this
+            ->setter
+            ->sprintf(Str::of($property)->camelize()->ucfirst()->toString())
+            ->toString();
 
         if (!$refl->hasMethod($setter)) {
             return false;
@@ -44,9 +45,10 @@ final class SetterStrategy implements InjectionStrategy
             throw new LogicException;
         }
 
-        $setter = (string) $this->setter->sprintf(
-            (string) (new Str($property))->camelize()
-        );
+        $setter = $this
+            ->setter
+            ->sprintf(Str::of($property)->camelize()->ucfirst()->toString())
+            ->toString();
         $object->$setter($value);
 
         return $object;

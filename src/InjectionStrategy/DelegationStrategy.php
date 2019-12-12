@@ -9,7 +9,7 @@ use Innmind\Reflection\{
     Exception\PropertyCannotBeInjected,
 };
 use Innmind\Immutable\{
-    Stream,
+    Sequence,
     Map,
 };
 
@@ -20,8 +20,8 @@ final class DelegationStrategy implements InjectionStrategy
 
     public function __construct(InjectionStrategy ...$strategies)
     {
-        $this->strategies = Stream::of(InjectionStrategy::class, ...$strategies);
-        $this->cache = new Map('string', InjectionStrategy::class);
+        $this->strategies = Sequence::of(InjectionStrategy::class, ...$strategies);
+        $this->cache = Map::of('string', InjectionStrategy::class);
     }
 
     /**
@@ -64,7 +64,7 @@ final class DelegationStrategy implements InjectionStrategy
             throw new PropertyCannotBeInjected($property);
         }
 
-        $this->cache = $this->cache->put($key, $strategy);
+        $this->cache = ($this->cache)($key, $strategy);
 
         return $strategy->inject($object, $property, $value);
     }

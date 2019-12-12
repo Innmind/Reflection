@@ -8,6 +8,7 @@ use Innmind\Reflection\{
     Instanciator,
 };
 use Innmind\Immutable\Map;
+use function Innmind\Immutable\unwrap;
 use PHPUnit\Framework\TestCase;
 
 class ConstructorLessInstanciatorTest extends TestCase
@@ -36,13 +37,13 @@ class ConstructorLessInstanciatorTest extends TestCase
             'stdClass',
             $instanciator->build(
                 'stdClass',
-                new Map('string', 'variable')
+                Map::of('string', 'variable')
             )
         );
 
         $builtObject = $instanciator->build(
             get_class($object),
-            new Map('string', 'variable')
+            Map::of('string', 'variable')
         );
 
         $this->assertInstanceOf(get_class($object), $builtObject);
@@ -60,11 +61,11 @@ class ConstructorLessInstanciatorTest extends TestCase
 
         $this->assertSame(
             [],
-            $instanciator->parameters('stdClass')->toPrimitive()
+            unwrap($instanciator->parameters('stdClass')),
         );
         $this->assertSame(
             [],
-            $instanciator->parameters(get_class($object))->toPrimitive()
+            unwrap($instanciator->parameters(get_class($object))),
         );
     }
 }

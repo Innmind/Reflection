@@ -8,8 +8,6 @@ use Innmind\Reflection\{
     Exception\InstanciationFailed,
 };
 use Innmind\Immutable\{
-    MapInterface,
-    SetInterface,
     Map,
     Set,
 };
@@ -19,7 +17,7 @@ final class ReflectionInstanciator implements Instanciator
     /**
      * {@inheritdoc}
      */
-    public function build(string $class, MapInterface $properties): object
+    public function build(string $class, Map $properties): object
     {
         try {
             $refl = new \ReflectionClass($class);
@@ -50,9 +48,9 @@ final class ReflectionInstanciator implements Instanciator
     /**
      * {@inheritdoc}
      */
-    public function parameters(string $class): SetInterface
+    public function parameters(string $class): Set
     {
-        $parameters = new Set('string');
+        $parameters = Set::strings();
         $refl = new \ReflectionClass($class);
 
         if (!$refl->hasMethod('__construct')) {
@@ -62,7 +60,7 @@ final class ReflectionInstanciator implements Instanciator
         $refl = $refl->getMethod('__construct');
 
         foreach ($refl->getParameters() as $parameter) {
-            $parameters = $parameters->add($parameter->name);
+            $parameters = ($parameters)($parameter->name);
         }
 
         return $parameters;
@@ -70,19 +68,19 @@ final class ReflectionInstanciator implements Instanciator
 
     /**
      * @param ReflectionMethod $constructor
-     * @param MapInterface<string, variable> $properties
+     * @param Map<string, variable> $properties
      *
-     * @return MapInterface<string, variable>
+     * @return Map<string, variable>
      */
     private function computeArguments(
         \ReflectionMethod $constructor,
-        MapInterface $properties
-    ): MapInterface {
+        Map $properties
+    ): Map {
         $arguments = $properties->clear();
 
         foreach ($constructor->getParameters() as $parameter) {
             if ($this->canInject($parameter, $properties)) {
-                $arguments = $arguments->put(
+                $arguments = ($arguments)(
                     $parameter->name,
                     $properties->get($parameter->name)
                 );
@@ -94,13 +92,13 @@ final class ReflectionInstanciator implements Instanciator
 
     /**
      * @param ReflectionParameter $parameter
-     * @param MapInterface<string, variable> $properties
+     * @param Map<string, variable> $properties
      *
      * @return bool
      */
     private function canInject(
         \ReflectionParameter $parameter,
-        MapInterface $properties
+        Map $properties
     ): bool {
         if (
             !$parameter->allowsNull() &&
@@ -120,13 +118,13 @@ final class ReflectionInstanciator implements Instanciator
             $type = $parameter->getType();
 
             if ($type->isBuiltin()) {
-                return (string) $type === gettype($property);
+                return $type->getName() === gettype($property);
             } else if (!is_object($property)) {
                 return false;
             }
 
             $refl = new \ReflectionObject($property);
-            $wishedClass = (string) $type;
+            $wishedClass = $type->getName();
 
             return get_class($property) === $wishedClass ||
                 $refl->isSubClassOf($wishedClass);

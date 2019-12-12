@@ -8,10 +8,8 @@ use Innmind\Reflection\{
     InjectionStrategy\InjectionStrategies,
     Exception\InvalidArgumentException,
 };
-use Innmind\Immutable\{
-    MapInterface,
-    Map,
-};
+use Innmind\Immutable\Map;
+use function Innmind\Immutable\assertMap;
 
 final class ReflectionObject
 {
@@ -22,18 +20,13 @@ final class ReflectionObject
 
     public function __construct(
         object $object,
-        MapInterface $properties = null,
+        Map $properties = null,
         InjectionStrategy $injectionStrategy = null,
         ExtractionStrategy $extractionStrategy = null
     ) {
-        $properties = $properties ?? new Map('string', 'mixed');
+        $properties ??= Map::of('string', 'mixed');
 
-        if (
-            (string) $properties->keyType() !== 'string' ||
-            (string) $properties->valueType() !== 'mixed'
-        ) {
-            throw new \TypeError('Argument 2 must be of type MapInterface<string, mixed>');
-        }
+        assertMap('string', 'mixed', $properties, 2);
 
         $this->object = $object;
         $this->properties = $properties;
@@ -43,7 +36,7 @@ final class ReflectionObject
 
     public static function of(
         object $object,
-        MapInterface $properties = null,
+        Map $properties = null,
         InjectionStrategy $injectionStrategy = null,
         ExtractionStrategy $extractionStrategy = null
     ): self {
@@ -59,7 +52,7 @@ final class ReflectionObject
     {
         return new self(
             $this->object,
-            $this->properties->put($name, $value),
+            ($this->properties)($name, $value),
             $this->injectionStrategy,
             $this->extractionStrategy
         );
@@ -77,7 +70,7 @@ final class ReflectionObject
         $map = $this->properties;
 
         foreach ($properties as $key => $value) {
-            $map = $map->put($key, $value);
+            $map = ($map)($key, $value);
         }
 
         return new self(
@@ -104,14 +97,14 @@ final class ReflectionObject
     /**
      * Extract the given list of properties
      *
-     * @return MapInterface<string, mixed>
+     * @return Map<string, mixed>
      */
-    public function extract(string ...$properties): MapInterface
+    public function extract(string ...$properties): Map
     {
-        $map = new Map('string', 'mixed');
+        $map = Map::of('string', 'mixed');
 
         foreach ($properties as $property) {
-            $map = $map->put(
+            $map = ($map)(
                 $property,
                 $this->extractProperty($property)
             );

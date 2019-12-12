@@ -17,11 +17,8 @@ use Fixtures\Innmind\Reflection\{
     NoConstructor,
     WithConstructor,
 };
-use Innmind\Immutable\{
-    MapInterface,
-    SetInterface,
-    Set,
-};
+use Innmind\Immutable\Set;
+use function Innmind\Immutable\unwrap;
 use PHPUnit\Framework\TestCase;
 
 class ReflectionClassTest extends TestCase
@@ -63,8 +60,8 @@ class ReflectionClassTest extends TestCase
     {
         $properties = ReflectionClass::of(WithConstructor::class)->properties();
 
-        $this->assertInstanceOf(SetInterface::class, $properties);
+        $this->assertInstanceOf(Set::class, $properties);
         $this->assertSame('string', (string) $properties->type());
-        $this->assertSame(['a', 'b'], $properties->toPrimitive());
+        $this->assertSame(['a', 'b'], unwrap($properties));
     }
 }
