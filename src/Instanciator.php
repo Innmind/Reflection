@@ -3,9 +3,10 @@ declare(strict_types = 1);
 
 namespace Innmind\Reflection;
 
+use Innmind\Reflection\Exception\InstanciationFailed;
 use Innmind\Immutable\{
-    MapInterface,
-    SetInterface,
+    Map,
+    Set,
 };
 
 interface Instanciator
@@ -13,16 +14,19 @@ interface Instanciator
     /**
      * Build a new instance for the given class
      *
-     * @param MapInterface<string, mixed> $properties
+     * @param class-string $class
+     * @param Map<string, mixed> $properties
      *
-     * @throws InstanciationFailedException
+     * @throws InstanciationFailed
      */
-    public function build(string $class, MapInterface $properties): object;
+    public function build(string $class, Map $properties): object;
 
     /**
      * Return a collection of parameters it can inject for the given class
      *
-     * @return SetInterface<string>
+     * @param class-string $class
+     *
+     * @return Set<string>
      */
-    public function parameters(string $class): SetInterface;
+    public function parameters(string $class): Set;
 }

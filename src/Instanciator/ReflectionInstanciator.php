@@ -8,18 +8,18 @@ use Innmind\Reflection\{
     Exception\InstanciationFailed,
 };
 use Innmind\Immutable\{
-    MapInterface,
-    SetInterface,
     Map,
     Set,
+    Sequence,
 };
+use function Innmind\Immutable\unwrap;
 
 final class ReflectionInstanciator implements Instanciator
 {
     /**
      * {@inheritdoc}
      */
-    public function build(string $class, MapInterface $properties): object
+    public function build(string $class, Map $properties): object
     {
         try {
             $refl = new \ReflectionClass($class);
@@ -31,16 +31,7 @@ final class ReflectionInstanciator implements Instanciator
             $constructor = $refl->getMethod('__construct');
 
             return $refl->newInstanceArgs(
-                $this
-                    ->computeArguments($constructor, $properties)
-                    ->reduce(
-                        [],
-                        function(array $carry, string $property, $value): array {
-                            $carry[$property] = $value;
-
-                            return $carry;
-                        }
-                    )
+                unwrap($this->computeArguments($constructor, $properties)),
             );
         } catch (\TypeError $e) {
             throw new InstanciationFailed($class, $e);
@@ -50,9 +41,9 @@ final class ReflectionInstanciator implements Instanciator
     /**
      * {@inheritdoc}
      */
-    public function parameters(string $class): SetInterface
+    public function parameters(string $class): Set
     {
-        $parameters = new Set('string');
+        $parameters = Set::strings();
         $refl = new \ReflectionClass($class);
 
         if (!$refl->hasMethod('__construct')) {
@@ -62,30 +53,26 @@ final class ReflectionInstanciator implements Instanciator
         $refl = $refl->getMethod('__construct');
 
         foreach ($refl->getParameters() as $parameter) {
-            $parameters = $parameters->add($parameter->name);
+            $parameters = ($parameters)($parameter->name);
         }
 
         return $parameters;
     }
 
     /**
-     * @param ReflectionMethod $constructor
-     * @param MapInterface<string, variable> $properties
+     * @param Map<string, mixed> $properties
      *
-     * @return MapInterface<string, variable>
+     * @return Sequence<mixed>
      */
     private function computeArguments(
         \ReflectionMethod $constructor,
-        MapInterface $properties
-    ): MapInterface {
-        $arguments = $properties->clear();
+        Map $properties
+    ): Sequence {
+        $arguments = Sequence::mixed();
 
         foreach ($constructor->getParameters() as $parameter) {
             if ($this->canInject($parameter, $properties)) {
-                $arguments = $arguments->put(
-                    $parameter->name,
-                    $properties->get($parameter->name)
-                );
+                $arguments = ($arguments)($properties->get($parameter->name));
             }
         }
 
@@ -93,14 +80,11 @@ final class ReflectionInstanciator implements Instanciator
     }
 
     /**
-     * @param ReflectionParameter $parameter
-     * @param MapInterface<string, variable> $properties
-     *
-     * @return bool
+     * @param Map<string, mixed> $properties
      */
     private function canInject(
         \ReflectionParameter $parameter,
-        MapInterface $properties
+        Map $properties
     ): bool {
         if (
             !$parameter->allowsNull() &&
@@ -114,21 +98,25 @@ final class ReflectionInstanciator implements Instanciator
             return false;
         }
 
+        /** @var mixed */
         $property = $properties->get($parameter->name);
 
         if ($parameter->hasType()) {
+            /** @var \ReflectionNamedType $type */
             $type = $parameter->getType();
 
             if ($type->isBuiltin()) {
-                return (string) $type === gettype($property);
-            } else if (!is_object($property)) {
+                return $type->getName() === \gettype($property);
+            }
+
+            if (!\is_object($property)) {
                 return false;
             }
 
             $refl = new \ReflectionObject($property);
-            $wishedClass = (string) $type;
+            $wishedClass = $type->getName();
 
-            return get_class($property) === $wishedClass ||
+            return \get_class($property) === $wishedClass ||
                 $refl->isSubClassOf($wishedClass);
         }
 

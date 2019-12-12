@@ -9,19 +9,23 @@ use Innmind\Reflection\{
     Exception\PropertyCannotBeExtracted,
 };
 use Innmind\Immutable\{
-    Stream,
+    Sequence,
     Map,
 };
 
 final class DelegationStrategy implements ExtractionStrategy
 {
-    private $strategies;
-    private $cache;
+    /** @var Sequence<ExtractionStrategy> */
+    private Sequence $strategies;
+    /** @var Map<string, ExtractionStrategy> */
+    private Map $cache;
 
     public function __construct(ExtractionStrategy ...$strategies)
     {
-        $this->strategies = Stream::of(ExtractionStrategy::class, ...$strategies);
-        $this->cache = new Map('string', ExtractionStrategy::class);
+        /** @var Sequence<ExtractionStrategy> */
+        $this->strategies = Sequence::of(ExtractionStrategy::class, ...$strategies);
+        /** @var Map<string, ExtractionStrategy> */
+        $this->cache = Map::of('string', ExtractionStrategy::class);
     }
 
     /**
@@ -33,9 +37,9 @@ final class DelegationStrategy implements ExtractionStrategy
             ->strategies
             ->reduce(
                 false,
-                function(bool $supports, ExtractionStrategy $strategy) use ($object, $property): bool {
+                static function(bool $supports, ExtractionStrategy $strategy) use ($object, $property): bool {
                     return $supports || $strategy->supports($object, $property);
-                }
+                },
             );
     }
 
@@ -55,22 +59,22 @@ final class DelegationStrategy implements ExtractionStrategy
 
         $strategy = $this->strategies->reduce(
             null,
-            function(?ExtractionStrategy $target, ExtractionStrategy $strategy) use ($object, $property): ?ExtractionStrategy {
+            static function(?ExtractionStrategy $target, ExtractionStrategy $strategy) use ($object, $property): ?ExtractionStrategy {
                 return $target ?? ($strategy->supports($object, $property) ? $strategy : null);
-            }
+            },
         );
 
         if (!$strategy instanceof ExtractionStrategy) {
             throw new PropertyCannotBeExtracted($property);
         }
 
-        $this->cache = $this->cache->put($key, $strategy);
+        $this->cache = ($this->cache)($key, $strategy);
 
         return $strategy->extract($object, $property);
     }
 
     private function generateKey(object $object, string $property): string
     {
-        return get_class($object).'::'.$property;
+        return \get_class($object).'::'.$property;
     }
 }

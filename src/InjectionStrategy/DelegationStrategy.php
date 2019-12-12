@@ -9,19 +9,23 @@ use Innmind\Reflection\{
     Exception\PropertyCannotBeInjected,
 };
 use Innmind\Immutable\{
-    Stream,
+    Sequence,
     Map,
 };
 
 final class DelegationStrategy implements InjectionStrategy
 {
-    private $strategies;
-    private $cache;
+    /** @var Sequence<InjectionStrategy> */
+    private Sequence $strategies;
+    /** @var Map<string, InjectionStrategy> */
+    private Map $cache;
 
     public function __construct(InjectionStrategy ...$strategies)
     {
-        $this->strategies = Stream::of(InjectionStrategy::class, ...$strategies);
-        $this->cache = new Map('string', InjectionStrategy::class);
+        /** @var Sequence<InjectionStrategy> */
+        $this->strategies = Sequence::of(InjectionStrategy::class, ...$strategies);
+        /** @var Map<string, InjectionStrategy> */
+        $this->cache = Map::of('string', InjectionStrategy::class);
     }
 
     /**
@@ -33,9 +37,9 @@ final class DelegationStrategy implements InjectionStrategy
             ->strategies
             ->reduce(
                 false,
-                function(bool $supports, InjectionStrategy $strategy) use ($object, $property, $value): bool {
+                static function(bool $supports, InjectionStrategy $strategy) use ($object, $property, $value): bool {
                     return $supports || $strategy->supports($object, $property, $value);
-                }
+                },
             );
     }
 
@@ -55,22 +59,22 @@ final class DelegationStrategy implements InjectionStrategy
 
         $strategy = $this->strategies->reduce(
             null,
-            function(?InjectionStrategy $target, InjectionStrategy $strategy) use ($object, $property, $value): ?InjectionStrategy {
+            static function(?InjectionStrategy $target, InjectionStrategy $strategy) use ($object, $property, $value): ?InjectionStrategy {
                 return $target ?? ($strategy->supports($object, $property, $value) ? $strategy : null);
-            }
+            },
         );
 
         if (!$strategy instanceof InjectionStrategy) {
             throw new PropertyCannotBeInjected($property);
         }
 
-        $this->cache = $this->cache->put($key, $strategy);
+        $this->cache = ($this->cache)($key, $strategy);
 
         return $strategy->inject($object, $property, $value);
     }
 
     private function generateKey(object $object, string $property): string
     {
-        return get_class($object).'::'.$property;
+        return \get_class($object).'::'.$property;
     }
 }

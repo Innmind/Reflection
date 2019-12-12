@@ -8,32 +8,31 @@ use Innmind\Reflection\{
     InjectionStrategy\InjectionStrategies,
     Exception\InvalidArgumentException,
 };
-use Innmind\Immutable\{
-    MapInterface,
-    Map,
-};
+use Innmind\Immutable\Map;
+use function Innmind\Immutable\assertMap;
 
 final class ReflectionObject
 {
-    private $object;
-    private $properties;
-    private $injectionStrategy;
-    private $extractionStrategy;
+    private object $object;
+    /** @var Map<string, mixed> */
+    private Map $properties;
+    private InjectionStrategy $injectionStrategy;
+    private ExtractionStrategy $extractionStrategy;
 
+    /**
+     * @param Map<string, mixed>|null $properties
+     */
     public function __construct(
         object $object,
-        MapInterface $properties = null,
+        Map $properties = null,
         InjectionStrategy $injectionStrategy = null,
         ExtractionStrategy $extractionStrategy = null
     ) {
-        $properties = $properties ?? new Map('string', 'mixed');
+        /** @var Map<string, mixed> $default */
+        $default = Map::of('string', 'mixed');
+        $properties ??= $default;
 
-        if (
-            (string) $properties->keyType() !== 'string' ||
-            (string) $properties->valueType() !== 'mixed'
-        ) {
-            throw new \TypeError('Argument 2 must be of type MapInterface<string, mixed>');
-        }
+        assertMap('string', 'mixed', $properties, 2);
 
         $this->object = $object;
         $this->properties = $properties;
@@ -41,9 +40,12 @@ final class ReflectionObject
         $this->extractionStrategy = $extractionStrategy ?? ExtractionStrategies::default();
     }
 
+    /**
+     * @param Map<string, mixed>|null $properties
+     */
     public static function of(
         object $object,
-        MapInterface $properties = null,
+        Map $properties = null,
         InjectionStrategy $injectionStrategy = null,
         ExtractionStrategy $extractionStrategy = null
     ): self {
@@ -59,9 +61,9 @@ final class ReflectionObject
     {
         return new self(
             $this->object,
-            $this->properties->put($name, $value),
+            ($this->properties)($name, $value),
             $this->injectionStrategy,
-            $this->extractionStrategy
+            $this->extractionStrategy,
         );
     }
 
@@ -76,15 +78,16 @@ final class ReflectionObject
     {
         $map = $this->properties;
 
+        /** @var mixed $value */
         foreach ($properties as $key => $value) {
-            $map = $map->put($key, $value);
+            $map = ($map)($key, $value);
         }
 
         return new self(
             $this->object,
             $map,
             $this->injectionStrategy,
-            $this->extractionStrategy
+            $this->extractionStrategy,
         );
     }
 
@@ -95,25 +98,24 @@ final class ReflectionObject
     {
         return $this->properties->reduce(
             $this->object,
-            function(object $object, string $key, $value): object {
-                return $this->inject($object, $key, $value);
-            }
+            fn(object $object, string $key, $value): object => $this->inject($object, $key, $value),
         );
     }
 
     /**
      * Extract the given list of properties
      *
-     * @return MapInterface<string, mixed>
+     * @return Map<string, mixed>
      */
-    public function extract(string ...$properties): MapInterface
+    public function extract(string ...$properties): Map
     {
-        $map = new Map('string', 'mixed');
+        /** @var Map<string, mixed> */
+        $map = Map::of('string', 'mixed');
 
         foreach ($properties as $property) {
-            $map = $map->put(
+            $map = ($map)(
                 $property,
-                $this->extractProperty($property)
+                $this->extractProperty($property),
             );
         }
 

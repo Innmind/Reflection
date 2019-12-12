@@ -11,11 +11,11 @@ use Innmind\Immutable\Str;
 
 final class IsserStrategy implements ExtractionStrategy
 {
-    private $isser;
+    private Str $isser;
 
     public function __construct()
     {
-        $this->isser = new Str('is%s');
+        $this->isser = Str::of('is%s');
     }
 
     /**
@@ -24,9 +24,10 @@ final class IsserStrategy implements ExtractionStrategy
     public function supports(object $object, string $property): bool
     {
         $refl = new \ReflectionObject($object);
-        $isser = (string) $this->isser->sprintf(
-            (string) (new Str($property))->camelize()
-        );
+        $isser = $this
+            ->isser
+            ->sprintf(Str::of($property)->camelize()->ucfirst()->toString())
+            ->toString();
 
         if (!$refl->hasMethod($isser)) {
             return false;
@@ -50,10 +51,12 @@ final class IsserStrategy implements ExtractionStrategy
             throw new LogicException;
         }
 
-        $isser = (string) $this->isser->sprintf(
-            (string) (new Str($property))->camelize()
-        );
+        $isser = $this
+            ->isser
+            ->sprintf(Str::of($property)->camelize()->ucfirst()->toString())
+            ->toString();
 
+        /** @psalm-suppress MixedMethodCall */
         return $object->$isser();
     }
 }

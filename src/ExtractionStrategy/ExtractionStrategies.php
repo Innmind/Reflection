@@ -6,20 +6,16 @@ use Innmind\Reflection\ExtractionStrategy;
 
 final class ExtractionStrategies
 {
-    private static $default;
+    private static ?ExtractionStrategy $default;
 
     public static function default(): ExtractionStrategy
     {
-        if (self::$default == null) {
-            self::$default = new DelegationStrategy(
-                new GetterStrategy,
-                new NamedMethodStrategy,
-                new IsserStrategy,
-                new HasserStrategy,
-                new ReflectionStrategy
-            );
-        }
-
-        return self::$default;
+        return self::$default ?? self::$default = new DelegationStrategy(
+            new GetterStrategy,
+            new NamedMethodStrategy,
+            new IsserStrategy,
+            new HasserStrategy,
+            new ReflectionStrategy,
+        );
     }
 }

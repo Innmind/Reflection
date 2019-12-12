@@ -11,11 +11,11 @@ use Innmind\Immutable\Str;
 
 final class HasserStrategy implements ExtractionStrategy
 {
-    private $hasser;
+    private Str $hasser;
 
     public function __construct()
     {
-        $this->hasser = new Str('has%s');
+        $this->hasser = Str::of('has%s');
     }
 
     /**
@@ -24,9 +24,10 @@ final class HasserStrategy implements ExtractionStrategy
     public function supports(object $object, string $property): bool
     {
         $refl = new \ReflectionObject($object);
-        $hasser = (string) $this->hasser->sprintf(
-            (string) (new Str($property))->camelize()
-        );
+        $hasser = $this
+            ->hasser
+            ->sprintf(Str::of($property)->camelize()->ucfirst()->toString())
+            ->toString();
 
         if (!$refl->hasMethod($hasser)) {
             return false;
@@ -50,10 +51,12 @@ final class HasserStrategy implements ExtractionStrategy
             throw new LogicException;
         }
 
-        $hasser = (string) $this->hasser->sprintf(
-            (string) (new Str($property))->camelize()
-        );
+        $hasser = $this
+            ->hasser
+            ->sprintf(Str::of($property)->camelize()->ucfirst()->toString())
+            ->toString();
 
+        /** @psalm-suppress MixedMethodCall */
         return $object->$hasser();
     }
 }

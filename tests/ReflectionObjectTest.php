@@ -11,11 +11,7 @@ use Innmind\Reflection\{
     InjectionStrategy,
     Exception\LogicException,
 };
-use Innmind\Immutable\{
-    MapInterface,
-    SetInterface,
-    Set,
-};
+use Innmind\Immutable\Map;
 use PHPUnit\Framework\TestCase;
 
 class ReflectionObjectTest extends TestCase
@@ -171,7 +167,7 @@ class ReflectionObjectTest extends TestCase
 
         $values = $refl->extract('a', 'b', 'c');
 
-        $this->assertInstanceOf(MapInterface::class, $values);
+        $this->assertInstanceOf(Map::class, $values);
         $this->assertSame('string', (string) $values->keyType());
         $this->assertSame('mixed', (string) $values->valueType());
         $this->assertCount(3, $values);

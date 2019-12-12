@@ -9,33 +9,35 @@ use Innmind\Reflection\{
     Exception\InvalidArgumentException,
 };
 use Innmind\Immutable\{
-    MapInterface,
     Map,
-    SetInterface,
     Set,
 };
+use function Innmind\Immutable\assertMap;
 
 final class ReflectionClass
 {
-    private $class;
-    private $properties;
-    private $injectionStrategy;
-    private $instanciator;
+    /** @var class-string */
+    private string $class;
+    /** @var Map<string, mixed> */
+    private Map $properties;
+    private InjectionStrategy $injectionStrategy;
+    private Instanciator $instanciator;
 
+    /**
+     * @param class-string $class
+     * @param Map<string, mixed>|null $properties
+     */
     public function __construct(
         string $class,
-        MapInterface $properties = null,
+        Map $properties = null,
         InjectionStrategy $injectionStrategy = null,
         Instanciator $instanciator = null
     ) {
-        $properties = $properties ?? new Map('string', 'mixed');
+        /** @var Map<string, mixed> $default */
+        $default = Map::of('string', 'mixed');
+        $properties ??= $default;
 
-        if (
-            (string) $properties->keyType() !== 'string' ||
-            (string) $properties->valueType() !== 'mixed'
-        ) {
-            throw new \TypeError('Argument 2 must be of type MapInterface<string, mixed>');
-        }
+        assertMap('string', 'mixed', $properties, 2);
 
         $this->class = $class;
         $this->properties = $properties;
@@ -43,9 +45,13 @@ final class ReflectionClass
         $this->instanciator = $instanciator ?? new ReflectionInstanciator;
     }
 
+    /**
+     * @param class-string $class
+     * @param Map<string, mixed>|null $properties
+     */
     public static function of(
         string $class,
-        MapInterface $properties = null,
+        Map $properties = null,
         InjectionStrategy $injectionStrategy = null,
         Instanciator $instanciator = null
     ): self {
@@ -61,9 +67,9 @@ final class ReflectionClass
     {
         return new self(
             $this->class,
-            $this->properties->put($property, $value),
+            ($this->properties)($property, $value),
             $this->injectionStrategy,
-            $this->instanciator
+            $this->instanciator,
         );
     }
 
@@ -76,15 +82,16 @@ final class ReflectionClass
     {
         $map = $this->properties;
 
+        /** @var mixed $value */
         foreach ($properties as $key => $value) {
-            $map = $map->put($key, $value);
+            $map = ($map)($key, $value);
         }
 
         return new self(
             $this->class,
             $map,
             $this->injectionStrategy,
-            $this->instanciator
+            $this->instanciator,
         );
     }
 
@@ -99,13 +106,11 @@ final class ReflectionClass
         //avoid injecting the properties already used in the constructor
         $properties = $this
             ->properties
-            ->filter(function(string $property) use ($parameters) {
-                return !$parameters->contains($property);
-            });
+            ->filter(static fn(string $property) => !$parameters->contains($property));
         $refl = new ReflectionObject(
             $object,
             $properties,
-            $this->injectionStrategy
+            $this->injectionStrategy,
         );
 
         return $refl->build();
@@ -116,15 +121,15 @@ final class ReflectionClass
      *
      * It will not extract properties defined in a parent class
      *
-     * @return SetInterface<string>
+     * @return Set<string>
      */
-    public function properties(): SetInterface
+    public function properties(): Set
     {
         $refl = new \ReflectionClass($this->class);
-        $properties = Set::of('string');
+        $properties = Set::strings();
 
         foreach ($refl->getProperties() as $property) {
-            $properties = $properties->add($property->getName());
+            $properties = ($properties)($property->getName());
         }
 
         return $properties;

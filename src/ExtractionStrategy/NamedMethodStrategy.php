@@ -18,9 +18,9 @@ final class NamedMethodStrategy implements ExtractionStrategy
     {
         $refl = new \ReflectionObject($object);
 
-        $property = (string) (new Str($property))
+        $property = Str::of($property)
             ->camelize()
-            ->lcfirst();
+            ->toString();
 
         if (!$refl->hasMethod($property)) {
             return false;
@@ -44,10 +44,11 @@ final class NamedMethodStrategy implements ExtractionStrategy
             throw new LogicException;
         }
 
-        $property = (string) (new Str($property))
+        $property = Str::of($property)
             ->camelize()
-            ->lcfirst();
+            ->toString();
 
+        /** @psalm-suppress MixedMethodCall */
         return $object->$property();
     }
 }

@@ -8,10 +8,10 @@ final class PropertyCannotBeInjected extends LogicException
     public function __construct(string $property)
     {
         parent::__construct(
-            sprintf(
+            \sprintf(
                 'Property "%s" cannot be injected',
-                $property
-            )
+                $property,
+            ),
         );
     }
 }

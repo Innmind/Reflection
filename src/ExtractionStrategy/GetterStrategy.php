@@ -11,11 +11,11 @@ use Innmind\Immutable\Str;
 
 final class GetterStrategy implements ExtractionStrategy
 {
-    private $getter;
+    private Str $getter;
 
     public function __construct()
     {
-        $this->getter = new Str('get%s');
+        $this->getter = Str::of('get%s');
     }
 
     /**
@@ -24,9 +24,10 @@ final class GetterStrategy implements ExtractionStrategy
     public function supports(object $object, string $property): bool
     {
         $refl = new \ReflectionObject($object);
-        $getter = (string) $this->getter->sprintf(
-            (string) (new Str($property))->camelize()
-        );
+        $getter = $this
+            ->getter
+            ->sprintf(Str::of($property)->camelize()->ucfirst()->toString())
+            ->toString();
 
         if (!$refl->hasMethod($getter)) {
             return false;
@@ -50,10 +51,12 @@ final class GetterStrategy implements ExtractionStrategy
             throw new LogicException;
         }
 
-        $getter = (string) $this->getter->sprintf(
-            (string) (new Str($property))->camelize()
-        );
+        $getter = $this
+            ->getter
+            ->sprintf(Str::of($property)->camelize()->ucfirst()->toString())
+            ->toString();
 
+        /** @psalm-suppress MixedMethodCall */
         return $object->$getter();
     }
 }

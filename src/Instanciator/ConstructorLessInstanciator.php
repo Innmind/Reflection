@@ -8,8 +8,6 @@ use Innmind\Reflection\{
     Exception\InstanciationFailed,
 };
 use Innmind\Immutable\{
-    MapInterface,
-    SetInterface,
     Map,
     Set,
 };
@@ -19,7 +17,7 @@ final class ConstructorLessInstanciator implements Instanciator
     /**
      * {@inheritdoc}
      */
-    public function build(string $class, MapInterface $properties): object
+    public function build(string $class, Map $properties): object
     {
         try {
             $refl = new \ReflectionClass($class);
@@ -33,8 +31,8 @@ final class ConstructorLessInstanciator implements Instanciator
     /**
      * {@inheritdoc}
      */
-    public function parameters(string $class): SetInterface
+    public function parameters(string $class): Set
     {
-        return new Set('string');
+        return Set::strings();
     }
 }

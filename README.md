@@ -1,10 +1,9 @@
 # Reflection
 
-| `master` | `develop` |
-|----------|-----------|
-|[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/Innmind/Reflection/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/Innmind/Reflection/?branch=master) [![Code Coverage](https://scrutinizer-ci.com/g/Innmind/Reflection/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/Innmind/Reflection/?branch=master) [![Build Status](https://scrutinizer-ci.com/g/Innmind/Reflection/badges/build.png?b=master)](https://scrutinizer-ci.com/g/Innmind/Reflection/build-status/master) | [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/Innmind/Reflection/badges/quality-score.png?b=develop)](https://scrutinizer-ci.com/g/Innmind/Reflection/?branch=develop) [![Code Coverage](https://scrutinizer-ci.com/g/Innmind/Reflection/badges/coverage.png?b=develop)](https://scrutinizer-ci.com/g/Innmind/Reflection/?branch=develop) [![Build Status](https://scrutinizer-ci.com/g/Innmind/Reflection/badges/build.png?b=develop)](https://scrutinizer-ci.com/g/Innmind/Reflection/build-status/develop)|
-
-[![SensioLabsInsight](https://insight.sensiolabs.com/projects/08bda127-8c81-4f20-a5e2-c2ac37abff71/big.png)](https://insight.sensiolabs.com/projects/08bda127-8c81-4f20-a5e2-c2ac37abff71)
+| `develop` |
+|-----------|
+| [![codecov](https://codecov.io/gh/Innmind/Reflection/branch/develop/graph/badge.svg)](https://codecov.io/gh/Innmind/Reflection) |
+| [![Build Status](https://travis-ci.org/Innmind/Reflection.svg?branch=develop)](https://travis-ci.org/Innmind/Reflection) |
 
 Library to build objects and extract data out of them through an immutable API.
 
@@ -13,7 +12,7 @@ Library to build objects and extract data out of them through an immutable API.
 ```php
 use Innmind\Reflection\ReflectionObject;
 
-$refl = (new ReflectionObject($myObject))
+$refl = ReflectionObject::of($myObject)
     ->withProperty('foo', 'bar')
     ->withProperty('bar', 'baz');
 $refl->build();
@@ -42,12 +41,12 @@ class Foo
     }
 }
 
-$foo = (new ReflectionClass(Foo::class))
+$foo = ReflectionClass::of(Foo::class)
     ->withProperty('foo', 'bar')
     ->build();
 ```
 
-The `ReflectionClass` uses the `ReflectionInstanciator` to build the new instance of your class; it's replaceable by any object implementing the `InstanciatorInterface` and giving it as the fourth argument of `ReflectionClass`.
+The `ReflectionClass` uses the `ReflectionInstanciator` to build the new instance of your class; it's replaceable by any object implementing the `Instanciator` interface and giving it as the fourth argument of `ReflectionClass`.
 
 In case the properties you define to be injected can't be injected through the constructor, it will use internally `ReflectionObject` to do so.
 
@@ -56,7 +55,7 @@ In case the properties you define to be injected can't be injected through the c
 ```php
 use Innmind\Reflection\ReflectionObject;
 
-$properties = (new ReflectionObject($myObject))->extract('foo', 'bar', 'baz');
+$properties = ReflectionObject::of($myObject)->extract('foo', 'bar', 'baz');
 ```
 
 Here `$properties` is a collection containing the values of `foo`, `bar` and `baz` that are set in your `$myObject`.
