@@ -37,8 +37,8 @@ final class ReflectionInstanciator implements Instanciator
                             $carry[$property] = $value;
 
                             return $carry;
-                        }
-                    )
+                        },
+                    ),
             );
         } catch (\TypeError $e) {
             throw new InstanciationFailed($class, $e);
@@ -82,7 +82,7 @@ final class ReflectionInstanciator implements Instanciator
             if ($this->canInject($parameter, $properties)) {
                 $arguments = ($arguments)(
                     $parameter->name,
-                    $properties->get($parameter->name)
+                    $properties->get($parameter->name),
                 );
             }
         }
@@ -119,14 +119,14 @@ final class ReflectionInstanciator implements Instanciator
 
             if ($type->isBuiltin()) {
                 return $type->getName() === gettype($property);
-            } else if (!is_object($property)) {
+            } else if (!\is_object($property)) {
                 return false;
             }
 
             $refl = new \ReflectionObject($property);
             $wishedClass = $type->getName();
 
-            return get_class($property) === $wishedClass ||
+            return \get_class($property) === $wishedClass ||
                 $refl->isSubClassOf($wishedClass);
         }
 

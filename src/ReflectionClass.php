@@ -57,7 +57,7 @@ final class ReflectionClass
             $this->class,
             ($this->properties)($property, $value),
             $this->injectionStrategy,
-            $this->instanciator
+            $this->instanciator,
         );
     }
 
@@ -78,7 +78,7 @@ final class ReflectionClass
             $this->class,
             $map,
             $this->injectionStrategy,
-            $this->instanciator
+            $this->instanciator,
         );
     }
 
@@ -99,7 +99,7 @@ final class ReflectionClass
         $refl = new ReflectionObject(
             $object,
             $properties,
-            $this->injectionStrategy
+            $this->injectionStrategy,
         );
 
         return $refl->build();

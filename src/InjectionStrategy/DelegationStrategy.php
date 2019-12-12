@@ -35,7 +35,7 @@ final class DelegationStrategy implements InjectionStrategy
                 false,
                 function(bool $supports, InjectionStrategy $strategy) use ($object, $property, $value): bool {
                     return $supports || $strategy->supports($object, $property, $value);
-                }
+                },
             );
     }
 
@@ -57,7 +57,7 @@ final class DelegationStrategy implements InjectionStrategy
             null,
             function(?InjectionStrategy $target, InjectionStrategy $strategy) use ($object, $property, $value): ?InjectionStrategy {
                 return $target ?? ($strategy->supports($object, $property, $value) ? $strategy : null);
-            }
+            },
         );
 
         if (!$strategy instanceof InjectionStrategy) {
@@ -71,6 +71,6 @@ final class DelegationStrategy implements InjectionStrategy
 
     private function generateKey(object $object, string $property): string
     {
-        return get_class($object).'::'.$property;
+        return \get_class($object).'::'.$property;
     }
 }

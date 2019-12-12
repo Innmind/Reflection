@@ -8,12 +8,12 @@ final class InstanciationFailed extends \RuntimeException implements Exception
     public function __construct(string $class, \Throwable $e)
     {
         parent::__construct(
-            sprintf(
+            \sprintf(
                 'Class "%s" cannot be instanciated',
-                $class
+                $class,
             ),
             $e->getCode(),
-            $e
+            $e,
         );
     }
 }

@@ -54,7 +54,7 @@ final class ReflectionObject
             $this->object,
             ($this->properties)($name, $value),
             $this->injectionStrategy,
-            $this->extractionStrategy
+            $this->extractionStrategy,
         );
     }
 
@@ -77,7 +77,7 @@ final class ReflectionObject
             $this->object,
             $map,
             $this->injectionStrategy,
-            $this->extractionStrategy
+            $this->extractionStrategy,
         );
     }
 
@@ -90,7 +90,7 @@ final class ReflectionObject
             $this->object,
             function(object $object, string $key, $value): object {
                 return $this->inject($object, $key, $value);
-            }
+            },
         );
     }
 
@@ -106,7 +106,7 @@ final class ReflectionObject
         foreach ($properties as $property) {
             $map = ($map)(
                 $property,
-                $this->extractProperty($property)
+                $this->extractProperty($property),
             );
         }
 

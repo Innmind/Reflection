@@ -18,7 +18,7 @@ final class AccessProperty
         try {
             return $this->byObject($object, $property);
         } catch (PropertyNotFound $e) {
-            return $this->byClass(get_class($object), $property);
+            return $this->byClass(\get_class($object), $property);
         }
     }
 
@@ -44,7 +44,7 @@ final class AccessProperty
         if ($refl->getParentClass()) {
             return $this->byClass(
                 $refl->getParentClass()->getName(),
-                $property
+                $property,
             );
         }
 

@@ -8,10 +8,10 @@ final class PropertyCannotBeExtracted extends LogicException
     public function __construct(string $property)
     {
         parent::__construct(
-            sprintf(
+            \sprintf(
                 'Property "%s" cannot be extracted',
-                $property
-            )
+                $property,
+            ),
         );
     }
 }

@@ -35,7 +35,7 @@ final class DelegationStrategy implements ExtractionStrategy
                 false,
                 function(bool $supports, ExtractionStrategy $strategy) use ($object, $property): bool {
                     return $supports || $strategy->supports($object, $property);
-                }
+                },
             );
     }
 
@@ -57,7 +57,7 @@ final class DelegationStrategy implements ExtractionStrategy
             null,
             function(?ExtractionStrategy $target, ExtractionStrategy $strategy) use ($object, $property): ?ExtractionStrategy {
                 return $target ?? ($strategy->supports($object, $property) ? $strategy : null);
-            }
+            },
         );
 
         if (!$strategy instanceof ExtractionStrategy) {
@@ -71,6 +71,6 @@ final class DelegationStrategy implements ExtractionStrategy
 
     private function generateKey(object $object, string $property): string
     {
-        return get_class($object).'::'.$property;
+        return \get_class($object).'::'.$property;
     }
 }
