@@ -11,7 +11,7 @@ use Innmind\Immutable\Str;
 
 final class HasserStrategy implements ExtractionStrategy
 {
-    private $hasser;
+    private Str $hasser;
 
     public function __construct()
     {

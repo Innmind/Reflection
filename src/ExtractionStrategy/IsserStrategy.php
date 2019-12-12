@@ -11,7 +11,7 @@ use Innmind\Immutable\Str;
 
 final class IsserStrategy implements ExtractionStrategy
 {
-    private $isser;
+    private Str $isser;
 
     public function __construct()
     {

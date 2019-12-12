@@ -13,10 +13,10 @@ use function Innmind\Immutable\assertMap;
 
 final class ReflectionObject
 {
-    private $object;
-    private $properties;
-    private $injectionStrategy;
-    private $extractionStrategy;
+    private object $object;
+    private Map $properties;
+    private InjectionStrategy $injectionStrategy;
+    private ExtractionStrategy $extractionStrategy;
 
     public function __construct(
         object $object,

@@ -15,8 +15,8 @@ use Innmind\Immutable\{
 
 final class DelegationStrategy implements ExtractionStrategy
 {
-    private $strategies;
-    private $cache;
+    private Sequence $strategies;
+    private Map $cache;
 
     public function __construct(ExtractionStrategy ...$strategies)
     {

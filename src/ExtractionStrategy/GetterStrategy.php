@@ -11,7 +11,7 @@ use Innmind\Immutable\Str;
 
 final class GetterStrategy implements ExtractionStrategy
 {
-    private $getter;
+    private Str $getter;
 
     public function __construct()
     {

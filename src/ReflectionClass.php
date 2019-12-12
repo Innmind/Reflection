@@ -16,10 +16,10 @@ use function Innmind\Immutable\assertMap;
 
 final class ReflectionClass
 {
-    private $class;
-    private $properties;
-    private $injectionStrategy;
-    private $instanciator;
+    private string $class;
+    private Map $properties;
+    private InjectionStrategy $injectionStrategy;
+    private Instanciator $instanciator;
 
     public function __construct(
         string $class,

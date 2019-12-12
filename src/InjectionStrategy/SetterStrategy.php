@@ -11,7 +11,7 @@ use Innmind\Immutable\Str;
 
 final class SetterStrategy implements InjectionStrategy
 {
-    private $setter;
+    private Str $setter;
 
     public function __construct()
     {

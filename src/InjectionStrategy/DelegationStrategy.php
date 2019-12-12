@@ -15,8 +15,8 @@ use Innmind\Immutable\{
 
 final class DelegationStrategy implements InjectionStrategy
 {
-    private $strategies;
-    private $cache;
+    private Sequence $strategies;
+    private Map $cache;
 
     public function __construct(InjectionStrategy ...$strategies)
     {

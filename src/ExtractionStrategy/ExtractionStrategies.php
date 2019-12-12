@@ -6,7 +6,7 @@ use Innmind\Reflection\ExtractionStrategy;
 
 final class ExtractionStrategies
 {
-    private static $default;
+    private static ExtractionStrategy $default;
 
     public static function default(): ExtractionStrategy
     {
