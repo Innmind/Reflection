@@ -30,7 +30,7 @@ class ReflectionClassTest extends TestCase
         $o = $r->build();
 
         $this->assertInstanceOf(NoConstructor::class, $o);
-        $this->assertSame(null, $o->a());
+        $this->assertNull($o->a());
     }
 
     public function testBuild()
