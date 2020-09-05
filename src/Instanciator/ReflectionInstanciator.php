@@ -114,6 +114,7 @@ final class ReflectionInstanciator implements Instanciator
             }
 
             $refl = new \ReflectionObject($property);
+            /** @var class-string */
             $wishedClass = $type->getName();
 
             return \get_class($property) === $wishedClass ||
