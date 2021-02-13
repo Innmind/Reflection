@@ -30,30 +30,15 @@ class DelegationStrategyTest extends TestCase
         $property = 'foo';
         $value = 'bar';
         $mock1
-            ->expects($this->at(0))
+            ->expects($this->exactly(3))
             ->method('supports')
             ->with($object, $property, $value)
-            ->willReturn(false);
-        $mock1
-            ->expects($this->at(1))
-            ->method('supports')
-            ->with($object, $property, $value)
-            ->willReturn(true);
-        $mock1
-            ->expects($this->at(2))
-            ->method('supports')
-            ->with($object, $property, $value)
-            ->willReturn(false);
+            ->will($this->onConsecutiveCalls(false, true, false));
         $mock2
-            ->expects($this->at(0))
+            ->expects($this->exactly(2))
             ->method('supports')
             ->with($object, $property, $value)
-            ->willReturn(true);
-        $mock2
-            ->expects($this->at(1))
-            ->method('supports')
-            ->with($object, $property, $value)
-            ->willReturn(false);
+            ->will($this->onConsecutiveCalls(true, false));
 
         $this->assertTrue($strategy->supports($object, $property, $value));
         $this->assertTrue($strategy->supports($object, $property, $value));
