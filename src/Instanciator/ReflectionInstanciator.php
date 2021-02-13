@@ -16,9 +16,6 @@ use function Innmind\Immutable\unwrap;
 
 final class ReflectionInstanciator implements Instanciator
 {
-    /**
-     * {@inheritdoc}
-     */
     public function build(string $class, Map $properties): object
     {
         try {
@@ -38,9 +35,6 @@ final class ReflectionInstanciator implements Instanciator
         }
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function parameters(string $class): Set
     {
         $parameters = Set::strings();
@@ -91,7 +85,9 @@ final class ReflectionInstanciator implements Instanciator
             !$properties->contains($parameter->name)
         ) {
             return false;
-        } else if (
+        }
+
+        if (
             $parameter->allowsNull() &&
             !$properties->contains($parameter->name)
         ) {

@@ -42,11 +42,11 @@ class ConstructorLessInstanciatorTest extends TestCase
         );
 
         $builtObject = $instanciator->build(
-            get_class($object),
+            \get_class($object),
             Map::of('string', 'variable')
         );
 
-        $this->assertInstanceOf(get_class($object), $builtObject);
+        $this->assertInstanceOf(\get_class($object), $builtObject);
         $this->assertNull($builtObject->foo);
     }
 
@@ -65,7 +65,7 @@ class ConstructorLessInstanciatorTest extends TestCase
         );
         $this->assertSame(
             [],
-            unwrap($instanciator->parameters(get_class($object))),
+            unwrap($instanciator->parameters(\get_class($object))),
         );
     }
 }

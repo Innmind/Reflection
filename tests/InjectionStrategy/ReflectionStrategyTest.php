@@ -62,7 +62,8 @@ class ReflectionStrategyTest extends TestCase
     public function testInjectInheritedProperty()
     {
         $strategy = new ReflectionStrategy;
-        $object = new class extends Foo {};
+        $object = new class extends Foo {
+        };
 
         $this->assertSame(42, $object->someProperty());
         $this->assertSame($object, $strategy->inject($object, 'someProperty', 24));

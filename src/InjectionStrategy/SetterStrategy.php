@@ -18,9 +18,6 @@ final class SetterStrategy implements InjectionStrategy
         $this->setter = Str::of('set%s');
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function supports(object $object, string $property, $value): bool
     {
         $refl = new \ReflectionObject($object);
@@ -36,9 +33,6 @@ final class SetterStrategy implements InjectionStrategy
         return $refl->getMethod($setter)->isPublic();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function inject(object $object, string $property, $value): object
     {
         if (!$this->supports($object, $property, $value)) {

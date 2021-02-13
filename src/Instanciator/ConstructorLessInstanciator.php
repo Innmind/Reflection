@@ -14,9 +14,6 @@ use Innmind\Immutable\{
 
 final class ConstructorLessInstanciator implements Instanciator
 {
-    /**
-     * {@inheritdoc}
-     */
     public function build(string $class, Map $properties): object
     {
         try {
@@ -28,9 +25,6 @@ final class ConstructorLessInstanciator implements Instanciator
         }
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function parameters(string $class): Set
     {
         return Set::strings();

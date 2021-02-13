@@ -11,9 +11,6 @@ use Innmind\Immutable\Str;
 
 final class NamedMethodStrategy implements ExtractionStrategy
 {
-    /**
-     * {@inheritdoc}
-     */
     public function supports(object $object, string $property): bool
     {
         $refl = new \ReflectionObject($object);
@@ -35,9 +32,6 @@ final class NamedMethodStrategy implements ExtractionStrategy
         return $property->getNumberOfRequiredParameters() === 0;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function extract(object $object, string $property)
     {
         if (!$this->supports($object, $property)) {

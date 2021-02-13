@@ -102,7 +102,8 @@ class SetterStrategyTest extends TestCase
     public function testInjectWithInheritedMethod()
     {
         $strategy = new SetterStrategy;
-        $object = new class extends Foo {};
+        $object = new class extends Foo {
+        };
 
         $this->assertSame(42, $object->someProperty());
         $this->assertSame($object, $strategy->inject($object, 'someProperty', 24));

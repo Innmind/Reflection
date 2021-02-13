@@ -88,7 +88,8 @@ class NamedMethodStrategyTest extends TestCase
 
     public function testExtractInheritedMethod()
     {
-        $object = new class extends Foo {};
+        $object = new class extends Foo {
+        };
         $strategy = new NamedMethodStrategy;
 
         $this->assertSame(42, $strategy->extract($object, 'someProperty'));

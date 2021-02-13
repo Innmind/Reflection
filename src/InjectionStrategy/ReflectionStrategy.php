@@ -11,9 +11,6 @@ use Innmind\Reflection\{
 
 final class ReflectionStrategy implements InjectionStrategy
 {
-    /**
-     * {@inheritdoc}
-     */
     public function supports(object $object, string $property, $value): bool
     {
         try {
@@ -25,9 +22,6 @@ final class ReflectionStrategy implements InjectionStrategy
         }
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function inject(object $object, string $property, $value): object
     {
         if (!$this->supports($object, $property, $value)) {
