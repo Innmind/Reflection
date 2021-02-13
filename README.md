@@ -1,6 +1,6 @@
 # Reflection
 
-[![Build Status](https://github.com/innmind/reflection/workflows/CI/badge.svg)](https://github.com/innmind/reflection/actions?query=workflow%3ACI)
+[![Build Status](https://github.com/innmind/reflection/workflows/CI/badge.svg?branch=master)](https://github.com/innmind/reflection/actions?query=workflow%3ACI)
 [![codecov](https://codecov.io/gh/innmind/reflection/branch/develop/graph/badge.svg)](https://codecov.io/gh/innmind/reflection)
 [![Type Coverage](https://shepherd.dev/github/innmind/reflection/coverage.svg)](https://shepherd.dev/github/innmind/reflection)
 
