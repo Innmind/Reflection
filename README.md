@@ -1,9 +1,8 @@
 # Reflection
 
-| `develop` |
-|-----------|
-| [![codecov](https://codecov.io/gh/Innmind/Reflection/branch/develop/graph/badge.svg)](https://codecov.io/gh/Innmind/Reflection) |
-| [![Build Status](https://travis-ci.org/Innmind/Reflection.svg?branch=develop)](https://travis-ci.org/Innmind/Reflection) |
+[![Build Status](https://github.com/innmind/reflection/workflows/CI/badge.svg?branch=master)](https://github.com/innmind/reflection/actions?query=workflow%3ACI)
+[![codecov](https://codecov.io/gh/innmind/reflection/branch/develop/graph/badge.svg)](https://codecov.io/gh/innmind/reflection)
+[![Type Coverage](https://shepherd.dev/github/innmind/reflection/coverage.svg)](https://shepherd.dev/github/innmind/reflection)
 
 Library to build objects and extract data out of them through an immutable API.
 

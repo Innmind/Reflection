@@ -53,11 +53,13 @@ class AccessPropertyTest extends TestCase
                 'foo',
             ],
             [
-                new class extends Foo {},
+                new class extends Foo {
+                },
                 'someProperty',
             ],
             [
-                new class extends Foo {},
+                new class extends Foo {
+                },
                 'inheritProtected',
             ],
         ];

@@ -11,9 +11,6 @@ use Innmind\Reflection\{
 
 final class ReflectionStrategy implements ExtractionStrategy
 {
-    /**
-     * {@inheritdoc}
-     */
     public function supports(object $object, string $property): bool
     {
         try {
@@ -25,9 +22,6 @@ final class ReflectionStrategy implements ExtractionStrategy
         }
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function extract(object $object, string $property)
     {
         if (!$this->supports($object, $property)) {

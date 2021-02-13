@@ -28,9 +28,6 @@ final class DelegationStrategy implements InjectionStrategy
         $this->cache = Map::of('string', InjectionStrategy::class);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function supports(object $object, string $property, $value): bool
     {
         return $this
@@ -43,9 +40,6 @@ final class DelegationStrategy implements InjectionStrategy
             );
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function inject(object $object, string $property, $value): object
     {
         $key = $this->generateKey($object, $property);

@@ -89,7 +89,8 @@ class HasserStrategyTest extends TestCase
     public function testExtractWithInheritedMethod()
     {
         $strategy = new HasserStrategy;
-        $object = new class extends Foo {};
+        $object = new class extends Foo {
+        };
 
         $this->assertTrue($strategy->extract($object, 'someProperty'));
     }

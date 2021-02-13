@@ -28,9 +28,6 @@ final class DelegationStrategy implements ExtractionStrategy
         $this->cache = Map::of('string', ExtractionStrategy::class);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function supports(object $object, string $property): bool
     {
         return $this
@@ -43,9 +40,6 @@ final class DelegationStrategy implements ExtractionStrategy
             );
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function extract(object $object, string $property)
     {
         $key = $this->generateKey($object, $property);

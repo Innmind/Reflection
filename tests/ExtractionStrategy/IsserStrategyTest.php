@@ -89,7 +89,8 @@ class IsserStrategyTest extends TestCase
     public function testExtractWithInheritedMethod()
     {
         $strategy = new IsserStrategy;
-        $object = new class extends Foo {};
+        $object = new class extends Foo {
+        };
 
         $this->assertFalse($strategy->extract($object, 'someProperty'));
     }

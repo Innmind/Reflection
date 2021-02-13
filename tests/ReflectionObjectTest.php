@@ -38,8 +38,7 @@ class ReflectionObjectTest extends TestCase
 
     public function testBuild()
     {
-        $o = new class()
-        {
+        $o = new class() {
             private $a;
             protected $b;
             private $c;
@@ -76,8 +75,7 @@ class ReflectionObjectTest extends TestCase
 
     public function testBuildWithProperties()
     {
-        $o = new class()
-        {
+        $o = new class() {
             private $a;
             protected $b;
             private $c;
@@ -131,8 +129,7 @@ class ReflectionObjectTest extends TestCase
 
     public function testThrowWhenNameMethodDoesntHaveParameter()
     {
-        $o = new class()
-        {
+        $o = new class() {
             public function a()
             {
                 //pass
@@ -149,8 +146,7 @@ class ReflectionObjectTest extends TestCase
 
     public function testExtract()
     {
-        $o = new class
-        {
+        $o = new class {
             public $a = 24;
 
             public function getB()

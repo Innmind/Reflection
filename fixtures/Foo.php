@@ -5,12 +5,12 @@ namespace Fixtures\Innmind\Reflection;
 
 class Foo
 {
-    private $someProperty = 42;
     protected $inheritProtected = 'whatever';
+    private $someProperty = 42;
 
     public function someProperty(int $newValue = null)
     {
-        if (is_int($newValue)) {
+        if (\is_int($newValue)) {
             $this->someProperty = $newValue;
 
             return $this;

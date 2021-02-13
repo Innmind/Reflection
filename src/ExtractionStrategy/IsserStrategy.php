@@ -18,9 +18,6 @@ final class IsserStrategy implements ExtractionStrategy
         $this->isser = Str::of('is%s');
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function supports(object $object, string $property): bool
     {
         $refl = new \ReflectionObject($object);
@@ -42,9 +39,6 @@ final class IsserStrategy implements ExtractionStrategy
         return $isser->getNumberOfRequiredParameters() === 0;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function extract(object $object, string $property)
     {
         if (!$this->supports($object, $property)) {

@@ -45,7 +45,8 @@ class ReflectionStrategyTest extends TestCase
     public function testSupportsInheritMethod()
     {
         $strategy = new ReflectionStrategy;
-        $object = new class extends Foo {};
+        $object = new class extends Foo {
+        };
 
         $this->assertTrue($strategy->supports($object, 'someProperty'));
     }
@@ -76,7 +77,8 @@ class ReflectionStrategyTest extends TestCase
 
     public function testExtractInheritedProperty()
     {
-        $child = new class extends Foo {};
+        $child = new class extends Foo {
+        };
 
         $strategy = new ReflectionStrategy;
 
