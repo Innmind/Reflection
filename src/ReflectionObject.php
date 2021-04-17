@@ -68,6 +68,8 @@ final class ReflectionObject
      * Add a property that will be injected
      *
      * @param mixed  $value
+     *
+     * @return self<T>
      */
     public function withProperty(string $name, $value): self
     {
@@ -83,6 +85,8 @@ final class ReflectionObject
      * Add a set of properties that need to be injected
      *
      * @param array<string, mixed> $properties
+     *
+     * @return self<T>
      */
     public function withProperties(array $properties): self
     {
