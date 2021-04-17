@@ -22,7 +22,6 @@ final class DelegationStrategy implements InjectionStrategy
 
     public function __construct(InjectionStrategy ...$strategies)
     {
-        /** @var Sequence<InjectionStrategy<object>> */
         $this->strategies = Sequence::of(InjectionStrategy::class, ...$strategies);
         /** @var Map<string, InjectionStrategy<object>> */
         $this->cache = Map::of('string', InjectionStrategy::class);

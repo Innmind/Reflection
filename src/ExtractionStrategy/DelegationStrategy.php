@@ -22,7 +22,6 @@ final class DelegationStrategy implements ExtractionStrategy
 
     public function __construct(ExtractionStrategy ...$strategies)
     {
-        /** @var Sequence<ExtractionStrategy> */
         $this->strategies = Sequence::of(ExtractionStrategy::class, ...$strategies);
         /** @var Map<string, ExtractionStrategy> */
         $this->cache = Map::of('string', ExtractionStrategy::class);
