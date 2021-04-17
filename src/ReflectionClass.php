@@ -14,17 +14,22 @@ use Innmind\Immutable\{
 };
 use function Innmind\Immutable\assertMap;
 
+/**
+ * @template T of object
+ */
 final class ReflectionClass
 {
-    /** @var class-string */
+    /** @var class-string<T> */
     private string $class;
     /** @var Map<string, mixed> */
     private Map $properties;
+    /** @var InjectionStrategy<T> */
     private InjectionStrategy $injectionStrategy;
+    /** @var Instanciator<T> */
     private Instanciator $instanciator;
 
     /**
-     * @param class-string $class
+     * @param class-string<T> $class
      * @param Map<string, mixed>|null $properties
      */
     public function __construct(
@@ -41,13 +46,19 @@ final class ReflectionClass
 
         $this->class = $class;
         $this->properties = $properties;
+        /** @var InjectionStrategy<T> */
         $this->injectionStrategy = $injectionStrategy ?? InjectionStrategies::default();
+        /** @var Instanciator<T> */
         $this->instanciator = $instanciator ?? new ReflectionInstanciator;
     }
 
     /**
-     * @param class-string $class
+     * @template V of object
+     *
+     * @param class-string<V> $class
      * @param Map<string, mixed>|null $properties
+     *
+     * @return self<V>
      */
     public static function of(
         string $class,
@@ -97,6 +108,8 @@ final class ReflectionClass
 
     /**
      * Return a new instance of the class
+     *
+     * @return T
      */
     public function build(): object
     {
