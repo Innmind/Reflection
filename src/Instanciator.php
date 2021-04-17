@@ -9,15 +9,20 @@ use Innmind\Immutable\{
     Set,
 };
 
+/**
+ * @template T of object
+ */
 interface Instanciator
 {
     /**
      * Build a new instance for the given class
      *
-     * @param class-string $class
+     * @param class-string<T> $class
      * @param Map<string, mixed> $properties
      *
      * @throws InstanciationFailed
+     *
+     * @return T
      */
     public function build(string $class, Map $properties): object;
 

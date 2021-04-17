@@ -11,15 +11,21 @@ use Innmind\Reflection\{
 use Innmind\Immutable\Map;
 use function Innmind\Immutable\assertMap;
 
+/**
+ * @template T of object
+ */
 final class ReflectionObject
 {
+    /** @var T */
     private object $object;
     /** @var Map<string, mixed> */
     private Map $properties;
+    /** @var InjectionStrategy<T> */
     private InjectionStrategy $injectionStrategy;
     private ExtractionStrategy $extractionStrategy;
 
     /**
+     * @param T $object
      * @param Map<string, mixed>|null $properties
      */
     public function __construct(
@@ -36,12 +42,18 @@ final class ReflectionObject
 
         $this->object = $object;
         $this->properties = $properties;
+        /** @var InjectionStrategy<T> */
         $this->injectionStrategy = $injectionStrategy ?? InjectionStrategies::default();
         $this->extractionStrategy = $extractionStrategy ?? ExtractionStrategies::default();
     }
 
     /**
+     * @template V of object
+     *
+     * @param V $object
      * @param Map<string, mixed>|null $properties
+     *
+     * @return self<V>
      */
     public static function of(
         object $object,
@@ -91,9 +103,12 @@ final class ReflectionObject
 
     /**
      * Return the object with the list of properties set on it
+     *
+     * @return T
      */
     public function build(): object
     {
+        /** @psalm-suppress InvalidArgument */
         return $this->properties->reduce(
             $this->object,
             fn(object $object, string $key, $value): object => $this->inject($object, $key, $value),
@@ -123,7 +138,10 @@ final class ReflectionObject
     /**
      * Inject the given key/value pair into the object
      *
+     * @param T $object
      * @param mixed  $value
+     *
+     * @return T
      */
     private function inject(object $object, string $key, $value): object
     {
