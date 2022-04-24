@@ -36,6 +36,7 @@ final class ReflectionInstanciator implements Instanciator
 
     public function parameters(string $class): Set
     {
+        /** @var Set<non-empty-string> */
         $parameters = Set::strings();
         $refl = new \ReflectionClass($class);
 
@@ -46,6 +47,7 @@ final class ReflectionInstanciator implements Instanciator
         $refl = $refl->getMethod('__construct');
 
         foreach ($refl->getParameters() as $parameter) {
+            /** @psalm-suppress ArgumentTypeCoercion */
             $parameters = ($parameters)($parameter->name);
         }
 
@@ -53,7 +55,7 @@ final class ReflectionInstanciator implements Instanciator
     }
 
     /**
-     * @param Map<string, mixed> $properties
+     * @param Map<non-empty-string, mixed> $properties
      *
      * @return Sequence<mixed>
      */
@@ -64,6 +66,7 @@ final class ReflectionInstanciator implements Instanciator
         $arguments = Sequence::mixed();
 
         foreach ($constructor->getParameters() as $parameter) {
+            /** @psalm-suppress ArgumentTypeCoercion */
             $arguments = $properties
                 ->get($parameter->name)
                 ->filter(fn() => $this->canInject($parameter, $properties))
@@ -77,12 +80,13 @@ final class ReflectionInstanciator implements Instanciator
     }
 
     /**
-     * @param Map<string, mixed> $properties
+     * @param Map<non-empty-string, mixed> $properties
      */
     private function canInject(
         \ReflectionParameter $parameter,
         Map $properties,
     ): bool {
+        /** @psalm-suppress ArgumentTypeCoercion */
         if (
             !$parameter->allowsNull() &&
             !$properties->contains($parameter->name)
@@ -90,6 +94,7 @@ final class ReflectionInstanciator implements Instanciator
             return false;
         }
 
+        /** @psalm-suppress ArgumentTypeCoercion */
         if (
             $parameter->allowsNull() &&
             !$properties->contains($parameter->name)
@@ -97,6 +102,7 @@ final class ReflectionInstanciator implements Instanciator
             return false;
         }
 
+        /** @psalm-suppress ArgumentTypeCoercion */
         return $properties
             ->get($parameter->name)
             ->match(

@@ -22,7 +22,7 @@ final class ReflectionStrategy implements ExtractionStrategy
         }
     }
 
-    public function extract(object $object, string $property)
+    public function extract(object $object, string $property): mixed
     {
         if (!$this->supports($object, $property)) {
             throw new LogicException;

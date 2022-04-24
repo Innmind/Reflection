@@ -11,7 +11,7 @@ use Innmind\Reflection\{
 
 final class ReflectionStrategy implements InjectionStrategy
 {
-    public function supports(object $object, string $property, $value): bool
+    public function supports(object $object, string $property, mixed $value): bool
     {
         try {
             (new AccessProperty)($object, $property);
@@ -22,7 +22,7 @@ final class ReflectionStrategy implements InjectionStrategy
         }
     }
 
-    public function inject(object $object, string $property, $value): object
+    public function inject(object $object, string $property, mixed $value): object
     {
         if (!$this->supports($object, $property, $value)) {
             throw new LogicException;

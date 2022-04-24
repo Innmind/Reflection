@@ -39,7 +39,7 @@ final class IsserStrategy implements ExtractionStrategy
         return $isser->getNumberOfRequiredParameters() === 0;
     }
 
-    public function extract(object $object, string $property)
+    public function extract(object $object, string $property): mixed
     {
         if (!$this->supports($object, $property)) {
             throw new LogicException;

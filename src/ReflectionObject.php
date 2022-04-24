@@ -53,7 +53,7 @@ final class ReflectionObject
     /**
      * Return the object with the list of properties set on it
      *
-     * @param Map<string, mixed>|null $properties
+     * @param Map<non-empty-string, mixed>|null $properties
      *
      * @return T
      */
@@ -64,18 +64,20 @@ final class ReflectionObject
         /** @psalm-suppress InvalidArgument */
         return $properties->reduce(
             $this->object,
-            fn(object $object, string $key, $value): object => $this->inject($object, $key, $value),
+            fn(object $object, string $key, mixed $value): object => $this->inject($object, $key, $value),
         );
     }
 
     /**
      * Extract the given list of properties
      *
-     * @return Map<string, mixed>
+     * @param non-empty-string $properties
+     *
+     * @return Map<non-empty-string, mixed>
      */
     public function extract(string ...$properties): Map
     {
-        /** @var Map<string, mixed> */
+        /** @var Map<non-empty-string, mixed> */
         $map = Map::of();
 
         foreach ($properties as $property) {
@@ -92,11 +94,11 @@ final class ReflectionObject
      * Inject the given key/value pair into the object
      *
      * @param T $object
-     * @param mixed  $value
+     * @param non-empty-string $key
      *
      * @return T
      */
-    private function inject(object $object, string $key, $value): object
+    private function inject(object $object, string $key, mixed $value): object
     {
         return $this->injectionStrategy->inject($object, $key, $value);
     }
@@ -104,9 +106,9 @@ final class ReflectionObject
     /**
      * Extract the given property out of the object
      *
-     * @return mixed
+     * @param non-empty-string $property
      */
-    private function extractProperty(string $property)
+    private function extractProperty(string $property): mixed
     {
         return $this->extractionStrategy->extract($this->object, $property);
     }

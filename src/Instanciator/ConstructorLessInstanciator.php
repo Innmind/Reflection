@@ -27,6 +27,7 @@ final class ConstructorLessInstanciator implements Instanciator
 
     public function parameters(string $class): Set
     {
+        /** @var Set<non-empty-string> */
         return Set::strings();
     }
 }

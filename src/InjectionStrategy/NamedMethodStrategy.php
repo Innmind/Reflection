@@ -21,7 +21,7 @@ use Innmind\Immutable\Str;
  */
 final class NamedMethodStrategy implements InjectionStrategy
 {
-    public function supports(object $object, string $property, $value): bool
+    public function supports(object $object, string $property, mixed $value): bool
     {
         $refl = new \ReflectionObject($object);
 
@@ -42,7 +42,7 @@ final class NamedMethodStrategy implements InjectionStrategy
         return $property->getNumberOfParameters() > 0;
     }
 
-    public function inject(object $object, string $property, $value): object
+    public function inject(object $object, string $property, mixed $value): object
     {
         if (!$this->supports($object, $property, $value)) {
             throw new LogicException;

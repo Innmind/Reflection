@@ -58,7 +58,7 @@ final class ReflectionClass
     /**
      * Return a new instance of the class
      *
-     * @param Map<string, mixed>|null $properties
+     * @param Map<non-empty-string, mixed>|null $properties
      *
      * @return T
      */
@@ -84,14 +84,16 @@ final class ReflectionClass
      *
      * It will not extract properties defined in a parent class
      *
-     * @return Set<string>
+     * @return Set<non-empty-string>
      */
     public function properties(): Set
     {
         $refl = new \ReflectionClass($this->class);
+        /** @var Set<non-empty-string> */
         $properties = Set::strings();
 
         foreach ($refl->getProperties() as $property) {
+            /** @psalm-suppress ArgumentTypeCoercion */
             $properties = ($properties)($property->getName());
         }
 

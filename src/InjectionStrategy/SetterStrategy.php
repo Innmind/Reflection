@@ -18,7 +18,7 @@ final class SetterStrategy implements InjectionStrategy
         $this->setter = Str::of('set%s');
     }
 
-    public function supports(object $object, string $property, $value): bool
+    public function supports(object $object, string $property, mixed $value): bool
     {
         $refl = new \ReflectionObject($object);
         $setter = $this
@@ -33,7 +33,7 @@ final class SetterStrategy implements InjectionStrategy
         return $refl->getMethod($setter)->isPublic();
     }
 
-    public function inject(object $object, string $property, $value): object
+    public function inject(object $object, string $property, mixed $value): object
     {
         if (!$this->supports($object, $property, $value)) {
             throw new LogicException;

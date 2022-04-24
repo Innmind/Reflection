@@ -30,14 +30,14 @@ final class DelegationStrategy implements InjectionStrategy
         $this->cache = Map::of();
     }
 
-    public function supports(object $object, string $property, $value): bool
+    public function supports(object $object, string $property, mixed $value): bool
     {
         return $this->strategies->any(
             static fn($strategy) => $strategy->supports($object, $property, $value),
         );
     }
 
-    public function inject(object $object, string $property, $value): object
+    public function inject(object $object, string $property, mixed $value): object
     {
         $key = $this->generateKey($object, $property);
 

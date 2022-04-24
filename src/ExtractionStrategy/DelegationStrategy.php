@@ -37,7 +37,7 @@ final class DelegationStrategy implements ExtractionStrategy
         );
     }
 
-    public function extract(object $object, string $property)
+    public function extract(object $object, string $property): mixed
     {
         $key = $this->generateKey($object, $property);
 

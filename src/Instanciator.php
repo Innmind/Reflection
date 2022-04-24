@@ -18,7 +18,7 @@ interface Instanciator
      * Build a new instance for the given class
      *
      * @param class-string<T> $class
-     * @param Map<string, mixed> $properties
+     * @param Map<non-empty-string, mixed> $properties
      *
      * @throws InstanciationFailed
      *
@@ -31,7 +31,7 @@ interface Instanciator
      *
      * @param class-string $class
      *
-     * @return Set<string>
+     * @return Set<non-empty-string>
      */
     public function parameters(string $class): Set;
 }

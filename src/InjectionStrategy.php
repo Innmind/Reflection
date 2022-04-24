@@ -14,19 +14,19 @@ interface InjectionStrategy
      * Check if the injection strategy can be used to inject the given
      * property and value into the given object
      *
-     * @param mixed $value
+     * @param non-empty-string $property
      */
-    public function supports(object $object, string $property, $value): bool;
+    public function supports(object $object, string $property, mixed $value): bool;
 
     /**
      * Inject the given value into the given object
      *
      * @param T $object
-     * @param mixed $value
+     * @param non-empty-string $property
      *
      * @throws PropertyCannotBeInjected If the property is not supported
      *
      * @return T
      */
-    public function inject(object $object, string $property, $value): object;
+    public function inject(object $object, string $property, mixed $value): object;
 }
