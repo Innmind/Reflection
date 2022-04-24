@@ -36,7 +36,7 @@ final class ReflectionClass
         string $class,
         Map $properties = null,
         InjectionStrategy $injectionStrategy = null,
-        Instanciator $instanciator = null
+        Instanciator $instanciator = null,
     ) {
         /** @var Map<string, mixed> $default */
         $default = Map::of('string', 'mixed');
@@ -64,7 +64,7 @@ final class ReflectionClass
         string $class,
         Map $properties = null,
         InjectionStrategy $injectionStrategy = null,
-        Instanciator $instanciator = null
+        Instanciator $instanciator = null,
     ): self {
         return new self($class, $properties, $injectionStrategy, $instanciator);
     }

@@ -17,7 +17,7 @@ class HasserStrategyTest extends TestCase
     {
         $this->assertInstanceOf(
             ExtractionStrategy::class,
-            new HasserStrategy
+            new HasserStrategy,
         );
     }
 

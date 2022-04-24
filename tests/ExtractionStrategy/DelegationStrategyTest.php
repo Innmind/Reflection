@@ -16,7 +16,7 @@ class DelegationStrategyTest extends TestCase
     {
         $this->assertInstanceOf(
             ExtractionStrategy::class,
-            new DelegationStrategy
+            new DelegationStrategy,
         );
     }
 
@@ -24,7 +24,7 @@ class DelegationStrategyTest extends TestCase
     {
         $strategy = new DelegationStrategy(
             $mock1 = $this->createMock(ExtractionStrategy::class),
-            $mock2 = $this->createMock(ExtractionStrategy::class)
+            $mock2 = $this->createMock(ExtractionStrategy::class),
         );
         $object = new \stdClass;
         $property = 'foo';
@@ -48,7 +48,7 @@ class DelegationStrategyTest extends TestCase
     {
         $strategy = new DelegationStrategy(
             $mock1 = $this->createMock(ExtractionStrategy::class),
-            $mock2 = $this->createMock(ExtractionStrategy::class)
+            $mock2 = $this->createMock(ExtractionStrategy::class),
         );
         $object = new \stdClass;
         $property = 'foo';
@@ -76,7 +76,7 @@ class DelegationStrategyTest extends TestCase
     {
         $strategy = new DelegationStrategy(
             $mock1 = $this->createMock(ExtractionStrategy::class),
-            $mock2 = $this->createMock(ExtractionStrategy::class)
+            $mock2 = $this->createMock(ExtractionStrategy::class),
         );
         $object = new \stdClass;
         $property = 'foo';
@@ -105,7 +105,7 @@ class DelegationStrategyTest extends TestCase
     {
         $strategy = new DelegationStrategy(
             $mock1 = $this->createMock(ExtractionStrategy::class),
-            $mock2 = $this->createMock(ExtractionStrategy::class)
+            $mock2 = $this->createMock(ExtractionStrategy::class),
         );
         $object = new \stdClass;
         $property = 'foo';
@@ -135,7 +135,7 @@ class DelegationStrategyTest extends TestCase
     {
         $strategy = new DelegationStrategy(
             $mock1 = $this->createMock(ExtractionStrategy::class),
-            $mock2 = $this->createMock(ExtractionStrategy::class)
+            $mock2 = $this->createMock(ExtractionStrategy::class),
         );
         $object = new \stdClass;
         $property = 'foo';

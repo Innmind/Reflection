@@ -17,7 +17,7 @@ class NamedMethodStrategyTest extends TestCase
     {
         $this->assertInstanceOf(
             InjectionStrategy::class,
-            new NamedMethodStrategy
+            new NamedMethodStrategy,
         );
     }
 

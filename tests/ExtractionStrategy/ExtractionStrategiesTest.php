@@ -15,11 +15,11 @@ class ExtractionStrategiesTest extends TestCase
     {
         $this->assertInstanceOf(
             DelegationStrategy::class,
-            ExtractionStrategies::default()
+            ExtractionStrategies::default(),
         );
         $this->assertSame(
             ExtractionStrategies::default(),
-            ExtractionStrategies::default()
+            ExtractionStrategies::default(),
         );
     }
 }

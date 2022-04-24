@@ -17,7 +17,7 @@ class ConstructorLessInstanciatorTest extends TestCase
     {
         $this->assertInstanceOf(
             Instanciator::class,
-            new ConstructorLessInstanciator
+            new ConstructorLessInstanciator,
         );
     }
 
@@ -37,13 +37,13 @@ class ConstructorLessInstanciatorTest extends TestCase
             'stdClass',
             $instanciator->build(
                 'stdClass',
-                Map::of('string', 'variable')
-            )
+                Map::of('string', 'variable'),
+            ),
         );
 
         $builtObject = $instanciator->build(
             \get_class($object),
-            Map::of('string', 'variable')
+            Map::of('string', 'variable'),
         );
 
         $this->assertInstanceOf(\get_class($object), $builtObject);

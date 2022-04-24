@@ -17,7 +17,7 @@ class ReflectionStrategyTest extends TestCase
     {
         $this->assertInstanceOf(
             ExtractionStrategy::class,
-            new ReflectionStrategy
+            new ReflectionStrategy,
         );
     }
 

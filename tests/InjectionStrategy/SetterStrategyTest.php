@@ -17,7 +17,7 @@ class SetterStrategyTest extends TestCase
     {
         $this->assertInstanceOf(
             InjectionStrategy::class,
-            new SetterStrategy
+            new SetterStrategy,
         );
     }
 

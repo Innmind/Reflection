@@ -32,7 +32,7 @@ final class ReflectionObject
         object $object,
         Map $properties = null,
         InjectionStrategy $injectionStrategy = null,
-        ExtractionStrategy $extractionStrategy = null
+        ExtractionStrategy $extractionStrategy = null,
     ) {
         /** @var Map<string, mixed> $default */
         $default = Map::of('string', 'mixed');
@@ -59,7 +59,7 @@ final class ReflectionObject
         object $object,
         Map $properties = null,
         InjectionStrategy $injectionStrategy = null,
-        ExtractionStrategy $extractionStrategy = null
+        ExtractionStrategy $extractionStrategy = null,
     ): self {
         return new self($object, $properties, $injectionStrategy, $extractionStrategy);
     }

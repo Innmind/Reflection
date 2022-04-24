@@ -17,7 +17,7 @@ class IsserStrategyTest extends TestCase
     {
         $this->assertInstanceOf(
             ExtractionStrategy::class,
-            new IsserStrategy
+            new IsserStrategy,
         );
     }
 

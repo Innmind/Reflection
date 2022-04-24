@@ -60,7 +60,7 @@ final class ReflectionInstanciator implements Instanciator
      */
     private function computeArguments(
         \ReflectionMethod $constructor,
-        Map $properties
+        Map $properties,
     ): Sequence {
         $arguments = Sequence::mixed();
 
@@ -78,7 +78,7 @@ final class ReflectionInstanciator implements Instanciator
      */
     private function canInject(
         \ReflectionParameter $parameter,
-        Map $properties
+        Map $properties,
     ): bool {
         if (
             !$parameter->allowsNull() &&

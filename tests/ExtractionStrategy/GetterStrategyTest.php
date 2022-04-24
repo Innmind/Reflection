@@ -17,7 +17,7 @@ class GetterStrategyTest extends TestCase
     {
         $this->assertInstanceOf(
             ExtractionStrategy::class,
-            new GetterStrategy
+            new GetterStrategy,
         );
     }
 

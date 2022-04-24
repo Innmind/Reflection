@@ -17,7 +17,7 @@ class NamedMethodStrategyTest extends TestCase
     {
         $this->assertInstanceOf(
             ExtractionStrategy::class,
-            new NamedMethodStrategy
+            new NamedMethodStrategy,
         );
     }
 

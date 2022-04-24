@@ -47,7 +47,7 @@ class ReflectionClassTest extends TestCase
                 [
                     'a' => 24,
                     'b' => 66,
-                ]
+                ],
             )
             ->build();
 

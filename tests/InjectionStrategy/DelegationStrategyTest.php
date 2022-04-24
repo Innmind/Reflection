@@ -16,7 +16,7 @@ class DelegationStrategyTest extends TestCase
     {
         $this->assertInstanceOf(
             InjectionStrategy::class,
-            new DelegationStrategy
+            new DelegationStrategy,
         );
     }
 
@@ -24,7 +24,7 @@ class DelegationStrategyTest extends TestCase
     {
         $strategy = new DelegationStrategy(
             $mock1 = $this->createMock(InjectionStrategy::class),
-            $mock2 = $this->createMock(InjectionStrategy::class)
+            $mock2 = $this->createMock(InjectionStrategy::class),
         );
         $object = new \stdClass;
         $property = 'foo';
@@ -49,7 +49,7 @@ class DelegationStrategyTest extends TestCase
     {
         $strategy = new DelegationStrategy(
             $mock1 = $this->createMock(InjectionStrategy::class),
-            $mock2 = $this->createMock(InjectionStrategy::class)
+            $mock2 = $this->createMock(InjectionStrategy::class),
         );
         $object = new \stdClass;
         $property = 'foo';
@@ -78,7 +78,7 @@ class DelegationStrategyTest extends TestCase
     {
         $strategy = new DelegationStrategy(
             $mock1 = $this->createMock(InjectionStrategy::class),
-            $mock2 = $this->createMock(InjectionStrategy::class)
+            $mock2 = $this->createMock(InjectionStrategy::class),
         );
         $object = new \stdClass;
         $property = 'foo';
@@ -108,7 +108,7 @@ class DelegationStrategyTest extends TestCase
     {
         $strategy = new DelegationStrategy(
             $mock1 = $this->createMock(InjectionStrategy::class),
-            $mock2 = $this->createMock(InjectionStrategy::class)
+            $mock2 = $this->createMock(InjectionStrategy::class),
         );
         $object = new \stdClass;
         $property = 'foo';
@@ -139,7 +139,7 @@ class DelegationStrategyTest extends TestCase
     {
         $strategy = new DelegationStrategy(
             $mock1 = $this->createMock(InjectionStrategy::class),
-            $mock2 = $this->createMock(InjectionStrategy::class)
+            $mock2 = $this->createMock(InjectionStrategy::class),
         );
         $object = new \stdClass;
         $property = 'foo';

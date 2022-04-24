@@ -104,13 +104,13 @@ class ReflectionObjectTest extends TestCase
                 [
                     'a' => 1,
                     'b' => 2,
-                ]
+                ],
             )
             ->withProperties(
                 [
                     'c' => 3,
                     'd' => 4,
-                ]
+                ],
             )
             ->build();
 

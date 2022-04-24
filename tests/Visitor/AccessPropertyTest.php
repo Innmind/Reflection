@@ -19,7 +19,7 @@ class AccessPropertyTest extends TestCase
     {
         $this->assertInstanceOf(
             \ReflectionProperty::class,
-            (new AccessProperty)($object, $property)
+            (new AccessProperty)($object, $property),
         );
     }
 

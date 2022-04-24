@@ -15,11 +15,11 @@ class InjectionStrategiesTest extends TestCase
     {
         $this->assertInstanceOf(
             DelegationStrategy::class,
-            InjectionStrategies::default()
+            InjectionStrategies::default(),
         );
         $this->assertSame(
             InjectionStrategies::default(),
-            InjectionStrategies::default()
+            InjectionStrategies::default(),
         );
     }
 }

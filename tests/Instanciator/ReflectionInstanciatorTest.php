@@ -21,7 +21,7 @@ class ReflectionInstanciatorTest extends TestCase
     {
         $this->assertInstanceOf(
             Instanciator::class,
-            new ReflectionInstanciator
+            new ReflectionInstanciator,
         );
     }
 
@@ -33,7 +33,7 @@ class ReflectionInstanciatorTest extends TestCase
             Foo::class,
             Map::of('string', 'mixed')
                 ('o', $o = new \stdClass)
-                ('bar', 'foo')
+                ('bar', 'foo'),
         );
 
         $this->assertInstanceOf(Foo::class, $object);
@@ -44,7 +44,7 @@ class ReflectionInstanciatorTest extends TestCase
             Map::of('string', 'mixed')
                 ('o', $o = new \stdClass)
                 ('bar', 'foo')
-                ('baz', 42)
+                ('baz', 42),
         );
 
         $this->assertInstanceOf(Foo::class, $object);
