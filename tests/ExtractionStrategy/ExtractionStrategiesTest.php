@@ -6,6 +6,7 @@ namespace Tests\Innmind\Reflection\ExtractionStrategy;
 use Innmind\Reflection\ExtractionStrategy\{
     ExtractionStrategies,
     DelegationStrategy,
+    ReflectionStrategy,
 };
 use PHPUnit\Framework\TestCase;
 
@@ -14,12 +15,20 @@ class ExtractionStrategiesTest extends TestCase
     public function testDefault()
     {
         $this->assertInstanceOf(
-            DelegationStrategy::class,
+            ReflectionStrategy::class,
             ExtractionStrategies::default(),
         );
+    }
+
+    public function testAll()
+    {
+        $this->assertInstanceOf(
+            DelegationStrategy::class,
+            ExtractionStrategies::all(),
+        );
         $this->assertEquals(
-            ExtractionStrategies::default(),
-            ExtractionStrategies::default(),
+            ExtractionStrategies::all(),
+            ExtractionStrategies::all(),
         );
     }
 }

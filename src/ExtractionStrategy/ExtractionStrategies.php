@@ -9,6 +9,11 @@ final class ExtractionStrategies
 {
     public static function default(): ExtractionStrategy
     {
+        return new ReflectionStrategy;
+    }
+
+    public static function all(): ExtractionStrategy
+    {
         return new DelegationStrategy(
             new GetterStrategy,
             new NamedMethodStrategy,

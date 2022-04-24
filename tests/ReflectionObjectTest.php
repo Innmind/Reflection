@@ -122,7 +122,7 @@ class ReflectionObjectTest extends TestCase
         $this->expectException(LogicException::class);
         $this->expectExceptionMessage('Property "a" cannot be injected');
 
-        ReflectionObject::of(new \stdClass)
+        ReflectionObject::of(new \stdClass, null, InjectionStrategies::all())
             ->withProperty('a', 1)
             ->build();
     }
@@ -139,7 +139,7 @@ class ReflectionObjectTest extends TestCase
         $this->expectException(LogicException::class);
         $this->expectExceptionMessage('Property "a" cannot be injected');
 
-        ReflectionObject::of($o)
+        ReflectionObject::of($o, null, InjectionStrategies::all())
             ->withProperty('a', 1)
             ->build();
     }
@@ -159,7 +159,7 @@ class ReflectionObjectTest extends TestCase
                 return 66;
             }
         };
-        $refl = new ReflectionObject($o);
+        $refl = new ReflectionObject($o, null, null, ExtractionStrategies::all());
 
         $values = $refl->extract('a', 'b', 'c');
 
@@ -177,6 +177,6 @@ class ReflectionObjectTest extends TestCase
         $this->expectException(LogicException::class);
         $this->expectExceptionMessage('Property "a" cannot be extracted');
 
-        ReflectionObject::of(new \stdClass)->extract('a');
+        ReflectionObject::of(new \stdClass, null, null, ExtractionStrategies::all())->extract('a');
     }
 }

@@ -9,6 +9,11 @@ final class InjectionStrategies
 {
     public static function default(): InjectionStrategy
     {
+        return new ReflectionStrategy;
+    }
+
+    public static function all(): InjectionStrategy
+    {
         return new DelegationStrategy(
             new SetterStrategy,
             new NamedMethodStrategy,
