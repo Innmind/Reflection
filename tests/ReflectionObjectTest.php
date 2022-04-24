@@ -26,16 +26,6 @@ class ReflectionObjectTest extends TestCase
         $this->assertSame($o, $o2);
     }
 
-    public function testAddPropertyToInject()
-    {
-        $o = new \stdClass;
-        $refl = new ReflectionObject($o);
-        $refl2 = $refl->withProperty('foo', 'bar');
-
-        $this->assertInstanceOf(ReflectionObject::class, $refl2);
-        $this->assertNotSame($refl, $refl2);
-    }
-
     public function testBuild()
     {
         $o = new class() {
@@ -62,57 +52,12 @@ class ReflectionObjectTest extends TestCase
 
         $this->assertSame([null, null, null, null], $o->dump());
 
-        $result = ReflectionObject::of($o)
-            ->withProperty('a', 1)
-            ->withProperty('b', 2)
-            ->withProperty('c', 3)
-            ->withProperty('d', 4)
-            ->build();
-
-        $this->assertSame($o, $result);
-        $this->assertSame([1, 2, 3, 4], $o->dump());
-    }
-
-    public function testBuildWithProperties()
-    {
-        $o = new class() {
-            private $a;
-            protected $b;
-            private $c;
-            private $d;
-
-            public function setC($value)
-            {
-                $this->c = $value;
-            }
-
-            public function d($value)
-            {
-                $this->d = $value;
-            }
-
-            public function dump()
-            {
-                return [$this->a, $this->b, $this->c, $this->d];
-            }
-        };
-
-        $this->assertSame([null, null, null, null], $o->dump());
-
-        ReflectionObject::of($o)
-            ->withProperties(
-                [
-                    'a' => 1,
-                    'b' => 2,
-                ],
-            )
-            ->withProperties(
-                [
-                    'c' => 3,
-                    'd' => 4,
-                ],
-            )
-            ->build();
+        ReflectionObject::of($o)->build(Map::of(
+            ['a', 1],
+            ['b', 2],
+            ['c', 3],
+            ['d', 4],
+        ));
 
         $this->assertSame([1, 2, 3, 4], $o->dump());
     }
@@ -122,9 +67,9 @@ class ReflectionObjectTest extends TestCase
         $this->expectException(LogicException::class);
         $this->expectExceptionMessage('Property "a" cannot be injected');
 
-        ReflectionObject::of(new \stdClass, null, InjectionStrategies::all())
-            ->withProperty('a', 1)
-            ->build();
+        ReflectionObject::of(new \stdClass, InjectionStrategies::all())->build(
+            Map::of(['a', 1]),
+        );
     }
 
     public function testThrowWhenNameMethodDoesntHaveParameter()
@@ -139,9 +84,9 @@ class ReflectionObjectTest extends TestCase
         $this->expectException(LogicException::class);
         $this->expectExceptionMessage('Property "a" cannot be injected');
 
-        ReflectionObject::of($o, null, InjectionStrategies::all())
-            ->withProperty('a', 1)
-            ->build();
+        ReflectionObject::of($o, InjectionStrategies::all())->build(
+            Map::of(['a', 1]),
+        );
     }
 
     public function testExtract()
@@ -159,7 +104,7 @@ class ReflectionObjectTest extends TestCase
                 return 66;
             }
         };
-        $refl = new ReflectionObject($o, null, null, ExtractionStrategies::all());
+        $refl = new ReflectionObject($o, null, ExtractionStrategies::all());
 
         $values = $refl->extract('a', 'b', 'c');
 
@@ -184,6 +129,6 @@ class ReflectionObjectTest extends TestCase
         $this->expectException(LogicException::class);
         $this->expectExceptionMessage('Property "a" cannot be extracted');
 
-        ReflectionObject::of(new \stdClass, null, null, ExtractionStrategies::all())->extract('a');
+        ReflectionObject::of(new \stdClass, null, ExtractionStrategies::all())->extract('a');
     }
 }

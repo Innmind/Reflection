@@ -17,7 +17,10 @@ use Fixtures\Innmind\Reflection\{
     NoConstructor,
     WithConstructor,
 };
-use Innmind\Immutable\Set;
+use Innmind\Immutable\{
+    Set,
+    Map,
+};
 use PHPUnit\Framework\TestCase;
 
 class ReflectionClassTest extends TestCase
@@ -34,21 +37,17 @@ class ReflectionClassTest extends TestCase
 
     public function testBuild()
     {
-        $o = ReflectionClass::of(NoConstructor::class)
-            ->withProperty('a', 42)
-            ->build();
+        $o = ReflectionClass::of(NoConstructor::class)->build(
+            Map::of(['a', 42]),
+        );
 
         $this->assertInstanceOf(NoConstructor::class, $o);
         $this->assertSame(42, $o->a());
 
-        $o = ReflectionClass::of(WithConstructor::class)
-            ->withProperties(
-                [
-                    'a' => 24,
-                    'b' => 66,
-                ],
-            )
-            ->build();
+        $o = ReflectionClass::of(WithConstructor::class)->build(Map::of(
+            ['a', 24],
+            ['b', 66],
+        ));
 
         $this->assertInstanceOf(WithConstructor::class, $o);
         $this->assertSame(24, $o->a());

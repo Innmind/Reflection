@@ -17,24 +17,19 @@ final class ReflectionObject
 {
     /** @var T */
     private object $object;
-    /** @var Map<string, mixed> */
-    private Map $properties;
     /** @var InjectionStrategy<T> */
     private InjectionStrategy $injectionStrategy;
     private ExtractionStrategy $extractionStrategy;
 
     /**
      * @param T $object
-     * @param Map<string, mixed>|null $properties
      */
     public function __construct(
         object $object,
-        Map $properties = null,
         InjectionStrategy $injectionStrategy = null,
         ExtractionStrategy $extractionStrategy = null,
     ) {
         $this->object = $object;
-        $this->properties = $properties ?? Map::of();
         /** @var InjectionStrategy<T> */
         $this->injectionStrategy = $injectionStrategy ?? InjectionStrategies::default();
         $this->extractionStrategy = $extractionStrategy ?? ExtractionStrategies::default();
@@ -44,69 +39,30 @@ final class ReflectionObject
      * @template V of object
      *
      * @param V $object
-     * @param Map<string, mixed>|null $properties
      *
      * @return self<V>
      */
     public static function of(
         object $object,
-        Map $properties = null,
         InjectionStrategy $injectionStrategy = null,
         ExtractionStrategy $extractionStrategy = null,
     ): self {
-        return new self($object, $properties, $injectionStrategy, $extractionStrategy);
-    }
-
-    /**
-     * Add a property that will be injected
-     *
-     * @param mixed  $value
-     *
-     * @return self<T>
-     */
-    public function withProperty(string $name, $value): self
-    {
-        return new self(
-            $this->object,
-            ($this->properties)($name, $value),
-            $this->injectionStrategy,
-            $this->extractionStrategy,
-        );
-    }
-
-    /**
-     * Add a set of properties that need to be injected
-     *
-     * @param array<string, mixed> $properties
-     *
-     * @return self<T>
-     */
-    public function withProperties(array $properties): self
-    {
-        $map = $this->properties;
-
-        /** @var mixed $value */
-        foreach ($properties as $key => $value) {
-            $map = ($map)($key, $value);
-        }
-
-        return new self(
-            $this->object,
-            $map,
-            $this->injectionStrategy,
-            $this->extractionStrategy,
-        );
+        return new self($object, $injectionStrategy, $extractionStrategy);
     }
 
     /**
      * Return the object with the list of properties set on it
      *
+     * @param Map<string, mixed>|null $properties
+     *
      * @return T
      */
-    public function build(): object
+    public function build(Map $properties = null): object
     {
+        $properties ??= Map::of();
+
         /** @psalm-suppress InvalidArgument */
-        return $this->properties->reduce(
+        return $properties->reduce(
             $this->object,
             fn(object $object, string $key, $value): object => $this->inject($object, $key, $value),
         );
