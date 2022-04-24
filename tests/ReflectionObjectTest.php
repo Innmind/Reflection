@@ -19,7 +19,7 @@ class ReflectionObjectTest extends TestCase
     public function testBuildWithoutProperties()
     {
         $o = new \stdClass;
-        $refl = new ReflectionObject($o);
+        $refl = ReflectionObject::of($o);
 
         $o2 = $refl->build();
 
@@ -104,7 +104,7 @@ class ReflectionObjectTest extends TestCase
                 return 66;
             }
         };
-        $refl = new ReflectionObject($o, null, ExtractionStrategies::all());
+        $refl = ReflectionObject::of($o, null, ExtractionStrategies::all());
 
         $values = $refl->extract('a', 'b', 'c');
 

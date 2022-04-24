@@ -24,7 +24,7 @@ final class ReflectionObject
     /**
      * @param T $object
      */
-    public function __construct(
+    private function __construct(
         object $object,
         InjectionStrategy $injectionStrategy = null,
         ExtractionStrategy $extractionStrategy = null,

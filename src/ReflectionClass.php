@@ -28,7 +28,7 @@ final class ReflectionClass
     /**
      * @param class-string<T> $class
      */
-    public function __construct(
+    private function __construct(
         string $class,
         InjectionStrategy $injectionStrategy = null,
         Instanciator $instanciator = null,
@@ -73,12 +73,10 @@ final class ReflectionClass
         $properties = $properties->filter(
             static fn(string $property) => !$parameters->contains($property),
         );
-        $refl = new ReflectionObject(
-            $object,
-            $this->injectionStrategy,
-        );
 
-        return $refl->build($properties);
+        return ReflectionObject::of($object, $this->injectionStrategy)->build(
+            $properties,
+        );
     }
 
     /**
