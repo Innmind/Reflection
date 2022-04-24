@@ -17,7 +17,7 @@ class InjectionStrategiesTest extends TestCase
             DelegationStrategy::class,
             InjectionStrategies::default(),
         );
-        $this->assertSame(
+        $this->assertEquals(
             InjectionStrategies::default(),
             InjectionStrategies::default(),
         );

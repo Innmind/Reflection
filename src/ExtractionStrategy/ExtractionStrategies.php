@@ -7,11 +7,9 @@ use Innmind\Reflection\ExtractionStrategy;
 
 final class ExtractionStrategies
 {
-    private static ?ExtractionStrategy $default;
-
     public static function default(): ExtractionStrategy
     {
-        return self::$default ?? self::$default = new DelegationStrategy(
+        return new DelegationStrategy(
             new GetterStrategy,
             new NamedMethodStrategy,
             new IsserStrategy,

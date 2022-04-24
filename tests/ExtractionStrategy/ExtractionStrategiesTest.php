@@ -17,7 +17,7 @@ class ExtractionStrategiesTest extends TestCase
             DelegationStrategy::class,
             ExtractionStrategies::default(),
         );
-        $this->assertSame(
+        $this->assertEquals(
             ExtractionStrategies::default(),
             ExtractionStrategies::default(),
         );
