@@ -20,46 +20,39 @@ final class DelegationStrategy implements ExtractionStrategy
     /** @var Map<string, ExtractionStrategy> */
     private Map $cache;
 
+    /**
+     * @no-named-arguments
+     */
     public function __construct(ExtractionStrategy ...$strategies)
     {
-        $this->strategies = Sequence::of(ExtractionStrategy::class, ...$strategies);
+        $this->strategies = Sequence::of(...$strategies);
         /** @var Map<string, ExtractionStrategy> */
-        $this->cache = Map::of('string', ExtractionStrategy::class);
+        $this->cache = Map::of();
     }
 
     public function supports(object $object, string $property): bool
     {
-        return $this
-            ->strategies
-            ->reduce(
-                false,
-                static function(bool $supports, ExtractionStrategy $strategy) use ($object, $property): bool {
-                    return $supports || $strategy->supports($object, $property);
-                },
-            );
+        return $this->strategies->any(
+            static fn($strategy) => $strategy->supports($object, $property),
+        );
     }
 
     public function extract(object $object, string $property)
     {
         $key = $this->generateKey($object, $property);
 
-        if ($this->cache->contains($key)) {
-            return $this
-                ->cache
-                ->get($key)
-                ->extract($object, $property);
-        }
-
-        $strategy = $this->strategies->reduce(
-            null,
-            static function(?ExtractionStrategy $target, ExtractionStrategy $strategy) use ($object, $property): ?ExtractionStrategy {
-                return $target ?? ($strategy->supports($object, $property) ? $strategy : null);
-            },
-        );
-
-        if (!$strategy instanceof ExtractionStrategy) {
-            throw new PropertyCannotBeExtracted($property);
-        }
+        $strategy = $this
+            ->cache
+            ->get($key)
+            ->otherwise(
+                fn() => $this->strategies->find(
+                    static fn($strategy) => $strategy->supports($object, $property),
+                ),
+            )
+            ->match(
+                static fn($strategy) => $strategy,
+                static fn() => throw new PropertyCannotBeExtracted($property),
+            );
 
         $this->cache = ($this->cache)($key, $strategy);
 

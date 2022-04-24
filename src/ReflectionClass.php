@@ -12,7 +12,6 @@ use Innmind\Immutable\{
     Map,
     Set,
 };
-use function Innmind\Immutable\assertMap;
 
 /**
  * @template T of object
@@ -38,14 +37,8 @@ final class ReflectionClass
         InjectionStrategy $injectionStrategy = null,
         Instanciator $instanciator = null,
     ) {
-        /** @var Map<string, mixed> $default */
-        $default = Map::of('string', 'mixed');
-        $properties ??= $default;
-
-        assertMap('string', 'mixed', $properties, 2);
-
         $this->class = $class;
-        $this->properties = $properties;
+        $this->properties = $properties ?? Map::of();
         /** @var InjectionStrategy<T> */
         $this->injectionStrategy = $injectionStrategy ?? InjectionStrategies::default();
         /** @var Instanciator<T> */
@@ -72,11 +65,9 @@ final class ReflectionClass
     /**
      * Add a property to be injected in the new object
      *
-     * @param mixed  $value
-     *
      * @return self<T>
      */
-    public function withProperty(string $property, $value): self
+    public function withProperty(string $property, mixed $value): self
     {
         return new self(
             $this->class,

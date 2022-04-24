@@ -12,7 +12,6 @@ use Innmind\Immutable\{
     Map,
     Set,
 };
-use function Innmind\Immutable\unwrap;
 use PHPUnit\Framework\TestCase;
 
 class ReflectionInstanciatorTest extends TestCase
@@ -31,9 +30,10 @@ class ReflectionInstanciatorTest extends TestCase
 
         $object = $i->build(
             Foo::class,
-            Map::of('string', 'mixed')
-                ('o', $o = new \stdClass)
-                ('bar', 'foo'),
+            Map::of(
+                ['o', $o = new \stdClass],
+                ['bar', 'foo'],
+            ),
         );
 
         $this->assertInstanceOf(Foo::class, $object);
@@ -41,16 +41,17 @@ class ReflectionInstanciatorTest extends TestCase
 
         $object = $i->build(
             Foo::class,
-            Map::of('string', 'mixed')
-                ('o', $o = new \stdClass)
-                ('bar', 'foo')
-                ('baz', 42),
+            Map::of(
+                ['o', $o = new \stdClass],
+                ['bar', 'foo'],
+                ['baz', 42],
+            ),
         );
 
         $this->assertInstanceOf(Foo::class, $object);
         $this->assertSame([$o, 'foo', 42], $object->properties);
 
-        $object = $i->build('stdClass', Map::of('string', 'mixed'));
+        $object = $i->build('stdClass', Map::of());
 
         $this->assertInstanceOf('stdClass', $object);
     }
@@ -62,7 +63,7 @@ class ReflectionInstanciatorTest extends TestCase
         $this->expectException(InstanciationFailed::class);
         $this->expectExceptionMessage('Class "Tests\Innmind\Reflection\Instanciator\Foo" cannot be instanciated');
 
-        $i->build(Foo::class, Map::of('string', 'mixed'));
+        $i->build(Foo::class, Map::of());
     }
 
     public function testGetParameters()
@@ -72,8 +73,7 @@ class ReflectionInstanciatorTest extends TestCase
         $parameters = $i->parameters(Foo::class);
 
         $this->assertInstanceOf(Set::class, $parameters);
-        $this->assertSame('string', (string) $parameters->type());
-        $this->assertSame(['o', 'bar', 'baz'], unwrap($parameters));
+        $this->assertSame(['o', 'bar', 'baz'], $parameters->toList());
 
         $parameters = $i->parameters('stdClass');
 

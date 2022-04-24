@@ -12,7 +12,6 @@ use Innmind\Immutable\{
     Set,
     Sequence,
 };
-use function Innmind\Immutable\unwrap;
 
 final class ReflectionInstanciator implements Instanciator
 {
@@ -28,7 +27,7 @@ final class ReflectionInstanciator implements Instanciator
             $constructor = $refl->getMethod('__construct');
 
             return $refl->newInstanceArgs(
-                unwrap($this->computeArguments($constructor, $properties)),
+                $this->computeArguments($constructor, $properties)->toList(),
             );
         } catch (\TypeError $e) {
             throw new InstanciationFailed($class, $e);
@@ -65,9 +64,13 @@ final class ReflectionInstanciator implements Instanciator
         $arguments = Sequence::mixed();
 
         foreach ($constructor->getParameters() as $parameter) {
-            if ($this->canInject($parameter, $properties)) {
-                $arguments = ($arguments)($properties->get($parameter->name));
-            }
+            $arguments = $properties
+                ->get($parameter->name)
+                ->filter(fn() => $this->canInject($parameter, $properties))
+                ->match(
+                    static fn($property) => ($arguments)($property),
+                    static fn() => $arguments,
+                );
         }
 
         return $arguments;
@@ -94,9 +97,18 @@ final class ReflectionInstanciator implements Instanciator
             return false;
         }
 
-        /** @var mixed */
-        $property = $properties->get($parameter->name);
+        return $properties
+            ->get($parameter->name)
+            ->match(
+                fn($value) => $this->canInjectValue($parameter, $value),
+                static fn() => true,
+            );
+    }
 
+    private function canInjectValue(
+        \ReflectionParameter $parameter,
+        mixed $property,
+    ): bool {
         if ($parameter->hasType()) {
             /** @var \ReflectionNamedType $type */
             $type = $parameter->getType();

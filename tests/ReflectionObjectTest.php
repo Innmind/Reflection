@@ -164,12 +164,19 @@ class ReflectionObjectTest extends TestCase
         $values = $refl->extract('a', 'b', 'c');
 
         $this->assertInstanceOf(Map::class, $values);
-        $this->assertSame('string', (string) $values->keyType());
-        $this->assertSame('mixed', (string) $values->valueType());
         $this->assertCount(3, $values);
-        $this->assertSame(24, $values->get('a'));
-        $this->assertSame(42, $values->get('b'));
-        $this->assertSame(66, $values->get('c'));
+        $this->assertSame(24, $values->get('a')->match(
+            static fn($value) => $value,
+            static fn() => null,
+        ));
+        $this->assertSame(42, $values->get('b')->match(
+            static fn($value) => $value,
+            static fn() => null,
+        ));
+        $this->assertSame(66, $values->get('c')->match(
+            static fn($value) => $value,
+            static fn() => null,
+        ));
     }
 
     public function testThrowWhenCannotExtractProperty()

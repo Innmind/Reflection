@@ -9,7 +9,6 @@ use Innmind\Reflection\{
     Exception\InvalidArgumentException,
 };
 use Innmind\Immutable\Map;
-use function Innmind\Immutable\assertMap;
 
 /**
  * @template T of object
@@ -34,14 +33,8 @@ final class ReflectionObject
         InjectionStrategy $injectionStrategy = null,
         ExtractionStrategy $extractionStrategy = null,
     ) {
-        /** @var Map<string, mixed> $default */
-        $default = Map::of('string', 'mixed');
-        $properties ??= $default;
-
-        assertMap('string', 'mixed', $properties, 2);
-
         $this->object = $object;
-        $this->properties = $properties;
+        $this->properties = $properties ?? Map::of();
         /** @var InjectionStrategy<T> */
         $this->injectionStrategy = $injectionStrategy ?? InjectionStrategies::default();
         $this->extractionStrategy = $extractionStrategy ?? ExtractionStrategies::default();
@@ -127,7 +120,7 @@ final class ReflectionObject
     public function extract(string ...$properties): Map
     {
         /** @var Map<string, mixed> */
-        $map = Map::of('string', 'mixed');
+        $map = Map::of();
 
         foreach ($properties as $property) {
             $map = ($map)(
