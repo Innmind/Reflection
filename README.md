@@ -41,6 +41,7 @@ use Innmind\Reflection\Extract;
 use Innmind\Immutable\{
     Set,
     Maybe,
+    Map,
 };
 
 $properties = (new Extract)($myObject, Set::of('foo', 'bar', 'baz')); // Maybe<Map<non-empty-string, mixed>>
