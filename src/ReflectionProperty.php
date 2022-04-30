@@ -50,4 +50,20 @@ final class ReflectionProperty
     {
         return ReflectionType::of((new \ReflectionProperty($this->class, $this->name))->getType());
     }
+
+    /**
+     * @return Set<ReflectionAttribute>
+     */
+    public function attributes(): Set
+    {
+        $reflection = new \ReflectionProperty($this->class, $this->name);
+        /** @var Set<ReflectionAttribute> */
+        $attributes = Set::of();
+
+        foreach ($reflection->getAttributes() as $attribute) {
+            $attributes = ($attributes)(ReflectionAttribute::of($attribute));
+        }
+
+        return $attributes;
+    }
 }

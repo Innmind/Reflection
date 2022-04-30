@@ -5,7 +5,9 @@ namespace Fixtures\Innmind\Reflection;
 
 final class ManyTypes
 {
+    #[Attr('foo')]
     private int $a;
+    #[Attr('bar')]
     private float $b;
     private string $c;
     private bool $d;

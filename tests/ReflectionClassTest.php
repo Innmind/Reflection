@@ -17,6 +17,7 @@ use Fixtures\Innmind\Reflection\{
     NoConstructor,
     WithConstructor,
     ManyTypes,
+    Attr,
 };
 use Innmind\Immutable\{
     Set,
@@ -252,5 +253,49 @@ class ReflectionClassTest extends TestCase
 
                 $this->assertFalse($types['intersection']->allows($type));
             });
+    }
+
+    public function testAttributes()
+    {
+        $properties = ReflectionClass::of(ManyTypes::class)->properties();
+
+        $this->assertSame(
+            'foo',
+            $properties
+                ->find(static fn($property) => $property->name() === 'a')
+                ->map(static fn($property) => $property->attributes())
+                ->flatMap(static fn($attributes) => $attributes->find(
+                    static fn($attribute) => $attribute->class() === Attr::class,
+                ))
+                ->match(
+                    static fn($attribute) => $attribute->instance()->value,
+                    static fn() => null,
+                ),
+        );
+        $this->assertSame(
+            'bar',
+            $properties
+                ->find(static fn($property) => $property->name() === 'b')
+                ->map(static fn($property) => $property->attributes())
+                ->flatMap(static fn($attributes) => $attributes->find(
+                    static fn($attribute) => $attribute->class() === Attr::class,
+                ))
+                ->match(
+                    static fn($attribute) => $attribute->instance()->value,
+                    static fn() => null,
+                ),
+        );
+        $this->assertNull(
+            $properties
+                ->find(static fn($property) => $property->name() === 'c')
+                ->map(static fn($property) => $property->attributes())
+                ->flatMap(static fn($attributes) => $attributes->find(
+                    static fn($attribute) => $attribute->class() === Attr::class,
+                ))
+                ->match(
+                    static fn($attribute) => $attribute->instance(),
+                    static fn() => null,
+                ),
+        );
     }
 }
