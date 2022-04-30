@@ -84,17 +84,20 @@ final class ReflectionClass
      *
      * It will not extract properties defined in a parent class
      *
-     * @return Set<non-empty-string>
+     * @return Set<ReflectionProperty<T>>
      */
     public function properties(): Set
     {
         $refl = new \ReflectionClass($this->class);
-        /** @var Set<non-empty-string> */
+        /** @var Set<ReflectionProperty<T>> */
         $properties = Set::strings();
 
         foreach ($refl->getProperties() as $property) {
             /** @psalm-suppress ArgumentTypeCoercion */
-            $properties = ($properties)($property->getName());
+            $properties = ($properties)(ReflectionProperty::of(
+                $this->class,
+                $property->getName(),
+            ));
         }
 
         return $properties;
