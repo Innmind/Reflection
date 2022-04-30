@@ -20,4 +20,19 @@ final class ManyTypes
     private ?NoConstructor $k;
     private int|string $union;
     private \Countable&\ArrayAccess $intersection;
+
+    public function a(): int
+    {
+        return $this->a;
+    }
+
+    public function b(): float
+    {
+        return $this->b;
+    }
+
+    public function d(): bool
+    {
+        return $this->d;
+    }
 }

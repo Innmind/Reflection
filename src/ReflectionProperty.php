@@ -3,7 +3,10 @@ declare(strict_types = 1);
 
 namespace Innmind\Reflection;
 
-use Innmind\Immutable\Set;
+use Innmind\Immutable\{
+    Set,
+    Maybe,
+};
 
 /**
  * @template T of object
@@ -65,5 +68,32 @@ final class ReflectionProperty
         }
 
         return $attributes;
+    }
+
+    /**
+     * @param T $object
+     *
+     * @return Maybe<T> Returns nothing if the value can't be injected
+     */
+    public function inject(object $object, mixed $value): Maybe
+    {
+        if (!$this->type()->allows($value)) {
+            /** @var Maybe<T> */
+            return Maybe::nothing();
+        }
+
+        $reflection = new \ReflectionProperty($this->class, $this->name);
+
+        if (!$reflection->isPublic()) {
+            $reflection->setAccessible(true);
+        }
+
+        $reflection->setValue($object, $value);
+
+        if (!$reflection->isPublic()) {
+            $reflection->setAccessible(false);
+        }
+
+        return Maybe::just($object);
     }
 }
