@@ -15,8 +15,9 @@
         "issues": "http://github.com/Innmind/Reflection/issues"
     },
     "require": {
-        "php": "~8.1",
-        "innmind/immutable": "~4.0"
+        "php": "~8.2",
+        "innmind/immutable": "~4.0",
+        "innmind/type": "~1.0"
     },
     "autoload": {
         "psr-4": {
@@ -30,9 +31,9 @@
         }
     },
     "require-dev": {
-        "phpunit/phpunit": "~9.0",
-        "vimeo/psalm": "~4.22",
+        "phpunit/phpunit": "~10.2",
+        "vimeo/psalm": "~5.13",
         "innmind/coding-standard": "~2.0",
-        "innmind/black-box": "^4.18"
+        "innmind/black-box": "~5.1"
     }
 }

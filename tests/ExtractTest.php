@@ -26,8 +26,8 @@ class ExtractTest extends TestCase
     {
         $this
             ->forAll(
-                DataSet\AnyType::any(),
-                DataSet\AnyType::any(),
+                DataSet\Type::any(),
+                DataSet\Type::any(),
             )
             ->then(function($a, $b) {
                 $instanciate = new Instanciate;
@@ -62,8 +62,8 @@ class ExtractTest extends TestCase
     {
         $this
             ->forAll(
-                DataSet\AnyType::any(),
-                DataSet\AnyType::any(),
+                DataSet\Type::any(),
+                DataSet\Type::any(),
             )
             ->then(function($a, $b) {
                 $instanciate = new Instanciate;

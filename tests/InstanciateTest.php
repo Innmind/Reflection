@@ -22,7 +22,7 @@ class InstanciateTest extends TestCase
     public function testInvoke()
     {
         $this
-            ->forAll(Set\AnyType::any())
+            ->forAll(Set\Type::any())
             ->then(function($value) {
                 $instanciate = new Instanciate;
 
@@ -72,7 +72,7 @@ class InstanciateTest extends TestCase
         $this
             ->forAll(
                 Set\Integers::any(),
-                Set\AnyType::any(),
+                Set\Type::any(),
             )
             ->filter(static fn($value, $invalid) => !\is_bool($invalid))
             ->then(function($value, $invalid) {
