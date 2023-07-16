@@ -25,6 +25,11 @@ final class ReflectionType
         return new self(Build::fromReflection($type));
     }
 
+    public function type(): Type
+    {
+        return $this->type;
+    }
+
     public function allows(mixed $value): bool
     {
         return $this->type->allows($value);
