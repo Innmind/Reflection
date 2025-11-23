@@ -3,26 +3,14 @@ declare(strict_types = 1);
 
 namespace Tests\Innmind\Reflection;
 
-use Innmind\Reflection\{
-    ReflectionClass,
-    InjectionStrategy,
-    InjectionStrategy\InjectionStrategies,
-    InjectionStrategy\NamedMethodStrategy,
-    InjectionStrategy\ReflectionStrategy,
-    InjectionStrategy\SetterStrategy,
-    Instanciator\ReflectionInstanciator,
-    Instanciator,
-};
+use Innmind\Reflection\ReflectionClass;
 use Fixtures\Innmind\Reflection\{
     NoConstructor,
     WithConstructor,
     ManyTypes,
     Attr,
 };
-use Innmind\Immutable\{
-    Set,
-    Map,
-};
+use Innmind\Immutable\Set;
 use PHPUnit\Framework\TestCase;
 use Innmind\BlackBox\{
     PHPUnit\BlackBox,
