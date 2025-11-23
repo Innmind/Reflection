@@ -11,8 +11,8 @@ use Fixtures\Innmind\Reflection\{
     Attr,
 };
 use Innmind\Immutable\Set;
-use PHPUnit\Framework\TestCase;
 use Innmind\BlackBox\{
+    PHPUnit\Framework\TestCase,
     PHPUnit\BlackBox,
     Set as DataSet,
 };
@@ -76,12 +76,12 @@ class ReflectionClassTest extends TestCase
         $types = \array_combine(\array_column($types, 0), \array_column($types, 1));
 
         $this
-            ->forAll(DataSet\Integers::any())
+            ->forAll(DataSet::integers())
             ->then(function($int) use ($types) {
                 $this->assertTrue($types['a']->allows($int));
             });
         $this
-            ->forAll(DataSet\Type::any())
+            ->forAll(DataSet::type())
             ->then(function($type) use ($types) {
                 if (\is_int($type)) {
                     return;
@@ -90,7 +90,7 @@ class ReflectionClassTest extends TestCase
                 $this->assertFalse($types['a']->allows($type));
             });
         $this
-            ->forAll(DataSet\RealNumbers::any())
+            ->forAll(DataSet::realNumbers())
             ->then(function($value) use ($types) {
                 if (\is_int($value)) {
                     return;
@@ -99,7 +99,7 @@ class ReflectionClassTest extends TestCase
                 $this->assertTrue($types['b']->allows($value));
             });
         $this
-            ->forAll(DataSet\Type::any())
+            ->forAll(DataSet::type())
             ->then(function($type) use ($types) {
                 if (\is_float($type)) {
                     return;
@@ -108,12 +108,12 @@ class ReflectionClassTest extends TestCase
                 $this->assertFalse($types['b']->allows($type));
             });
         $this
-            ->forAll(DataSet\Unicode::strings())
+            ->forAll(DataSet::strings()->unicode())
             ->then(function($value) use ($types) {
                 $this->assertTrue($types['c']->allows($value));
             });
         $this
-            ->forAll(DataSet\Type::any())
+            ->forAll(DataSet::type())
             ->then(function($type) use ($types) {
                 if (\is_string($type)) {
                     return;
@@ -122,12 +122,12 @@ class ReflectionClassTest extends TestCase
                 $this->assertFalse($types['c']->allows($type));
             });
         $this
-            ->forAll(DataSet\Elements::of(true, false))
+            ->forAll(DataSet::of(true, false))
             ->then(function($value) use ($types) {
                 $this->assertTrue($types['d']->allows($value));
             });
         $this
-            ->forAll(DataSet\Type::any())
+            ->forAll(DataSet::type())
             ->then(function($type) use ($types) {
                 if (\is_bool($type)) {
                     return;
@@ -136,12 +136,12 @@ class ReflectionClassTest extends TestCase
                 $this->assertFalse($types['d']->allows($type));
             });
         $this
-            ->forAll(DataSet\Sequence::of(DataSet\Type::any()))
+            ->forAll(DataSet::sequence(DataSet::type()))
             ->then(function($value) use ($types) {
                 $this->assertTrue($types['e']->allows($value));
             });
         $this
-            ->forAll(DataSet\Type::any())
+            ->forAll(DataSet::type())
             ->then(function($type) use ($types) {
                 if (\is_array($type)) {
                     return;
@@ -153,7 +153,7 @@ class ReflectionClassTest extends TestCase
         }));
         $this->assertTrue($types['f']->allows(new \stdClass));
         $this
-            ->forAll(DataSet\Type::any())
+            ->forAll(DataSet::type())
             ->then(function($type) use ($types) {
                 if (\is_object($type)) {
                     return;
@@ -163,7 +163,7 @@ class ReflectionClassTest extends TestCase
             });
         $this->assertTrue($types['g']->allows(static fn() => null));
         $this
-            ->forAll(DataSet\Type::any())
+            ->forAll(DataSet::type())
             ->then(function($type) use ($types) {
                 if (\is_callable($type)) {
                     return;
@@ -173,12 +173,12 @@ class ReflectionClassTest extends TestCase
             });
         $this->assertTrue($types['h']->allows(new NoConstructor));
         $this
-            ->forAll(DataSet\Type::any())
+            ->forAll(DataSet::type())
             ->then(function($type) use ($types) {
                 $this->assertFalse($types['h']->allows($type));
             });
         $this
-            ->forAll(DataSet\Type::any())
+            ->forAll(DataSet::type())
             ->then(function($type) use ($types) {
                 $this->assertTrue($types['i']->allows($type));
                 $this->assertTrue($types['j']->allows($type));
@@ -186,15 +186,15 @@ class ReflectionClassTest extends TestCase
         $this->assertTrue($types['k']->allows(new NoConstructor));
         $this->assertTrue($types['k']->allows(null));
         $this
-            ->forAll(DataSet\Either::any(
-                DataSet\Integers::any(),
-                DataSet\Unicode::strings(),
+            ->forAll(DataSet::either(
+                DataSet::integers(),
+                DataSet::strings()->unicode(),
             ))
             ->then(function($value) use ($types) {
                 $this->assertTrue($types['union']->allows($value));
             });
         $this
-            ->forAll(DataSet\Type::any())
+            ->forAll(DataSet::type())
             ->then(function($type) use ($types) {
                 if (\is_int($type) || \is_string($type)) {
                     return;
@@ -204,7 +204,7 @@ class ReflectionClassTest extends TestCase
             });
         $this->assertTrue($types['intersection']->allows(new \ArrayIterator([])));
         $this
-            ->forAll(DataSet\Type::any())
+            ->forAll(DataSet::type())
             ->then(function($type) use ($types) {
                 if ($type instanceof \Countable) {
                     return;

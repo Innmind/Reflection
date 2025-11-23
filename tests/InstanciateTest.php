@@ -5,8 +5,8 @@ namespace Tests\Innmind\Reflection;
 
 use Innmind\Reflection\Instanciate;
 use Innmind\Immutable\Map;
-use PHPUnit\Framework\TestCase;
 use Innmind\BlackBox\{
+    PHPUnit\Framework\TestCase,
     PHPUnit\BlackBox,
     Set,
 };
@@ -19,11 +19,11 @@ class InstanciateTest extends TestCase
 {
     use BlackBox;
 
-    public function testInvoke()
+    public function testInvoke(): BlackBox\Proof
     {
-        $this
-            ->forAll(Set\Type::any())
-            ->then(function($value) {
+        return $this
+            ->forAll(Set::type())
+            ->prove(function($value) {
                 $instanciate = new Instanciate;
 
                 $object = $instanciate(NoConstructor::class, Map::of(['a', $value]))->match(
@@ -36,14 +36,14 @@ class InstanciateTest extends TestCase
             });
     }
 
-    public function testPartialInstance()
+    public function testPartialInstance(): BlackBox\Proof
     {
-        $this
+        return $this
             ->forAll(
-                Set\Integers::any(),
-                Set\Elements::of(true, false),
+                Set::integers(),
+                Set::of(true, false),
             )
-            ->then(function($value, $bool) {
+            ->prove(function($value, $bool) {
                 $instanciate = new Instanciate;
 
                 $object = $instanciate(ManyTypes::class, Map::of(['a', $value], ['d', $bool]))->match(
@@ -67,15 +67,15 @@ class InstanciateTest extends TestCase
             });
     }
 
-    public function testReturnNothingWhenFailingToInjectAProperty()
+    public function testReturnNothingWhenFailingToInjectAProperty(): BlackBox\Proof
     {
-        $this
+        return $this
             ->forAll(
-                Set\Integers::any(),
-                Set\Type::any(),
+                Set::integers(),
+                Set::type(),
             )
             ->filter(static fn($value, $invalid) => !\is_bool($invalid))
-            ->then(function($value, $invalid) {
+            ->prove(function($value, $invalid) {
                 $instanciate = new Instanciate;
 
                 $object = $instanciate(ManyTypes::class, Map::of(['a', $value], ['d', $invalid]))->match(
