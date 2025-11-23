@@ -15,7 +15,7 @@
         "issues": "http://github.com/Innmind/Reflection/issues"
     },
     "require": {
-        "php": "~8.2",
+        "php": "~8.4",
         "innmind/immutable": "~4.0|~5.0",
         "innmind/type": "~1.0"
     },
