@@ -3,10 +3,7 @@ declare(strict_types = 1);
 
 namespace Innmind\Reflection;
 
-use Innmind\Immutable\{
-    Map,
-    Set,
-};
+use Innmind\Immutable\Set;
 
 /**
  * @template T of object

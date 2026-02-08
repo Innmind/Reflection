@@ -11,8 +11,8 @@ use Innmind\Immutable\{
     Map,
     Set,
 };
-use PHPUnit\Framework\TestCase;
 use Innmind\BlackBox\{
+    PHPUnit\Framework\TestCase,
     PHPUnit\BlackBox,
     Set as DataSet,
 };
@@ -22,14 +22,14 @@ class ExtractTest extends TestCase
 {
     use BlackBox;
 
-    public function testExtract()
+    public function testExtract(): BlackBox\Proof
     {
-        $this
+        return $this
             ->forAll(
-                DataSet\Type::any(),
-                DataSet\Type::any(),
+                DataSet::type(),
+                DataSet::type(),
             )
-            ->then(function($a, $b) {
+            ->prove(function($a, $b) {
                 $instanciate = new Instanciate;
 
                 $object = $instanciate(WithConstructor::class, Map::of(['a', $a], ['b', $b]))->match(
@@ -58,14 +58,14 @@ class ExtractTest extends TestCase
             });
     }
 
-    public function testReturnNothingWhenFailingToExtractAProperty()
+    public function testReturnNothingWhenFailingToExtractAProperty(): BlackBox\Proof
     {
-        $this
+        return $this
             ->forAll(
-                DataSet\Type::any(),
-                DataSet\Type::any(),
+                DataSet::type(),
+                DataSet::type(),
             )
-            ->then(function($a, $b) {
+            ->prove(function($a, $b) {
                 $instanciate = new Instanciate;
 
                 $object = $instanciate(WithConstructor::class, Map::of(['a', $a], ['b', $b]))->match(
