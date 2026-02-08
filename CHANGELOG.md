@@ -5,6 +5,7 @@
 ### Changed
 
 - Requires PHP `8.4`
+- Requires `innmind/immutable:~6.0`
 
 ## 5.2.0 - 2023-09-16
 
