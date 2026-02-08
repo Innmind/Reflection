@@ -83,16 +83,7 @@ final class ReflectionProperty
         }
 
         $reflection = new \ReflectionProperty($this->class, $this->name);
-
-        if (!$reflection->isPublic()) {
-            $reflection->setAccessible(true);
-        }
-
         $reflection->setValue($object, $value);
-
-        if (!$reflection->isPublic()) {
-            $reflection->setAccessible(false);
-        }
 
         return Maybe::just($object);
     }
@@ -103,17 +94,8 @@ final class ReflectionProperty
     public function extract(object $object): mixed
     {
         $reflection = new \ReflectionProperty($this->class, $this->name);
-
-        if (!$reflection->isPublic()) {
-            $reflection->setAccessible(true);
-        }
-
         /** @var mixed */
         $value = $reflection->getValue($object);
-
-        if (!$reflection->isPublic()) {
-            $reflection->setAccessible(false);
-        }
 
         return $value;
     }
