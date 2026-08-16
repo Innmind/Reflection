@@ -2,7 +2,9 @@
     "name": "innmind/reflection",
     "type": "library",
     "description": "Library to build objects and extract data out of them",
-    "keywords": ["reflection"],
+    "keywords": [
+        "reflection"
+    ],
     "homepage": "http://github.com/Innmind/Reflection",
     "license": "MIT",
     "authors": [
